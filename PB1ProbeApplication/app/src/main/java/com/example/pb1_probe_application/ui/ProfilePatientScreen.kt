@@ -99,18 +99,6 @@ fun PatientInfoField(patientInfo: ProfilePatientInfo, modifier: Modifier = Modif
     }
 }
 
-@Composable
-fun ScaffoldDemo() {
-    val materialBlue700= androidx.compose.ui.graphics.Color.Blue
-    val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Open))
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = { TopAppBar(title = {Text("TopAppBar")},backgroundColor = materialBlue700)  },
-        content = { Text("BodyContent") },
-        bottomBar = { BottomAppBar(backgroundColor = materialBlue700) { Text("BottomAppBar") } }
-    )
-}
-
 @Preview
 @Composable
 private fun AffirmationCardPreview() {
