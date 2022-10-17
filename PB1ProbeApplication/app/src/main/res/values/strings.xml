@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">PB1-Probe-Application</string>
+
+    <!--Patient profile Strings-->
+    <string name="navn">Navn</string>
+    <string name="efternavn">Efternavn</string>
+    <string name="koen">Køn</string>
+    <string name="alder">Alder</string>
+    <string name="vaegt">Vægt</string>
+    <string name="diagnose">Diagnose</string>
+    <string name="email">Email</string>
+    <string name="telefon">Telefon</string>
+
 </resources>

@@ -9,4 +9,5 @@ data class ProfilePatientState(
     val diagnose: String = "",
     val email: String = "",
     val telefon: String = "",
+
 )
