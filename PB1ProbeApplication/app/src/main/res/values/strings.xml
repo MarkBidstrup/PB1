@@ -10,5 +10,7 @@
     <string name="diagnose">Diagnose</string>
     <string name="email">Email</string>
     <string name="telefon">Telefon</string>
+    <string name="empty"></string>
+
 
 </resources>

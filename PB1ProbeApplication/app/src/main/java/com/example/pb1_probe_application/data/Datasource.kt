@@ -15,7 +15,8 @@ class Datasource() {
             ProfilePatientInfo(R.string.vaegt,""),
             ProfilePatientInfo(R.string.diagnose,""),
             ProfilePatientInfo(R.string.email,""),
-            ProfilePatientInfo(R.string.telefon,"")
-            )
+            ProfilePatientInfo(R.string.telefon,""),
+            ProfilePatientInfo(R.string.empty,"")
+        )
     }
 }
