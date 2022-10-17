@@ -76,14 +76,15 @@ fun PatientInfoField(patientInfo: ProfilePatientInfo, modifier: Modifier = Modif
         )
         Text(
             text = "Placeholder", // TODO: insert variable text here
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(start = 10.dp),
             style = MaterialTheme.typography.body1,
             color = androidx.compose.ui.graphics.Color.Black
         )
         Divider(
-            startIndent = 10.dp,
+            modifier = Modifier.padding(10.dp),
             thickness = 1.dp,
-            color = androidx.compose.ui.graphics.Color.LightGray)
+            color = androidx.compose.ui.graphics.Color.LightGray
+        )
     }
 }
 
