@@ -1,13 +1,15 @@
 package com.example.pb1_probe_application.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import android.graphics.Paint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.platform.LocalContext
@@ -31,33 +33,20 @@ fun ProfilePatienScreen() {
 @Composable
 fun PatientInfoList(patientInfoList: List<ProfilePatientInfo>, modifier: Modifier = Modifier) {
 
-//    Scaffold() {
-//        TopAppBar() {
-//            Text(
-//                text = "Min profil", // TODO: hardcoded and missing things
-//                style = MaterialTheme.typography.h1
-//            )
-//        }
-//        LazyColumn {
-//            items(patientInfoList) { ProfilePatientInfo ->
-//                PatientInfoField(ProfilePatientInfo)
-//            }
-//        }
-//        BottomAppBar(backgroundColor = NavBarColorGreen) {
-//            Text(
-//                text = "Placeholder for nav bar",
-//                style = MaterialTheme.typography.h1,
-//            )
-//        }
-//    }
-
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text("Min profil", style = Typography.h1)
-                        },
+                modifier = Modifier.fillMaxWidth(),
+                title = { Text("Min profil", style = Typography.h1) },
                 backgroundColor = androidx.compose.ui.graphics.Color.White)
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
+                 IconButton(onClick = { /*TODO*/ }) {
+                     Icon(
+                         Icons.Default.ArrowBack,
+                         contentDescription = "back arrow",
+                     )
+                 }
+            }
                  },
         content = {
                     LazyColumn {
