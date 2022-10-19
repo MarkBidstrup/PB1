@@ -1,8 +1,11 @@
 package com.example.pb1_probe_application.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -11,8 +14,12 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,16 +33,19 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
 fun EditProfileScreen(user: String) {
+
     val currentUser: String = user
+    val focusManager = LocalFocusManager.current
 
     if (currentUser.equals("patient"))
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
     if (currentUser.equals("researcher"))
-        EditUserInfoList(userInfoList = Datasource().loadProfileResercherInfo())
+        EditUserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), focusManager = LocalFocusManager.current)
 }
 
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+
 
     Scaffold(
         topBar = {
@@ -55,7 +65,17 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier
         content = {
                     LazyColumn {
                         items(userInfoList) { UserInfo ->
-                            EditUserInfoField(UserInfo)
+                            EditUserInfoField(
+                                userInfo = UserInfo,
+                                label = R.string.Placeholder, // TODO: make this variable
+                                keyboardOptions = KeyboardOptions.Default.copy(
+                                    keyboardType = KeyboardType.Text,
+                                    imeAction = ImeAction.Done
+                                ),
+                                keyboardActions = KeyboardActions(
+                                    onDone = { focusManager.clearFocus() }
+                                )
+                            )
                             if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
                                 Divider(
                                     modifier = Modifier.padding(10.dp),
@@ -71,8 +91,14 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier
 }
 
 @Composable
-fun EditUserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun EditUserInfoField(
+    userInfo: UserInfo,
+    @StringRes label: Int,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
+    modifier: Modifier = Modifier) {
+
+    var input by remember { mutableStateOf("") }
 
     Column {
         Text(
@@ -82,15 +108,16 @@ fun EditUserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
             color = TextColorGreen
         )
         OutlinedTextField(
-            value = text,
-            label = { Text(text = stringResource(id = R.string.Placeholder)) },
+            value = input,
+            singleLine = true,
+            label = { Text(text = stringResource(label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
+            onValueChange = { input = it },
             textStyle = Typography.body1,
-            onValueChange = {
-                text = it
-            }
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions
         )
     }
 }
@@ -98,5 +125,5 @@ fun EditUserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun ProfileUserScreenPreview() {
-    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
+    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
 }

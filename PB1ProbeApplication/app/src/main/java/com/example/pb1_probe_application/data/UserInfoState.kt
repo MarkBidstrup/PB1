@@ -1,13 +1,13 @@
 package com.example.pb1_probe_application.data
 
-data class UserInfoState(
-    val navn: String = "",
-    val efternavn: String = "",
-    val koen: String = "",
-    val alder: String = "",
-    val vaegt: String = "",
-    val diagnose: String = "",
-    val email: String = "",
-    val telefon: String = "",
-    val forskningsenhed: String = "",
+data class UserInfoState (
+    var navn: String,
+    var efternavn: String,
+    var koen: String,
+    var alder: String,
+    var vaegt: String,
+    var diagnose: String,
+    var email: String,
+    var telefon: String,
+    var forskningsenhed: String,
 )

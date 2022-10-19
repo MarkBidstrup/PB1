@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 //                    Greeting("Android")
-                    ProfileScreen("patient")
+                    EditProfileScreen("patient")
                 }
             }
         }
