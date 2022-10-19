@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +35,6 @@ fun ProfileScreen(user: String) {
 @Composable
 fun PatientInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
 
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -44,10 +44,16 @@ fun PatientInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {
                      Icon(
-                         Icons.Default.ArrowBack,
+                         Icons.Default.Edit,
                          contentDescription = "back arrow",
                      )
                  }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        Icons.Default.Settings,
+                        contentDescription = "back arrow",
+                    )
+                }
             }
                  },
         content = {
