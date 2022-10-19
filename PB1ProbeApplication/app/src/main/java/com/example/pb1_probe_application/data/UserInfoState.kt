@@ -1,6 +1,6 @@
 package com.example.pb1_probe_application.data
 
-data class ProfilePatientState(
+data class UserInfoState(
     val navn: String = "",
     val efternavn: String = "",
     val koen: String = "",
@@ -9,5 +9,5 @@ data class ProfilePatientState(
     val diagnose: String = "",
     val email: String = "",
     val telefon: String = "",
-
+    val forskningsenhed: String = "",
 )

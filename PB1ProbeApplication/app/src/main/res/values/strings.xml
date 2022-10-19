@@ -11,6 +11,9 @@
     <string name="email">Email</string>
     <string name="telefon">Telefon</string>
     <string name="empty"></string>
+    <string name="MyProfileHeader">Min profil</string>
+    <string name="Placeholder">Placeholder</string>
+    <string name="forskningsenhed">Forskningsenhed</string>
 
 
 </resources>

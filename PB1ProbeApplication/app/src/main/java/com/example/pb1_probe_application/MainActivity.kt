@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pb1_probe_application.ui.ProfilePatienScreen
+import com.example.pb1_probe_application.ui.ProfileScreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 //                    Greeting("Android")
-                    ProfilePatienScreen()
+                    ProfileScreen("patient")
                 }
             }
         }
