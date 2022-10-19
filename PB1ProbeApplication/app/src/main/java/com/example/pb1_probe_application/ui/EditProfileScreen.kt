@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.data.UserInfoState
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
@@ -55,16 +56,16 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier
                     LazyColumn {
                         items(userInfoList) { UserInfo ->
                             EditUserInfoField(UserInfo)
-                        if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
-                            Divider(
-                                modifier = Modifier.padding(10.dp),
-                                thickness = 1.dp,
-                                color = androidx.compose.ui.graphics.Color.LightGray
-                            )
-                        }
+                            if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
+                                Divider(
+                                    modifier = Modifier.padding(10.dp),
+                                    thickness = 1.dp,
+                                    color = androidx.compose.ui.graphics.Color.LightGray
+                                )
+                            }
                         }
                     }
-                  },
+        },
     )
 
 }

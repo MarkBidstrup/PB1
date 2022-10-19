@@ -77,7 +77,6 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
             }
         }
     )
-
 }
 
 @Composable
