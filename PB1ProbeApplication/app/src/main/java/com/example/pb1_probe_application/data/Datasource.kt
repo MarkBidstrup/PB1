@@ -17,7 +17,6 @@ class Datasource() {
             UserInfo(R.string.diagnose,""),
             UserInfo(R.string.email,""),
             UserInfo(R.string.telefon,""),
-            UserInfo(R.string.empty,"")
         )
     }
 

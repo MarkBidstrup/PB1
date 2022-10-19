@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.pb1_probe_application.ui.EditProfileScreen
 import com.example.pb1_probe_application.ui.ProfileScreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 
