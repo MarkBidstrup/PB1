@@ -10,10 +10,10 @@
     <string name="diagnose">Diagnose</string>
     <string name="email">Email</string>
     <string name="telefon">Telefon</string>
-    <string name="MyProfileHeader">Min profil</string>
+    <string name="MyProfileHeading">Min profil</string>
     <string name="Placeholder">Placeholder</string>
     <string name="forskningsenhed">Forskningsenhed</string>
-    <string name="EditProfileHeader">Rediger profil</string>
+    <string name="EditProfileHeading">Rediger profil</string>
 
 
 </resources>
