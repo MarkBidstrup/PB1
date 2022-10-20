@@ -51,7 +51,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.EditProfileHeader), style = Typography.h1) },
+                title = { Text(stringResource(R.string.EditProfileHeading), style = Typography.h1) },
                 backgroundColor = androidx.compose.ui.graphics.Color.White)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {

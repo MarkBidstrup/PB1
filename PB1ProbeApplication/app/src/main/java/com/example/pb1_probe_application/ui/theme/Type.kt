@@ -31,7 +31,14 @@ val Typography = Typography(
         fontFamily = Cairo,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ),
+
+    body2 = TextStyle(
+    fontFamily = Cairo,
+    fontWeight = FontWeight.Normal,
+    fontSize = 12.sp
+    ),
+
     /* Other default text styles to override
     button = TextStyle(
         fontFamily = FontFamily.Default,
