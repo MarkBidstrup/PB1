@@ -32,6 +32,9 @@ fun SettingsScreen(user: String) {
 
 @Composable
 fun SettingsPatientScreen() {
+    var checkedPlaceholder: Boolean = true;
+    var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -49,24 +52,29 @@ fun SettingsPatientScreen() {
         },
         content = {
             Column() {
-                Text(
-                    text = "Tilgængelighedsfunktion",
-                    style = Typography.body1,
-                    modifier = Modifier.padding(start = 10.dp)
-                )
                 Row() {
-                    Text(
-                        text = "Forskere kan anmode mig om at deltage i deres studier",
-                        style = Typography.body2,
-                        modifier = Modifier.padding(start = 10.dp)
-                    )
-//                    IconButton(onClick = { /*TODO*/ }) {
-//                        Icon(
-//                            Icons.Default.,
-//                            contentDescription = "back arrow"
-//                        )
-//                    }
+                    Column() {
+                        Text(
+                            text = "Tilgængelighedsfunktion",
+                            style = Typography.body1,
+                            modifier = Modifier.padding(start = 10.dp)
+                        )
+                        Text(
+                            text = "Forskere kan anmode mig om at deltage i deres studier",
+                            style = Typography.body2,
+                            modifier = Modifier.padding(start = 10.dp)
+                        )
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        Switch(
+                            checked = checkedPlaceholder,
+                            onCheckedChange = onCheckedChangePlaceholder,
+                            modifier = Modifier.wrapContentSize(),
+                        )
+                    }
                 }
+//                Row() {
+//                }
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
