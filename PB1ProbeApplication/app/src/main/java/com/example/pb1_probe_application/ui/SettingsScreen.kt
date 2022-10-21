@@ -25,9 +25,9 @@ fun SettingsScreen(user: String) {
     val currentUser: String = user
 
     if (currentUser.equals("patient"))
-        UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
+        SettingsPatientScreen()
     if (currentUser.equals("researcher"))
-        UserInfoList(userInfoList = Datasource().loadProfileResercherInfo())
+        SettingsResearcherScreen()
 }
 
 @Composable
@@ -39,7 +39,7 @@ fun SettingsPatientScreen() {
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.SettingsHeading), style = Typography.h1) },
+                title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
                 backgroundColor = androidx.compose.ui.graphics.Color.White)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = { /*TODO*/ }) {
@@ -55,12 +55,12 @@ fun SettingsPatientScreen() {
                 Row() {
                     Column() {
                         Text(
-                            text = "Tilgængelighedsfunktion",
+                            text = stringResource(R.string.tilgaengelighed),
                             style = Typography.body1,
                             modifier = Modifier.padding(start = 10.dp)
                         )
                         Text(
-                            text = "Forskere kan anmode mig om at deltage i deres studier",
+                            text = stringResource(R.string.forskereKanAnmode),
                             style = Typography.body2,
                             modifier = Modifier.padding(start = 10.dp)
                         )
@@ -73,15 +73,13 @@ fun SettingsPatientScreen() {
                         )
                     }
                 }
-//                Row() {
-//                }
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp)
                 )
                 Text(
-                    text = "Notifikationer",
+                    text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
                     modifier = Modifier.padding(10.dp)
                 )
@@ -91,7 +89,7 @@ fun SettingsPatientScreen() {
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp)
                 )
                 Text(
-                    text = "Privatlivspolitik & licensaftale",
+                    text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
                     modifier = Modifier.padding(10.dp)
                 )
@@ -101,7 +99,58 @@ fun SettingsPatientScreen() {
                     modifier = Modifier.padding(start = 10.dp, end = 10.dp)
                 )
                 Text(
-                    text = "Privatlivspolitik & licensaftale",
+                    text = stringResource(R.string.logUd),
+                    style = Typography.body1,
+                    color = TextColorRed,
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun SettingsResearcherScreen() {
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
+                backgroundColor = androidx.compose.ui.graphics.Color.White)
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "back arrow"
+                    )
+                }
+            }
+        },
+        content = {
+            Column() {
+                Text(
+                    text = stringResource(R.string.notifikationer),
+                    style = Typography.body1,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Divider(
+                    thickness = 1.dp,
+                    color = androidx.compose.ui.graphics.Color.LightGray,
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                )
+                Text(
+                    text = stringResource(R.string.privatLicensAftale),
+                    style = Typography.body1,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Divider(
+                    thickness = 1.dp,
+                    color = androidx.compose.ui.graphics.Color.LightGray,
+                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                )
+                Text(
+                    text = stringResource(R.string.logUd),
                     style = Typography.body1,
                     color = TextColorRed,
                     modifier = Modifier.padding(10.dp)

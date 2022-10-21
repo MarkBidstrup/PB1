@@ -10,12 +10,17 @@
     <string name="diagnose">Diagnose</string>
     <string name="email">Email</string>
     <string name="telefon">Telefon</string>
-    <string name="Placeholder">Placeholder</string>
+    <string name="placeholder">Placeholder</string>
     <string name="forskningsenhed">Forskningsenhed</string>
 
     <!--Heading Strings-->
-    <string name="EditProfileHeading">Rediger profil</string>
-    <string name="MyProfileHeading">Min profil</string>
-    <string name="SettingsHeading">Indstillinger</string>
+    <string name="editProfileHeading">Rediger profil</string>
+    <string name="myProfileHeading">Min profil</string>
+    <string name="settingsHeading">Indstillinger</string>
+    <string name="privatLicensAftale"><![CDATA[Privatlivspolitik & licensaftale]]></string>
+    <string name="logUd">Log ud</string>
+    <string name="notifikationer">Notifikationer</string>
+    <string name="forskereKanAnmode">Forskere kan anmode mig om at deltage i deres studier</string>
+    <string name="tilgaengelighed">Tilgængelighedsfunktion</string>
 
 </resources>

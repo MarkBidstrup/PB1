@@ -38,7 +38,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.MyProfileHeading), style = Typography.h1) },
+                title = { Text(stringResource(R.string.myProfileHeading), style = Typography.h1) },
                 backgroundColor = androidx.compose.ui.graphics.Color.White)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {
@@ -73,7 +73,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
             BottomAppBar(
                 backgroundColor = NavBarColorGreen
             ) {
-                Text(stringResource(R.string.Placeholder))
+                Text(stringResource(R.string.placeholder))
             }
         }
     )
@@ -89,7 +89,7 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
             color = TextColorGreen
         )
         Text(
-            text = stringResource(R.string.Placeholder), // TODO: insert variable text here
+            text = stringResource(R.string.placeholder), // TODO: insert variable text here
             modifier = Modifier.padding(start = 10.dp),
             style = MaterialTheme.typography.body1,
             color = androidx.compose.ui.graphics.Color.Black
