@@ -30,7 +30,10 @@
     <string name="push">Push</string>
     <string name="sms">SMS</string>
     <string name="faaNotiPååEmailOgSms">Få notifikationer på email og SMS</string>
-
+    <string name="mineStudier">Mine studier</string>
+    <string name="aktiveStudier">Aktive studier</string>
+    <string name="opretStudie">OPRET NYT STUDIE</string>
+    <string name="ingenForskerStudier">Du har ingen aktive studier</string>
 
 
 </resources>

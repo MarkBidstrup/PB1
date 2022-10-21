@@ -27,6 +27,12 @@ val Typography = Typography(
         fontSize = 25.sp
     ),
 
+    h2 = TextStyle(
+        fontFamily = Cairo,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp
+    ),
+
     body1 = TextStyle(
         fontFamily = Cairo,
         fontWeight = FontWeight.Normal,
@@ -37,6 +43,12 @@ val Typography = Typography(
     fontFamily = Cairo,
     fontWeight = FontWeight.Normal,
     fontSize = 12.sp
+    ),
+
+    button = TextStyle(
+        fontFamily = Cairo,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp
     ),
 
     caption = TextStyle(
