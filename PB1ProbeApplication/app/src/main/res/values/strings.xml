@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">PB1-Probe-Application</string>
 
     <!--Patient profile Strings-->
@@ -17,10 +17,20 @@
     <string name="editProfileHeading">Rediger profil</string>
     <string name="myProfileHeading">Min profil</string>
     <string name="settingsHeading">Indstillinger</string>
+    <string name="notificationsHeading">Notifikationer</string>
+
+    <!--Settings Strings-->
     <string name="privatLicensAftale"><![CDATA[Privatlivspolitik & licensaftale]]></string>
     <string name="logUd">Log ud</string>
     <string name="notifikationer">Notifikationer</string>
     <string name="forskereKanAnmode">Forskere kan anmode mig om at deltage i deres studier</string>
     <string name="tilgaengelighed">Tilgængelighedsfunktion</string>
+
+    <!--Notifications Strings-->
+    <string name="push">Push</string>
+    <string name="sms">SMS</string>
+    <string name="faaNotiPååEmailOgSms">Få notifikationer på email og SMS</string>
+
+
 
 </resources>
