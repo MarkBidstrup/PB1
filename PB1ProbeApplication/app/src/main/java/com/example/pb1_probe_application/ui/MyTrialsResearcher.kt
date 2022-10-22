@@ -66,7 +66,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 } else {
                     LazyColumn(
                         modifier = modifier
-                            .weight(3f),
+                            .weight(5f),
                         contentPadding = PaddingValues(16.dp)
                     ) {
                         items(trials) { trialsPosts ->
@@ -74,7 +74,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.weight(.01f))
+                Spacer(modifier = Modifier.weight(.2f))
                 Button(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
