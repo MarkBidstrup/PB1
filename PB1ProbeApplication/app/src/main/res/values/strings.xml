@@ -41,6 +41,7 @@
     <string name="anmod">ANMOD DELTAGERE</string>
     <string name="tilmeldingsfrist">Tilmeldingsfrist: </string>
     <string name="antalTilmeldte">Antal tilmeldte: </string>
+    <string name="potentielleKandidater">Potentielle kandidater: </string>
 
 
 </resources>

@@ -66,7 +66,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 } else {
                     LazyColumn(
                         modifier = modifier
-                            .weight(2f),
+                            .weight(3f),
                         contentPadding = PaddingValues(16.dp)
                     ) {
                         items(trials) { trialsPosts ->
@@ -74,7 +74,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.weight(.1f))
+                Spacer(modifier = Modifier.weight(.01f))
                 Button(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -110,15 +110,16 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
 
 @Composable
 fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
-    val shape = RoundedCornerShape(6.dp)
+    val shape = RoundedCornerShape(10.dp)
     Box(modifier = Modifier
         .fillMaxWidth()
         .clip(shape)
         .border(2.dp, Color.LightGray, shape))
          {
-        Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp), Arrangement.SpaceEvenly){
+        Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
+            Arrangement.SpaceEvenly){
             Column(modifier = Modifier.height(110.dp)
-                                        .width(210.dp)
+                                        .weight(1f)
                                         .padding(end = 2.dp),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
@@ -130,7 +131,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = stringResource(R.string.tilmeldingsfrist) + trialInfo.registrationDeadline,
+                    text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
                     style = MaterialTheme.typography.body2,
                     color = androidx.compose.ui.graphics.Color.Black
                 )
@@ -142,21 +143,23 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Potentielle kandidater: " + " "+ trialInfo.numPotentialParticipants,
+                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numPotentialParticipants,
                     style = MaterialTheme.typography.body2,
                     color = androidx.compose.ui.graphics.Color.Black
                 )
+                Spacer(modifier = Modifier.height(2.dp))
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = modifier
                 .height(110.dp)
+                .width(130.dp)
                 .padding(top = 8.dp, bottom = 8.dp, end = 3.dp)) {
                 Button(
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
                         .align(Alignment.End)
-                        .height(35.dp)
-                        .width(125.dp),
+                        .fillMaxWidth()
+                        .height(35.dp),
                     onClick = { /*TODO*/  },
                     shape = RoundedCornerShape(6.dp),
                     elevation = ButtonDefaults.elevation(
@@ -171,7 +174,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
                         .align(Alignment.End)
-                        .width(125.dp)
+                        .fillMaxWidth()
                         .height(35.dp),
                     onClick = { /*TODO*/  },
                     shape = RoundedCornerShape(6.dp),
