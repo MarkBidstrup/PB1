@@ -54,7 +54,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(bottom = 80.dp)) {
                 Text(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(start=16.dp),
                     text = stringResource(R.string.aktiveStudier), style = Typography.h2
                 )
                 if(trials.isEmpty()) {
