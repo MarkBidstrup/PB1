@@ -86,8 +86,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                         pressedElevation = 8.dp ),
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
                 ) {
-                    Row(
-                    ) {
+                    Row( ) {
                         Icon(
                             Icons.Default.Add,
                             contentDescription = "add"
@@ -119,8 +118,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
             Arrangement.SpaceEvenly){
             Column(modifier = Modifier.height(110.dp)
-                                        .weight(1f)
-                                        .padding(end = 2.dp),
+                                        .weight(1f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
                     text = trialInfo.trialName,
@@ -129,27 +127,24 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     color = androidx.compose.ui.graphics.Color.Black
 
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
                     style = MaterialTheme.typography.body2,
                     color = androidx.compose.ui.graphics.Color.Black
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipantsRegistered,
                     style = MaterialTheme.typography.body2,
                     color = androidx.compose.ui.graphics.Color.Black
                 )
-                Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numPotentialParticipants,
                     style = MaterialTheme.typography.body2,
                     color = androidx.compose.ui.graphics.Color.Black
                 )
-                Spacer(modifier = Modifier.height(2.dp))
+                Spacer(modifier = Modifier.height(1.dp))
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(15.dp))
             Column(modifier = modifier
                 .height(110.dp)
                 .width(130.dp)
