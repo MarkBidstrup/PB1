@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.graphics.Paint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -60,7 +61,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(250.dp))
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.ingenForskerStudier), style = Typography.body1
+                        text = stringResource(R.string.ingenStudier), style = Typography.body1
                     )
                 } else {
                     LazyColumn(
@@ -73,7 +74,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                Spacer(modifier = Modifier.weight(.2f))
+                Spacer(modifier = Modifier.weight(.1f))
                 Button(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -115,22 +116,73 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
         .clip(shape)
         .border(2.dp, Color.LightGray, shape))
          {
-        Column (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp)){
-            Text(
-                text = stringResource(R.string.placeholder), // TODO: insert variable text here
-                style = MaterialTheme.typography.body1,
-                color = androidx.compose.ui.graphics.Color.Black
-            )
-            Text(
-                text = stringResource(R.string.placeholder), // TODO: insert variable text here
-                style = MaterialTheme.typography.body1,
-                color = androidx.compose.ui.graphics.Color.Black
-            )
-            Text(
-                text = stringResource(R.string.placeholder), // TODO: insert variable text here
-                style = MaterialTheme.typography.body1,
-                color = androidx.compose.ui.graphics.Color.Black
-            )
+        Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp), Arrangement.SpaceEvenly){
+            Column(modifier = Modifier.height(110.dp)
+                                        .width(210.dp)
+                                        .padding(end = 2.dp),
+                verticalArrangement = Arrangement.SpaceEvenly) {
+                Text(
+                    text = trialInfo.trialName,
+                    style = MaterialTheme.typography.body1,
+                    fontWeight = FontWeight.Bold,
+                    color = androidx.compose.ui.graphics.Color.Black
+
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(R.string.tilmeldingsfrist) + trialInfo.registrationDeadline,
+                    style = MaterialTheme.typography.body2,
+                    color = androidx.compose.ui.graphics.Color.Black
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipantsRegistered,
+                    style = MaterialTheme.typography.body2,
+                    color = androidx.compose.ui.graphics.Color.Black
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = "Potentielle kandidater: " + " "+ trialInfo.numPotentialParticipants,
+                    style = MaterialTheme.typography.body2,
+                    color = androidx.compose.ui.graphics.Color.Black
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Column(modifier = modifier
+                .height(110.dp)
+                .padding(top = 8.dp, bottom = 8.dp, end = 3.dp)) {
+                Button(
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .height(35.dp)
+                        .width(125.dp),
+                    onClick = { /*TODO*/  },
+                    shape = RoundedCornerShape(6.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 10.dp,
+                        pressedElevation = 10.dp ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+                ) {
+                    Text(stringResource(R.string.haandterStudie), style = Typography.button, fontWeight = FontWeight.Bold)
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .align(Alignment.End)
+                        .width(125.dp)
+                        .height(35.dp),
+                    onClick = { /*TODO*/  },
+                    shape = RoundedCornerShape(6.dp),
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 10.dp,
+                        pressedElevation = 10.dp ),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+                ) {
+                    Text(stringResource(R.string.anmod), style = Typography.button, fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
     Spacer(modifier = Modifier.height(10.dp))

@@ -6,7 +6,7 @@ data class TrialState (
     // TODO add deltagerinformation
     val trialName: String,
     val goal: String,
-    val registrationDeadline: Date,
+    val registrationDeadline: String,
     val numParticipantsRequired: Int,
     val inclusionCriteria: String,
     val exclusionCriteria: String,
@@ -17,8 +17,8 @@ data class TrialState (
     val trialDuration: String,
     val numVisits: Int,
     val lengthOfEachVisit: String,
-    val expectedEndDate: Date,
-    val expectedReplyDate: Date,
+    val expectedEndDate: String,
+    val expectedReplyDate: String,
     val diagnoses: List<String>,
 
     val numParticipantsRegistered: Int,     // TODO this needs to be a list of registered participants?

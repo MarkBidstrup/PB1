@@ -30,10 +30,17 @@
     <string name="push">Push</string>
     <string name="sms">SMS</string>
     <string name="faaNotiPååEmailOgSms">Få notifikationer på email og SMS</string>
+
+
+    <!--My Trials Strings-->
     <string name="mineStudier">Mine studier</string>
     <string name="aktiveStudier">Aktive studier</string>
     <string name="opretStudie">OPRET NYT STUDIE</string>
-    <string name="ingenForskerStudier">Du har ingen aktive studier</string>
+    <string name="ingenStudier">Du har ingen aktive studier</string>
+    <string name="haandterStudie">HÅNDTER STUDIE</string>
+    <string name="anmod">ANMOD DELTAGERE</string>
+    <string name="tilmeldingsfrist">Tilmeldingsfrist: </string>
+    <string name="antalTilmeldte">Antal tilmeldte: </string>
 
 
 </resources>
