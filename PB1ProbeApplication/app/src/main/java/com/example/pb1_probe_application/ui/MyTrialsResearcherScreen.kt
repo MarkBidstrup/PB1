@@ -72,6 +72,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                     ) {
                         items(trials) { trialsPosts ->
                             ResearcherTrialPost(trialsPosts)
+                            Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
                 }
@@ -119,7 +120,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
             Arrangement.SpaceEvenly){
             Column(modifier = Modifier.height(110.dp)
-                                        .weight(1f),
+                                        .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
                     text = trialInfo.trialName,
@@ -145,7 +146,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(1.dp))
             }
-            Spacer(modifier = Modifier.width(15.dp))
+            Spacer(modifier = Modifier.weight(.1f))
             Column(modifier = modifier
                 .height(110.dp)
                 .width(130.dp)
@@ -184,7 +185,6 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
             }
         }
     }
-    Spacer(modifier = Modifier.height(10.dp))
 }
 
 @Preview
