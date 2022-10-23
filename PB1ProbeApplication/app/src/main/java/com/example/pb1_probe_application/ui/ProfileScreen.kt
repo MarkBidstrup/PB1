@@ -92,7 +92,6 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
             text = stringResource(R.string.placeholder), // TODO: insert variable text here
             modifier = Modifier.padding(start = 10.dp),
             style = MaterialTheme.typography.body1,
-            color = androidx.compose.ui.graphics.Color.Black
         )
     }
 }

@@ -1,8 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -34,7 +31,7 @@ import com.example.pb1_probe_application.ui.theme.StrokeColor
 
 
 @Composable
-fun HomeScreen() {
+fun TrialListingsScreen() {
     Scaffold(
         topBar = {
             ProbeTopBar()
@@ -193,7 +190,7 @@ fun ProbeTopBar(modifier: Modifier = Modifier) {
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        HomeScreen()
+        TrialListingsScreen()
     }
 }
 
@@ -204,6 +201,6 @@ fun TrialPreview() {
 @Composable
 fun TrialDarkThemePreview() {
     PB1ProbeApplicationTheme(darkTheme = true) {
-        HomeScreen()
+        TrialListingsScreen()
     }
 }

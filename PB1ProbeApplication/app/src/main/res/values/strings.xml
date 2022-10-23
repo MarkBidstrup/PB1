@@ -62,5 +62,6 @@
     <string name="intervention_1">Blodprøve, sundhedsundersøgelse</string>
 
     <string name="expand_forklaring">Se mere eller mindre information om studiet</string>
+    <string name="sletProfil">Slet profil</string>
 
 </resources>

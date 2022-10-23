@@ -29,6 +29,7 @@ import com.example.pb1_probe_application.data.UserInfoState
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
+import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
@@ -81,6 +82,18 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                                     modifier = Modifier.padding(10.dp),
                                     thickness = 1.dp,
                                     color = androidx.compose.ui.graphics.Color.LightGray
+                                )
+                            } else {
+                                Divider(
+                                    modifier = Modifier.padding(10.dp),
+                                    thickness = 1.dp,
+                                    color = androidx.compose.ui.graphics.Color.LightGray
+                                )
+                                Text(
+                                    text = stringResource(R.string.sletProfil),
+                                    style = Typography.body1,
+                                    color = TextColorRed,
+                                    modifier = Modifier.padding(10.dp)
                                 )
                             }
                         }

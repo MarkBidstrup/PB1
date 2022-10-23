@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 //                    Greeting("Android")
-                    MyTrialsResearcher()
+                    EditProfileScreen("researcher")
                 }
             }
         }
@@ -40,6 +40,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     PB1ProbeApplicationTheme {
-        Greeting("Android")
+        TrialListingsScreen()
     }
 }
