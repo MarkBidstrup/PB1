@@ -53,7 +53,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
         modifier = modifier.padding(8.dp).
-        border(2.dp, Color.LightGray, RoundedCornerShape(10.dp)
+        border(1.dp, Color.LightGray, RoundedCornerShape(10.dp)
     )
     ) {
         Column(

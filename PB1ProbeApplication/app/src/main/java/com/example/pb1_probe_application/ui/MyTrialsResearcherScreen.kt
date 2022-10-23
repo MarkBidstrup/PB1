@@ -29,6 +29,7 @@ import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
+import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
@@ -47,7 +48,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.mineStudier), style = Typography.h1)
                 },
-                backgroundColor = androidx.compose.ui.graphics.Color.White)
+                backgroundColor = MaterialTheme.colors.onPrimary)
 
         },
         content = {
@@ -55,7 +56,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(bottom = 80.dp)) {
                 Text(
-                    modifier = Modifier.padding(start=16.dp),
+                    modifier = Modifier.padding(start = 16.dp, bottom = 12.dp),
                     text = stringResource(R.string.aktiveStudier), style = Typography.h2
                 )
                 if(trials.isEmpty()) {
@@ -66,13 +67,13 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                     )
                 } else {
                     LazyColumn(
-                        modifier = modifier
-                            .weight(5f),
-                        contentPadding = PaddingValues(16.dp)
+                        modifier = modifier.weight(4f),
+                        contentPadding = PaddingValues(start=16.dp, end = 16.dp)
                     ) {
                         items(trials) { trialsPosts ->
                             ResearcherTrialPost(trialsPosts)
-                            Spacer(modifier = Modifier.height(12.dp))
+                            if (!(trials.indexOf(element = trialsPosts) == trials.lastIndex))
+                                Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
                 }
@@ -91,10 +92,13 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                     Row( ) {
                         Icon(
                             Icons.Default.Add,
-                            contentDescription = "add"
+                            contentDescription = "add",
+                            Modifier,
+                            androidx.compose.ui.graphics.Color.Black
                         )
                         Spacer(modifier = Modifier.padding(1.dp))
-                        Text(stringResource(R.string.opretStudie), style = Typography.body1, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.opretStudie), style = Typography.body1,
+                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
                     }
                 }
             }
@@ -112,16 +116,16 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
 @Composable
 fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(10.dp)
-    Card(elevation = 4.dp,
+    Card(
+        elevation = 4.dp,
+        shape = shape,
         modifier = Modifier
-        .fillMaxWidth()
-        .clip(shape)
-        .border(1.dp, Color.LightGray, shape))
-         {
+            .fillMaxWidth()
+            .border(1.dp, Color.LightGray, shape)
+    ) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
             Arrangement.SpaceEvenly){
-            Column(modifier = Modifier.height(110.dp)
-                                        .weight(3f),
+            Column(modifier = Modifier.height(110.dp).weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
                     text = trialInfo.trialName,
@@ -141,7 +145,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                 Spacer(modifier = Modifier.height(1.dp))
             }
             Spacer(modifier = Modifier.weight(.1f))
-            Column(modifier = modifier
+            Column(modifier = Modifier
                 .height(110.dp)
                 .width(130.dp)
                 .padding(top = 8.dp, bottom = 8.dp, end = 3.dp)) {
@@ -158,7 +162,8 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                         pressedElevation = 10.dp ),
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
                 ) {
-                    Text(stringResource(R.string.haandterStudie), style = Typography.button, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.haandterStudie), style = Typography.button,
+                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
@@ -174,7 +179,8 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                         pressedElevation = 10.dp ),
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
                 ) {
-                    Text(stringResource(R.string.anmod), style = Typography.button, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.anmod), style = Typography.button,
+                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
                 }
             }
         }
@@ -184,5 +190,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun ResearcherTrialsScreenPreview() {
-    MyTrialsResearcher()
+    PB1ProbeApplicationTheme(darkTheme = false) {
+        MyTrialsResearcher()
+    }
 }
