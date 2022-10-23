@@ -43,5 +43,24 @@
     <string name="antalTilmeldte">Antal tilmeldte: </string>
     <string name="potentielleKandidater">Potentielle kandidater: </string>
 
+    <!--Trial listing Strings-->
+    <string name="user_info">Læs mere...</string>
+    <string name="ansoeg">Ansøg</string>
+    <string name="formaal">Formål: </string>
+    <string name="lokation">Lokation: </string>
+    <string name="forloeb">Forløb: </string>
+    <string name="varighed">Varighed: </string>
+    <string name="sygdom">Sygdom: </string>
+    <string name="intervention">Intervention: </string>
+    <string name="titel_1">Tidlige abnormiteter i nethinden ved diabetes</string>
+    <string name="formaal_1">At undersøge tidlige forandringer i nethinden, som kan relateres til diabetes</string>
+    <string name="tilmeldingsfrist_1">01.01.2022</string>
+    <string name="lokation_1">Ålborg hospital</string>
+    <string name="forloeb_1">01.01.2022-01.01.2022</string>
+    <string name="varighed_1"> 61 dage</string>
+    <string name="sygdom_1">Diabetes type 2</string>
+    <string name="intervention_1">Blodprøve, sundhedsundersøgelse</string>
+
+    <string name="expand_forklaring">Se mere eller mindre information om studiet</string>
 
 </resources>
