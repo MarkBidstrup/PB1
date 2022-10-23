@@ -32,7 +32,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp
     ),
-
+    h3 = TextStyle(
+        fontFamily = Cairo,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 20.sp
+    ),
     body1 = TextStyle(
         fontFamily = Cairo,
         fontWeight = FontWeight.Normal,
@@ -40,9 +45,10 @@ val Typography = Typography(
     ),
 
     body2 = TextStyle(
-    fontFamily = Cairo,
-    fontWeight = FontWeight.Normal,
-    fontSize = 12.sp
+        fontFamily = Cairo,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp
     ),
 
     button = TextStyle(

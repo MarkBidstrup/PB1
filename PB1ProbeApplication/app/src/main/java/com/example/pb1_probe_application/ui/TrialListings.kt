@@ -8,9 +8,11 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
@@ -20,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,19 +30,8 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Trial
 import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
+import com.example.pb1_probe_application.ui.theme.StrokeColor
 
-/*
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            PB1ProbeApplicationTheme {
-                HomeScreen()
-            }
-        }
-    }
-}
-*/
 
 @Composable
 fun HomeScreen() {
@@ -62,7 +54,10 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
 
     Card(
         elevation = 4.dp,
-        modifier = modifier.padding(8.dp)
+        shape = RoundedCornerShape(10.dp),
+        modifier = modifier.padding(8.dp).
+        border(2.dp, Color.LightGray, RoundedCornerShape(10.dp)
+    )
     ) {
         Column(
             modifier = Modifier.animateContentSize(
@@ -111,8 +106,8 @@ fun TrialExpandButton(
 fun TrialTitle(@StringRes title: Int, modifier: Modifier = Modifier) {
     Text(
         text = stringResource(title),
-        style = MaterialTheme.typography.h2,
-        modifier = modifier.padding(top = 8.dp).width(300.dp)
+        style = MaterialTheme.typography.h3,
+        modifier = modifier.padding(top = 4.dp, start = 4.dp).width(300.dp)
     )
 }
 
@@ -125,45 +120,45 @@ fun TrialInfo(
     Column(
         modifier = modifier.padding(
             start = 16.dp,
-            top = 8.dp,
+            top = 0.dp,
             bottom = 16.dp,
             end = 16.dp
         )
     ) {
         Text(
             text = stringResource(R.string.formaal) +" "+ stringResource(trial.formaal),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
             text = stringResource(R.string.tilmeldingsfrist) +" "+ stringResource(trial.tilmeldingsfrist),
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp),
         )
         if (expanded) {
             Text(
                 text = stringResource(R.string.lokation) +" "+ stringResource(trial.tilmeldingsfrist),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
                 text = stringResource(R.string.forloeb) +" "+ stringResource(trial.forloeb),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
                 text = stringResource(R.string.varighed) +" "+ stringResource(trial.varighed),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
                 text = stringResource(R.string.sygdom) +" "+ stringResource(trial.sygdom),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
                 text = stringResource(R.string.intervention) +" "+ stringResource(trial.intervention),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
         }
