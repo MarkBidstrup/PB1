@@ -72,7 +72,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                     ) {
                         items(trials) { trialsPosts ->
                             ResearcherTrialPost(trialsPosts)
-                            Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
                 }
@@ -112,10 +112,11 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
 @Composable
 fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(10.dp)
-    Box(modifier = Modifier
+    Card(elevation = 4.dp,
+        modifier = Modifier
         .fillMaxWidth()
         .clip(shape)
-        .border(2.dp, Color.LightGray, shape))
+        .border(1.dp, Color.LightGray, shape))
          {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
             Arrangement.SpaceEvenly){
@@ -126,24 +127,17 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     text = trialInfo.trialName,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
-                    color = androidx.compose.ui.graphics.Color.Black,
                     lineHeight = 20.sp
                 )
                 Text(
                     text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
-                    style = MaterialTheme.typography.body2,
-                    color = androidx.compose.ui.graphics.Color.Black
-                )
+                    style = MaterialTheme.typography.body2)
                 Text(
                     text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipantsRegistered,
-                    style = MaterialTheme.typography.body2,
-                    color = androidx.compose.ui.graphics.Color.Black
-                )
+                    style = MaterialTheme.typography.body2)
                 Text(
                     text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numPotentialParticipants,
-                    style = MaterialTheme.typography.body2,
-                    color = androidx.compose.ui.graphics.Color.Black
-                )
+                    style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }
             Spacer(modifier = Modifier.weight(.1f))
