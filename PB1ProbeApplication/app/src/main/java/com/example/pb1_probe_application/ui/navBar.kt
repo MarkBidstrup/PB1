@@ -66,7 +66,7 @@ fun RowScope.addItem(
             Text(text = screen.title,
             fontFamily = Cairo,
             fontSize = 14.sp,
-                color = Color.Black
+                color = Color.DarkGray
             )
 
         },
@@ -119,5 +119,10 @@ fun BottomNavGraph(navController: NavHostController) {
 
             ProfileScreen(user = "researcher",navHostController= navController)
         }
+
+        // add a route to settingscreen page in order to navigate // ved ikke om det skal være her
+    composable( route = "Setting") {
+        SettingsScreen(user = "patient")
+    }
     }
 }
