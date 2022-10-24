@@ -1,7 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-import android.graphics.Paint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,10 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,33 +23,31 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
-import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun MyTrialsResearcher( trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController) {
+fun MyTrialsResearcher(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController, role: Role = Role.RESEARCHER) {
     val trials by trialsViewModel.uiState.collectAsState()
 // TODO - check when/ how often things recompose when using kotlin flows
-    TrialsList(trials, Modifier, navHostController)
+// TODO - check if a different state needs to be passed in depending on whether it's a researcher or patient
+    TrialsList(trials, Modifier, navHostController, role)
 }
 
 @Composable
-fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController) {
-
+fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.RESEARCHER) {
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.mineStudier), style = Typography.h1)
-                },
+                title = { Text(stringResource(R.string.mineStudier), style = Typography.h1)},
                 backgroundColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp
             )
-
         },
         content = {
             Column(modifier = Modifier
@@ -73,43 +68,50 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostC
                         modifier = modifier.weight(4f),
                         contentPadding = PaddingValues(start=17.dp, end = 17.dp)
                     ) {
-                        items(trials) { trialsPosts ->
-                            ResearcherTrialPost(trialsPosts)
-                            if (!(trials.indexOf(element = trialsPosts) == trials.lastIndex))
+                        items(trials) {
+                            if(role == Role.RESEARCHER)
+                                ResearcherTrialPost(trialInfo = it)
+                            else
+//                                PatientTrialPost(trialInfo = it)
+                            if (!(trials.indexOf(element = it) == trials.lastIndex))
                                 Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
                 }
                 Spacer(modifier = Modifier.weight(.2f))
-                Button(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .height(40.dp),
-                    onClick = { /*TODO*/  },
-                    shape = RoundedCornerShape(6.dp),
-                    elevation = ButtonDefaults.elevation(
-                        defaultElevation = 6.dp,
-                        pressedElevation = 8.dp ),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
-                ) {
-                    Row( ) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "add",
-                            Modifier,
-                            androidx.compose.ui.graphics.Color.Black
-                        )
-                        Spacer(modifier = Modifier.padding(1.dp))
-                        Text(stringResource(R.string.opretStudie), style = Typography.body1,
-                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
-                    }
-                }
+                if(role == Role.RESEARCHER)
+                    AddTrialButton(Modifier.align(CenterHorizontally).height(40.dp))
             }
         },
         bottomBar = {
             BottomBar(navController = navHostController)
         }
     )
+}
+
+@Composable
+fun AddTrialButton(modifier: Modifier) {
+    Button(
+        modifier = modifier,
+        onClick = { /*TODO*/  },
+        shape = RoundedCornerShape(6.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 6.dp,
+            pressedElevation = 8.dp ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+    ) {
+        Row( ) {
+            Icon(
+                Icons.Default.Add,
+                contentDescription = "add",
+                Modifier,
+                androidx.compose.ui.graphics.Color.Black
+            )
+            Spacer(modifier = Modifier.padding(1.dp))
+            Text(stringResource(R.string.opretStudie), style = Typography.body1,
+                fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
+        }
+    }
 }
 
 @Composable
@@ -124,7 +126,9 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
     ) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
             Arrangement.SpaceEvenly){
-            Column(modifier = Modifier.height(110.dp).weight(3f),
+            Column(modifier = Modifier
+                .height(110.dp)
+                .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
                     text = trialInfo.trialName,
