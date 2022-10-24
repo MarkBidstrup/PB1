@@ -25,6 +25,7 @@
     <string name="notifikationer">Notifikationer</string>
     <string name="forskereKanAnmode">Forskere kan anmode mig om at deltage i deres studier</string>
     <string name="tilgaengelighed">Tilgængelighedsfunktion</string>
+    <string name="sletProfil">Slet profil</string>
 
     <!--Notifications Strings-->
     <string name="push">Push</string>
@@ -52,6 +53,8 @@
     <string name="varighed">Varighed: </string>
     <string name="sygdom">Sygdom: </string>
     <string name="intervention">Intervention: </string>
+    <string name="expand_forklaring">Se mere eller mindre information om studiet</string>
+
     <string name="titel_1">Tidlige abnormiteter i nethinden ved diabetes</string>
     <string name="formaal_1">At undersøge tidlige forandringer i nethinden, som kan relateres til diabetes</string>
     <string name="tilmeldingsfrist_1">01.01.2022</string>
@@ -61,7 +64,5 @@
     <string name="sygdom_1">Diabetes type 2</string>
     <string name="intervention_1">Blodprøve, sundhedsundersøgelse</string>
 
-    <string name="expand_forklaring">Se mere eller mindre information om studiet</string>
-    <string name="sletProfil">Slet profil</string>
 
 </resources>

@@ -21,16 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Trial
 import com.example.pb1_probe_application.data.trials
+import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.StrokeColor
+import com.example.pb1_probe_application.ui.theme.Typography
 
 
-@Composable
+ @Composable
 fun TrialListingsScreen() {
     Scaffold(
         topBar = {
@@ -49,7 +52,7 @@ fun TrialListingsScreen() {
 
 @Composable
 fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(true) }
 
     Card(
         elevation = 4.dp,
@@ -88,13 +91,12 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(R.string.mereInfo),
                     style = MaterialTheme.typography.body2,
-                    modifier = modifier.padding(bottom = 8.dp),)
+                    color = Color.Blue,
+                    modifier = modifier.padding(start = 8.dp, top = 16.dp),)
                 Spacer(Modifier.weight(1f))
-                TrialApplyButton()
+                TrialApplyButton(onClick = {})
             }
         }
-
-
     }
 }
 
@@ -138,7 +140,7 @@ fun TrialInfo(
         modifier = modifier.padding(
             start = 16.dp,
             top = 0.dp,
-            bottom = 16.dp,
+            bottom = 0.dp,
             end = 16.dp
         )
     ) {
@@ -183,8 +185,25 @@ fun TrialInfo(
 }
 
 @Composable
-fun TrialApplyButton(modifier: Modifier = Modifier) {
-
+fun TrialApplyButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier
+            .width(95.dp)
+            .height(40.dp),
+        onClick = onClick,
+        shape = RoundedCornerShape(20.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 10.dp ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+    ) {
+        Text(stringResource(R.string.ansoeg), style = Typography.button,
+            fontWeight = FontWeight.Bold, color = Color.Black)
+    }
 }
 
 /**
