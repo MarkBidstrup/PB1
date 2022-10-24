@@ -86,7 +86,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.mere_info),
+                    text = stringResource(R.string.mereInfo),
                     style = MaterialTheme.typography.body2,
                     modifier = modifier.padding(bottom = 8.dp),)
                 Spacer(Modifier.weight(1f))
