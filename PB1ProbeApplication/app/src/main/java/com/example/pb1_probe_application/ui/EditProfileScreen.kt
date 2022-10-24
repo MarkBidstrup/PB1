@@ -20,8 +20,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
@@ -41,17 +49,22 @@ fun EditProfileScreen(user: String) {
 
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
-
+   
 
     Scaffold(
         topBar = {
+//            val navController = rememberNavController()
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                 IconButton(onClick = { /*TODO*/ }) {
+                 IconButton(onClick = {
+//                     navController.navigate("EditProfile")
+
+                 }) {
                      Icon(
+                         
                          Icons.Default.ArrowBack,
                          contentDescription = "edit",
                      )
@@ -97,6 +110,8 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
     )
 
 }
+
+
 
 @Composable
 fun EditUserInfoField(
