@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.BottomBarItems
+import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -120,9 +121,14 @@ fun BottomNavGraph(navController: NavHostController) {
             ProfileScreen(user = "researcher",navHostController= navController)
         }
 
-        // add a route to settingscreen page in order to navigate // ved ikke om det skal være her
-    composable( route = "Setting") {
+        // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
+    composable( route = Route.Setting.route) {
         SettingsScreen(user = "patient")
     }
+        // navigate to editprofile screen
+        composable( route = Route.EditProfile.route) {
+            EditProfileScreen(user = "patient")
+        }
+
     }
 }

@@ -45,7 +45,9 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, na
                 backgroundColor = MaterialTheme.colors.onPrimary,
                 elevation = 0.dp)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                 IconButton(onClick = { /*TODO*/ }) {
+                 IconButton(onClick = {
+                     navHostController.navigate("EditProfile")
+                 }) {
                      Icon(
                          Icons.Default.Edit,
                          contentDescription = "edit",

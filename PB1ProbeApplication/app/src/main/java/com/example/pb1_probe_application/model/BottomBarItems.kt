@@ -7,7 +7,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class BottomBarItems (
     val route: String,
     val title: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+
 ) {
     object Home : BottomBarItems(
         route = "Home",
@@ -29,5 +30,6 @@ sealed class BottomBarItems (
         title = "Min profil",
         icon = Icons.Default.Person
     )
+
 }
 
