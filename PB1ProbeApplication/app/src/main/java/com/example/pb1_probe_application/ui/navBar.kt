@@ -111,10 +111,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarItems.Trails.route) {
             MyTrialsResearcher(navHostController= navController)
-
         }
         composable(route = BottomBarItems.Messages.route) {
-            NotificationsScreen()
+            NotImplemented(navController)
         }
         composable(route = BottomBarItems.Profile.route) {
 
