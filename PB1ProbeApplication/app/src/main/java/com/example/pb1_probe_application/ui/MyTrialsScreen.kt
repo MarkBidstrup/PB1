@@ -8,9 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -22,24 +20,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.data.Trial
+import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
+import com.example.pb1_probe_application.ui.theme.MediumGrey
 import com.example.pb1_probe_application.ui.theme.Typography
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
+
+enum class TabPage() {
+    APPLIED, FOLLOWING
+}
 
 @Composable
-fun MyTrialsResearcher(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController, role: Role = Role.RESEARCHER) {
+fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
     val trials by trialsViewModel.uiState.collectAsState()
 // TODO - check when/ how often things recompose when using kotlin flows
 // TODO - check if a different state needs to be passed in depending on whether it's a researcher or patient
     TrialsList(trials, Modifier, navHostController, role)
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.RESEARCHER) {
+fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,34 +62,71 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostC
             Column(modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 80.dp)) {
-                Text(
-                    modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
-                    text = stringResource(R.string.aktiveStudier), style = Typography.h2
-                )
-                if(trials.isEmpty()) {
-                    Spacer(modifier = Modifier.height(250.dp))
+                if(role == Role.RESEARCHER) {
                     Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = stringResource(R.string.ingenStudier), style = Typography.body1
+                        modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
+                        text = stringResource(R.string.aktiveStudier), style = Typography.h2
                     )
-                } else {
-                    LazyColumn(
-                        modifier = modifier.weight(4f),
-                        contentPadding = PaddingValues(start=17.dp, end = 17.dp)
-                    ) {
-                        items(trials) {
-                            if(role == Role.RESEARCHER)
+                    if (trialList.isEmpty()) {
+                        Spacer(modifier = Modifier.height(250.dp))
+                        Text(
+                            modifier = Modifier.align(CenterHorizontally),
+                            text = stringResource(R.string.ingenAktiveStudier), style = Typography.body1
+                        )
+                    } else {
+                        LazyColumn(
+                            modifier = modifier.weight(4f),
+                            contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
+                        ) {
+                            items(trialList) {
                                 ResearcherTrialPost(trialInfo = it)
-                            else
-//                                PatientTrialPost(trialInfo = it)
-                            if (!(trials.indexOf(element = it) == trials.lastIndex))
-                                Spacer(modifier = Modifier.height(12.dp))
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(.2f))
+                        PostNewTrialButton(
+                            Modifier
+                                .align(CenterHorizontally)
+                                .height(40.dp))
+                    }
+                } else { // trial participant
+                    val pagerState = rememberPagerState(pageCount = TabPage.values().size)
+                    val scope = rememberCoroutineScope()
+                    TrialParticipantTabs(
+                        selectedTabIndex = pagerState.currentPage,
+                        onSelectedTab = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(it.ordinal)
+                            }
+                        },
+                        pagerState
+                    )
+                    HorizontalPager(state = pagerState, modifier = Modifier.weight(1f))
+                    { index ->
+                        if (trialList.isEmpty()) {
+                            Column(modifier = Modifier.fillMaxSize()) {
+                                val str =
+                                    if (TabPage.values()[index]  == TabPage.FOLLOWING)
+                                        stringResource(R.string.ingenFulgteStudier)
+                                    else
+                                        stringResource(R.string.ingenAktiveStudier)
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    modifier = modifier.align(CenterHorizontally).weight(1.2f),
+                                    text = str, style = Typography.body1
+                                )
+                            }
+                        } else {
+                            LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
+                            ) {
+                                items(trials) {
+                                    ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
+                                    if (!(trials.indexOf(element = it) == trials.lastIndex))
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                }
+                            }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.weight(.2f))
-                if(role == Role.RESEARCHER)
-                    AddTrialButton(Modifier.align(CenterHorizontally).height(40.dp))
             }
         },
         bottomBar = {
@@ -89,8 +135,36 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostC
     )
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun AddTrialButton(modifier: Modifier) {
+private fun TrialParticipantTabs(selectedTabIndex: Int, onSelectedTab: (TabPage) -> Unit, pagerState: PagerState) {
+    TabRow(selectedTabIndex = selectedTabIndex,
+        backgroundColor = MaterialTheme.colors.onPrimary,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        },
+        modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 12.dp)
+    ) {
+        TabPage.values().forEachIndexed { index, tab ->
+            Tab(selected = selectedTabIndex == index,
+                onClick = { onSelectedTab(tab) },
+                text = {
+                    val str =
+                        if(tab == TabPage.APPLIED)
+                            stringResource(R.string.tilmeldteStudier)
+                        else
+                            stringResource(R.string.fulgteStudier)
+                    Text(str,style = Typography.h2)},
+                unselectedContentColor = MediumGrey,
+            )
+        }
+    }
+}
+
+@Composable
+private fun PostNewTrialButton(modifier: Modifier) {
     Button(
         modifier = modifier,
         onClick = { /*TODO*/  },
@@ -105,17 +179,22 @@ fun AddTrialButton(modifier: Modifier) {
                 Icons.Default.Add,
                 contentDescription = "add",
                 Modifier,
-                androidx.compose.ui.graphics.Color.Black
+                Color.Black
             )
             Spacer(modifier = Modifier.padding(1.dp))
             Text(stringResource(R.string.opretStudie), style = Typography.body1,
-                fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
+                fontWeight = FontWeight.Bold, color = Color.Black)
         }
     }
 }
 
 @Composable
-fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
+fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) { //TODO - fix to trialState
+    TrialItem(trial = trial)
+}
+
+@Composable
+fun ResearcherTrialPost(trialInfo: TrialState) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -167,7 +246,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
                 ) {
                     Text(stringResource(R.string.haandterStudie), style = Typography.button,
-                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
+                        fontWeight = FontWeight.Bold, color = Color.Black)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Button(
@@ -184,7 +263,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
                 ) {
                     Text(stringResource(R.string.anmod), style = Typography.button,
-                        fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.Black)
+                        fontWeight = FontWeight.Bold, color = Color.Black)
                 }
             }
         }
@@ -195,6 +274,6 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-//        MyTrialsResearcher()
+        MyTrials()
     }
 }
