@@ -56,7 +56,7 @@ fun TrialListingsScreen(navHostController: NavHostController) {
 
 @Composable
 fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
-    var expanded by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(false) }
 
     Card(
         elevation = 4.dp,
@@ -182,7 +182,6 @@ fun TrialInfo(
             Text(
                 text = stringResource(R.string.intervention) +" "+ stringResource(trial.intervention),
                 style = MaterialTheme.typography.body2,
-                modifier = modifier.padding(bottom = 8.dp),
             )
         }
     }
@@ -197,7 +196,8 @@ fun TrialApplyButton(
         contentPadding = PaddingValues(0.dp),
         modifier = Modifier
             .width(95.dp)
-            .height(40.dp),
+            .height(40.dp)
+            .padding(bottom = 4.dp),
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
         elevation = ButtonDefaults.elevation(
