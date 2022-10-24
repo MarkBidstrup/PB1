@@ -48,7 +48,9 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.mineStudier), style = Typography.h1)
                 },
-                backgroundColor = MaterialTheme.colors.onPrimary)
+                backgroundColor = MaterialTheme.colors.onPrimary,
+                elevation = 0.dp
+            )
 
         },
         content = {
