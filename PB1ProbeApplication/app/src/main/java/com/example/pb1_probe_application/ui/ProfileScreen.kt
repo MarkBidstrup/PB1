@@ -39,7 +39,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.myProfileHeading), style = Typography.h1) },
-                backgroundColor = androidx.compose.ui.graphics.Color.White)
+                backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {
                      Icon(

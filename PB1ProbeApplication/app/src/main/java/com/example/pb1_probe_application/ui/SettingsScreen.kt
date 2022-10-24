@@ -40,7 +40,7 @@ fun SettingsPatientScreen() {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
-                backgroundColor = androidx.compose.ui.graphics.Color.White)
+                backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
@@ -117,7 +117,7 @@ fun SettingsResearcherScreen() {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
-                backgroundColor = androidx.compose.ui.graphics.Color.White)
+                backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(

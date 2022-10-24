@@ -1,6 +1,6 @@
-package com.example.pb1_probe_application.data
+package com.example.pb1_probe_application.model
 
-data class UserInfoState (
+data class UserPatient (
     var navn: String,
     var efternavn: String,
     var koen: String,
@@ -9,5 +9,4 @@ data class UserInfoState (
     var diagnose: String,
     var email: String,
     var telefon: String,
-    var forskningsenhed: String,
 )
