@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
@@ -33,14 +34,14 @@ import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun MyTrialsResearcher( trialsViewModel: TrialsViewModel = viewModel()) {
+fun MyTrialsResearcher( trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController) {
     val trials by trialsViewModel.uiState.collectAsState()
 // TODO - check when/ how often things recompose when using kotlin flows
-    TrialsList(trials = trials)
+    TrialsList(trials, Modifier, navHostController)
 }
 
 @Composable
-fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
+fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController) {
 
     Scaffold(
         topBar = {
@@ -106,11 +107,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
             }
         },
         bottomBar = {
-            BottomAppBar(
-                backgroundColor = NavBarColorGreen
-            ) {
-                Text(stringResource(R.string.placeholder))
-            }
+            BottomBar(navController = navHostController)
         }
     )
 }
@@ -135,6 +132,7 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
                 )
+                Spacer(modifier = Modifier.height(3.dp))
                 Text(
                     text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
                     style = MaterialTheme.typography.body2)
@@ -193,6 +191,6 @@ fun ResearcherTrialPost(trialInfo: TrialState, modifier: Modifier = Modifier) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrialsResearcher()
+//        MyTrialsResearcher()
     }
 }

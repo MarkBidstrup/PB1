@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.UserInfo
@@ -22,17 +23,17 @@ import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun ProfileScreen(user: String) {
+fun ProfileScreen(user: String, navHostController: NavHostController) {
     val currentUser: String = user
 
     if (currentUser.equals("patient"))
-        UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
+        UserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), navHostController = navHostController)
     if (currentUser.equals("researcher"))
-        UserInfoList(userInfoList = Datasource().loadProfileResercherInfo())
+        UserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), navHostController = navHostController)
 }
 
 @Composable
-fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
+fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, navHostController: NavHostController) {
 
     Scaffold(
         topBar = {
@@ -71,11 +72,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
                     }
                   },
         bottomBar = {
-            BottomAppBar(
-                backgroundColor = NavBarColorGreen
-            ) {
-                Text(stringResource(R.string.placeholder))
-            }
+            BottomBar(navController = navHostController)
         }
     )
 }
@@ -100,5 +97,5 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun ProfileUserScreenPreview() {
-    UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
+//    UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
 }

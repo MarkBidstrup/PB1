@@ -27,13 +27,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(){
     val navController = rememberNavController()
-    Scaffold(
-        bottomBar = {
-            BottomBar(navController = navController)
-        }
-    ) {
-        BottomNavGraph(navController = navController)
-    }
+    BottomNavGraph(navController = navController)
 }
 
 @Composable
@@ -113,10 +107,10 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen()
+            TrialListingsScreen(navController)
         }
         composable(route = BottomBarItems.Trails.route) {
-            MyTrialsResearcher()
+            MyTrialsResearcher(navHostController= navController)
 
         }
         composable(route = BottomBarItems.Messages.route) {
@@ -124,7 +118,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarItems.Profile.route) {
 
-            ProfileScreen(user = "patient" )
+            ProfileScreen(user = "patient",navHostController= navController)
         }
     }
 }

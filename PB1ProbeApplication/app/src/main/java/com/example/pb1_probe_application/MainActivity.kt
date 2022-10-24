@@ -42,6 +42,5 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     PB1ProbeApplicationTheme {
-        TrialListingsScreen()
     }
 }

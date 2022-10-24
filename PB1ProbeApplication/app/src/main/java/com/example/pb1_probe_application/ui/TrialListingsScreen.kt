@@ -23,15 +23,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Trial
 import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.StrokeColor
+import androidx.navigation.NavHostController
 
 
-@Composable
-fun TrialListingsScreen() {
+
+
+
+ @Composable
+fun TrialListingsScreen(navHostController: NavHostController) {
     Scaffold(
         topBar = {
             ProbeTopBar()
@@ -43,7 +48,9 @@ fun TrialListingsScreen() {
                 }
             }
         },
-        bottomBar = {}
+        bottomBar = {
+            BottomBar(navController = navHostController)
+        }
     )
 }
 
@@ -215,7 +222,7 @@ fun ProbeTopBar(modifier: Modifier = Modifier) {
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        TrialListingsScreen()
+//        TrialListingsScreen()
     }
 }
 
@@ -226,6 +233,6 @@ fun TrialPreview() {
 @Composable
 fun TrialDarkThemePreview() {
     PB1ProbeApplicationTheme(darkTheme = true) {
-        TrialListingsScreen()
+//        TrialListingsScreen()
     }
 }
