@@ -25,7 +25,8 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    Greeting("Android")
 //                    EditProfileScreen("researcher")
-                    ProfileScreen("patient")
+                       MainHome()
+                    //ProfileScreen("patient")
                 }
             }
         }
