@@ -47,7 +47,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1) },
+                title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {
@@ -74,13 +74,13 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             )
                             if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
                                 Divider(
-                                    modifier = Modifier.padding(10.dp),
+                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
                                     thickness = 1.dp,
                                     color = androidx.compose.ui.graphics.Color.LightGray
                                 )
                             } else {
                                 Divider(
-                                    modifier = Modifier.padding(10.dp),
+                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
                                     thickness = 1.dp,
                                     color = androidx.compose.ui.graphics.Color.LightGray
                                 )
@@ -88,7 +88,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                                     text = stringResource(R.string.sletProfil),
                                     style = Typography.body1,
                                     color = TextColorRed,
-                                    modifier = Modifier.padding(10.dp)
+                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                                 )
                             }
                         }
@@ -111,7 +111,7 @@ fun EditUserInfoField(
     Column {
         Text(
             text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
-            modifier = Modifier.padding(start = 10.dp),
+            modifier = Modifier.padding(start = 17.dp),
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
@@ -121,7 +121,7 @@ fun EditUserInfoField(
             label = { Text(text = stringResource(label)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(start = 17.dp, end = 17.dp),
             onValueChange = { input = it },
             textStyle = Typography.body1,
             keyboardOptions = keyboardOptions,

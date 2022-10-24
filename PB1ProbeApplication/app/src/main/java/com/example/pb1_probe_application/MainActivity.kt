@@ -24,8 +24,13 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 //                    Greeting("Android")
-//                    EditProfileScreen("researcher")
-                    ProfileScreen("patient")
+//                    NotificationsScreen()
+//                    ProfileScreen("patient")
+//                    ProfileScreen("researcher")
+//                    EditProfileScreen(user = "researcher")
+//                    EditProfileScreen(user = "patient")
+//                    SettingsScreen(user = "patient")
+                    SettingsScreen(user = "researcher")
                 }
             }
         }
