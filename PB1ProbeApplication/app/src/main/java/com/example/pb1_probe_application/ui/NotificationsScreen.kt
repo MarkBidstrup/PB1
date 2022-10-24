@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.ui.theme.TextColorGrey
@@ -42,9 +43,9 @@ fun NotificationsScreen() {
                 Text(
                     text = stringResource(R.string.push),
                     style = Typography.body1,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                     Switch(
                         checked = checkedPlaceholder,
                         onCheckedChange = onCheckedChangePlaceholder,
@@ -55,15 +56,15 @@ fun NotificationsScreen() {
                 Divider(
                     thickness = 1.dp,
                     color = Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Row() {
                     Text(
                         text = stringResource(R.string.email),
                         style = Typography.body1,
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     )
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                         Switch(
                             checked = checkedPlaceholder,
                             onCheckedChange = onCheckedChangePlaceholder,
@@ -74,15 +75,15 @@ fun NotificationsScreen() {
                 Divider(
                     thickness = 1.dp,
                     color = Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Row() {
                     Text(
                         text = stringResource(R.string.sms),
                         style = Typography.body1,
-                        modifier = Modifier.padding(10.dp)
+                        modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     )
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                         Switch(
                             checked = checkedPlaceholder,
                             onCheckedChange = onCheckedChangePlaceholder,
@@ -93,14 +94,20 @@ fun NotificationsScreen() {
                 Divider(
                     thickness = 1.dp,
                     color = Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.faaNotiPååEmailOgSms),
                     style = Typography.caption,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
             }
         }
     )
+}
+
+@Preview
+@Composable
+fun NotificationsScreenPreview() {
+    NotificationsScreen()
 }

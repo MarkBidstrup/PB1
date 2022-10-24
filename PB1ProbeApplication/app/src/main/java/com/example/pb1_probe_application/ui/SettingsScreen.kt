@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
@@ -57,15 +58,15 @@ fun SettingsPatientScreen() {
                         Text(
                             text = stringResource(R.string.tilgaengelighed),
                             style = Typography.body1,
-                            modifier = Modifier.padding(start = 10.dp)
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                         )
                         Text(
                             text = stringResource(R.string.forskereKanAnmode),
                             style = Typography.body2,
-                            modifier = Modifier.padding(start = 10.dp)
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                         )
                     }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                         Switch(
                             checked = checkedPlaceholder,
                             onCheckedChange = onCheckedChangePlaceholder,
@@ -76,33 +77,33 @@ fun SettingsPatientScreen() {
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.logUd),
                     style = Typography.body1,
                     color = TextColorRed,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
             }
         }
@@ -132,30 +133,38 @@ fun SettingsResearcherScreen() {
                 Text(
                     text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
                 Divider(
                     thickness = 1.dp,
                     color = androidx.compose.ui.graphics.Color.LightGray,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
                 )
                 Text(
                     text = stringResource(R.string.logUd),
                     style = Typography.body1,
                     color = TextColorRed,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                 )
             }
         }
     )
+}
+
+@Preview
+@Composable
+fun SettingsScreenPreview() {
+
+    SettingsPatientScreen()
+
 }
