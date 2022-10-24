@@ -39,7 +39,8 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.myProfileHeading), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
+                backgroundColor = MaterialTheme.colors.onPrimary,
+                elevation = 0.dp)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = { /*TODO*/ }) {
                      Icon(
@@ -61,7 +62,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier) {
                             UserInfoField(UserInfo)
                             if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
                                 Divider(
-                                    modifier = Modifier.padding(10.dp),
+                                    modifier = Modifier.padding(start = 17.dp, top = 10.dp, bottom = 10.dp, end = 17.dp),
                                     thickness = 1.dp,
                                     color = androidx.compose.ui.graphics.Color.LightGray
                                 )
@@ -84,13 +85,13 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
     Column {
         Text(
             text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(start = 17.dp),
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
         Text(
             text = stringResource(R.string.placeholder), // TODO: insert variable text here
-            modifier = Modifier.padding(start = 10.dp),
+            modifier = Modifier.padding(start = 17.dp),
             style = MaterialTheme.typography.body1,
         )
     }

@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.ui
+ package com.example.pb1_probe_application.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
@@ -35,14 +35,16 @@ fun TrialListingsScreen() {
     Scaffold(
         topBar = {
             ProbeTopBar()
-        }
-    ) {
-        LazyColumn(modifier = Modifier.background(MaterialTheme.colors.background)) {
-            items(trials) {
-                TrialItem(trial = it)
+        },
+        content = {
+            LazyColumn(modifier = Modifier.background(MaterialTheme.colors.background)) {
+                items(trials) {
+                    TrialItem(trial = it)
+                }
             }
-        }
-    }
+        },
+        bottomBar = {}
+    )
 }
 
 @Composable
@@ -52,9 +54,11 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
-        modifier = modifier.padding(8.dp).
-        border(1.dp, Color.LightGray, RoundedCornerShape(10.dp)
-    )
+        modifier = modifier
+            .padding(8.dp)
+            .border(
+                1.dp, StrokeColor, RoundedCornerShape(10.dp)
+            )
     ) {
         Column(
             modifier = Modifier.animateContentSize(
@@ -76,6 +80,18 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
                     onClick = { expanded = !expanded })
             }
             TrialInfo(trial, expanded)
+            if (expanded) Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.mere_info),
+                    style = MaterialTheme.typography.body2,
+                    modifier = modifier.padding(bottom = 8.dp),)
+                Spacer(Modifier.weight(1f))
+                TrialApplyButton()
+            }
         }
 
 
@@ -93,7 +109,9 @@ fun TrialExpandButton(
             imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
             //tint = MaterialTheme.colors.secondary,
             contentDescription = stringResource(R.string.expand_forklaring),
-            modifier = modifier.scale(2f).padding(end = 2.dp)
+            modifier = modifier
+                .scale(2f)
+                .padding(end = 2.dp)
         )
     }
 }
@@ -104,7 +122,9 @@ fun TrialTitle(@StringRes title: Int, modifier: Modifier = Modifier) {
     Text(
         text = stringResource(title),
         style = MaterialTheme.typography.h3,
-        modifier = modifier.padding(top = 4.dp, start = 4.dp).width(300.dp)
+        modifier = modifier
+            .padding(top = 4.dp, start = 4.dp)
+            .width(300.dp)
     )
 }
 
@@ -160,6 +180,11 @@ fun TrialInfo(
             )
         }
     }
+}
+
+@Composable
+fun TrialApplyButton(modifier: Modifier = Modifier) {
+
 }
 
 /**

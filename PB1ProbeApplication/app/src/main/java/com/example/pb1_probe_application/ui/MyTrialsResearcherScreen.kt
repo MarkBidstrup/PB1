@@ -58,7 +58,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(bottom = 80.dp)) {
                 Text(
-                    modifier = Modifier.padding(start = 16.dp, bottom = 12.dp),
+                    modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
                     text = stringResource(R.string.aktiveStudier), style = Typography.h2
                 )
                 if(trials.isEmpty()) {
@@ -70,7 +70,7 @@ fun TrialsList(trials: List<TrialState>, modifier: Modifier = Modifier) {
                 } else {
                     LazyColumn(
                         modifier = modifier.weight(4f),
-                        contentPadding = PaddingValues(start=16.dp, end = 16.dp)
+                        contentPadding = PaddingValues(start=17.dp, end = 17.dp)
                     ) {
                         items(trials) { trialsPosts ->
                             ResearcherTrialPost(trialsPosts)
