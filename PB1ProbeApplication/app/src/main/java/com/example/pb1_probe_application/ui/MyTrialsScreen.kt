@@ -80,6 +80,8 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                         ) {
                             items(trialList) {
                                 ResearcherTrialPost(trialInfo = it)
+                                if (!(trialList.indexOf(it) == trialList.lastIndex))
+                                    Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
                         Spacer(modifier = Modifier.weight(.2f))
@@ -121,7 +123,7 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                                 items(trials) {
                                     ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
                                     if (!(trials.indexOf(element = it) == trials.lastIndex))
-                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Spacer(modifier = Modifier.height(15.dp))
                                 }
                             }
                         }
@@ -189,7 +191,7 @@ private fun PostNewTrialButton(modifier: Modifier) {
 }
 
 @Composable
-fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) { //TODO - fix to trialState
+fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) { //TODO - call the function with different parameters depending on selectedTabIndex
     TrialItem(trial = trial)
 }
 
@@ -274,6 +276,6 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials()
+        MyTrials(role = Role.RESEARCHER)
     }
 }

@@ -118,7 +118,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarItems.Profile.route) {
 
-            ProfileScreen(user = "researcher",navHostController= navController)
+            ProfileScreen(user = "patient",navHostController= navController)
         }
 
         // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
