@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.BottomBarItems
+import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -66,7 +67,7 @@ fun RowScope.addItem(
             Text(text = screen.title,
             fontFamily = Cairo,
             fontSize = 14.sp,
-                color = Color.Black
+                color = Color.DarkGray
             )
 
         },
@@ -110,15 +111,24 @@ fun BottomNavGraph(navController: NavHostController) {
             TrialListingsScreen(navController)
         }
         composable(route = BottomBarItems.Trails.route) {
-            MyTrialsResearcher(navHostController= navController)
-
+            MyTrials(navHostController= navController)
         }
         composable(route = BottomBarItems.Messages.route) {
-            NotificationsScreen()
+            NotImplemented(navController)
         }
         composable(route = BottomBarItems.Profile.route) {
 
             ProfileScreen(user = "patient",navHostController= navController)
         }
+
+        // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
+    composable( route = Route.Setting.route) {
+        SettingsScreen(user = "patient")
+    }
+        // navigate to editprofile screen
+        composable( route = Route.EditProfile.route) {
+            EditProfileScreen(user = "patient")
+        }
+
     }
 }

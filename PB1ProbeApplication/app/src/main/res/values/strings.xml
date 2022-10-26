@@ -36,8 +36,11 @@
     <!--My Trials Strings-->
     <string name="mineStudier">Mine studier</string>
     <string name="aktiveStudier">Aktive studier</string>
+    <string name="fulgteStudier">Fulgte studier</string>
+    <string name="tilmeldteStudier">Tilmeldte studier</string>
     <string name="opretStudie">OPRET NYT STUDIE</string>
-    <string name="ingenStudier">Du har ingen aktive studier</string>
+    <string name="ingenAktiveStudier">Du har ingen aktive studier</string>
+    <string name="ingenFulgteStudier">Du har ingen fulgte studier</string>
     <string name="haandterStudie">HÅNDTER STUDIE</string>
     <string name="anmod">ANMOD DELTAGERE</string>
     <string name="tilmeldingsfrist">Tilmeldingsfrist: </string>
