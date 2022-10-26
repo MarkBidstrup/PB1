@@ -45,6 +45,7 @@
     <string name="potentielleKandidater">Potentielle kandidater: </string>
 
     <!--Trial listing Strings-->
+    <string name="nyesteStudier">Nyeste studier</string>
     <string name="mereInfo">Læs mere...</string>
     <string name="ansoeg">Ansøg</string>
     <string name="formaal">Formål: </string>

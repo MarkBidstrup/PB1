@@ -42,9 +42,22 @@ fun TrialListingsScreen(navHostController: NavHostController) {
             ProbeTopBar()
         },
         content = {
-            LazyColumn(modifier = Modifier.background(MaterialTheme.colors.background)) {
-                items(trials) {
-                    TrialItem(trial = it)
+            Column(modifier = Modifier.padding(all = 8.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
+                        text = stringResource(R.string.nyesteStudier), style = Typography.h2
+                    )
+                }
+
+                LazyColumn(modifier = Modifier.background(MaterialTheme.colors.background)) {
+                    items(trials) {
+                        TrialItem(trial = it)
+                    }
                 }
             }
         },
@@ -62,9 +75,8 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
-            .padding(8.dp)
             .border(
-                1.dp, StrokeColor, RoundedCornerShape(10.dp)
+                2.dp, StrokeColor, RoundedCornerShape(10.dp)
             )
     ) {
         Column(
@@ -156,7 +168,7 @@ fun TrialInfo(
         Text(
             text = stringResource(R.string.tilmeldingsfrist) +" "+ stringResource(trial.tilmeldingsfrist),
             style = MaterialTheme.typography.body2,
-            modifier = modifier.padding(bottom = 8.dp),
+            modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
             Text(
