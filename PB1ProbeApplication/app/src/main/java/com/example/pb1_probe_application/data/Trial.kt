@@ -64,5 +64,15 @@ val trials = listOf(
         R.string.varighed_1,
         R.string.sygdom_1,
         R.string.intervention_1,
+    ),
+    Trial (
+        R.string.titel_1,
+        R.string.formaal_1,
+        R.string.tilmeldingsfrist_1,
+        R.string.lokation_1,
+        R.string.forloeb_1,
+        R.string.varighed_1,
+        R.string.sygdom_1,
+        R.string.intervention_1,
     )
 )

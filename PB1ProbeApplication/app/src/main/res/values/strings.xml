@@ -46,8 +46,11 @@
     <string name="tilmeldingsfrist">Tilmeldingsfrist: </string>
     <string name="antalTilmeldte">Antal tilmeldte: </string>
     <string name="potentielleKandidater">Potentielle kandidater: </string>
+    <string name="notifikationTil">Tilføj studiet til mine fulgte studier</string>
+    <string name="notifikationFra">Fjern studiet fra mine fulgte studier</string>
 
     <!--Trial listing Strings-->
+    <string name="logo">Probes logo</string>
     <string name="nyesteStudier">Nyeste studier</string>
     <string name="mereInfo">Læs mere...</string>
     <string name="ansoeg">Ansøg</string>
@@ -68,5 +71,13 @@
     <string name="sygdom_1">Diabetes type 2</string>
     <string name="intervention_1">Blodprøve, sundhedsundersøgelse</string>
 
+    <!--Search Strings-->
+    <string name="filtrer">Filtrer</string>
+    <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>
+    <string name="soegForklaring">Søg efter et studie</string>
+
+    <!--Login Strings-->
+    <string name="logInd">LOG IND</string>
+    <string name="registrer">REGISTRER</string>
 
 </resources>
