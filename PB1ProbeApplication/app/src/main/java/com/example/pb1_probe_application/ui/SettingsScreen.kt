@@ -14,19 +14,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun SettingsScreen(user: String) {
-    val currentUser: String = user
+fun SettingsScreen(role: Role) {
+    val currentUser: Role = role
 
 
 
-    if (currentUser.equals("patient"))
+    if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         SettingsPatientScreen()
-    if (currentUser.equals("researcher"))
+    if (currentUser.equals(Role.RESEARCHER))
         SettingsResearcherScreen()
 }
 
