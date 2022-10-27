@@ -88,7 +88,9 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                         PostNewTrialButton(
                             Modifier
                                 .align(CenterHorizontally)
-                                .height(40.dp))
+                                .height(45.dp)
+                                .padding(bottom = 5.dp)
+                        )
                     }
                 } else { // trial participant
                     val pagerState = rememberPagerState(pageCount = TabPage.values().size)
@@ -172,8 +174,8 @@ private fun PostNewTrialButton(modifier: Modifier) {
         onClick = { /*TODO*/  },
         shape = RoundedCornerShape(6.dp),
         elevation = ButtonDefaults.elevation(
-            defaultElevation = 6.dp,
-            pressedElevation = 8.dp ),
+            defaultElevation = 8.dp,
+            pressedElevation = 10.dp ),
         colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
     ) {
         Row( ) {
