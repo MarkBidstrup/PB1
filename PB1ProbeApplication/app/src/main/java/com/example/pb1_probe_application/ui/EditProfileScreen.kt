@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
@@ -36,31 +37,33 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun EditProfileScreen(user: String) {
+fun EditProfileScreen(role: Role) {
 
-    val currentUser: String = user
+    val currentUser: Role = role
     val focusManager = LocalFocusManager.current
 
-    if (currentUser.equals("patient"))
+    if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-    if (currentUser.equals("researcher"))
+    if (currentUser.equals(Role.RESEARCHER))
         EditUserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), focusManager = LocalFocusManager.current)
 }
 
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+//    val navController = rememberNavController()
    
 
     Scaffold(
         topBar = {
-//            val navController = rememberNavController()
+
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                 IconButton(onClick = {
-//                     navController.navigate("EditProfile")
+                 IconButton(
+                     onClick = {
+//                         navController.navigate("Profile")
 
                  }) {
                      Icon(

@@ -19,18 +19,19 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun ProfileScreen(user: String, navHostController: NavHostController) {
-    val currentUser: String = user
+fun ProfileScreen(role: Role, navHostController: NavHostController) {
+    val currentUser: Role = role
 
-    if (currentUser.equals("patient"))
+    if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         UserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), navHostController = navHostController)
-    if (currentUser.equals("researcher"))
+    if (currentUser.equals(Role.RESEARCHER))
         UserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), navHostController = navHostController)
 }
 

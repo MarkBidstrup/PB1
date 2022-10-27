@@ -4,4 +4,5 @@ sealed class Route(val route: String) {
 
     object Setting: Route("Setting")
     object EditProfile: Route("EditProfile")
+    object Notification: Route("Notification")
 }

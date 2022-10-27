@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.BottomBarItems
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
@@ -67,7 +68,7 @@ fun RowScope.addItem(
             Text(text = screen.title,
             fontFamily = Cairo,
             fontSize = 14.sp,
-                color = Color.DarkGray
+              color = Color.DarkGray
             )
 
         },
@@ -75,12 +76,12 @@ fun RowScope.addItem(
             Icon(
                 imageVector = screen.icon,
                 contentDescription = "Navigation Icon"
-
             )
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
         } == true,
+
         // unselected items will appear less brighter with this code
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
@@ -118,17 +119,25 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarItems.Profile.route) {
 
-            ProfileScreen(user = "patient",navHostController= navController)
+            ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
         }
 
         // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
     composable( route = Route.Setting.route) {
-        SettingsScreen(user = "patient")
+        SettingsScreen(role = Role.TRIAL_PARTICIPANT)
     }
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
-            EditProfileScreen(user = "patient")
+            EditProfileScreen(role = Role.TRIAL_PARTICIPANT)
         }
+        // navigate to notification screen
+        composable( route = Route.Notification.route) {
+            NotificationsScreen()
+        }
+
+
+
+
 
     }
 }
