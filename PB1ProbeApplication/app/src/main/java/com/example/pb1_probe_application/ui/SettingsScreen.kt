@@ -33,7 +33,7 @@ fun SettingsScreen(user: String) {
 @Composable
 fun SettingsPatientScreen() {
 
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
 
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
@@ -47,7 +47,7 @@ fun SettingsPatientScreen() {
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
-                    navController.navigate("Home")
+//                    navController.navigate("Home")
                 }) {
                     Icon(
 
@@ -149,11 +149,6 @@ fun SettingsResearcherScreen() {
                     text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
-                   .clickable(
-                       onClick = {
-                       navController.navigate(Route.Notification.route)
-
-                   })
                 )
                 Divider(
                     thickness = 1.dp,

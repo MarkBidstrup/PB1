@@ -49,7 +49,7 @@ fun EditProfileScreen(user: String) {
 
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
    
 
     Scaffold(
@@ -62,7 +62,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(
                      onClick = {
-                         navController.navigate("Profile")
+//                         navController.navigate("Profile")
 
                  }) {
                      Icon(
