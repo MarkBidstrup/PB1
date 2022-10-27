@@ -38,6 +38,7 @@ import com.example.pb1_probe_application.ui.theme.*
 
  @Composable
 fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
+
     Scaffold(
         topBar = {
             ProbeTopBar()
@@ -74,7 +75,9 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                             .padding(bottom = 20.dp)
                             .align(alignment = CenterHorizontally)
                     ) {
-                        LoginButton(onClick = {}, R.string.logInd, false)
+                        LoginButton(onClick = {
+                            navHostController?.navigate("logInd")
+                        }, R.string.logInd, false)
                         LoginButton(onClick = {}, R.string.registrer, true)
                     }
                 }

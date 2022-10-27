@@ -111,6 +111,10 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarItems.Home.route) {
             TrialListingsScreen(navController, false)
         }
+        // TODO loggedInd temp solution
+        composable(route = Route.HomeLoggedIn.route) {
+            TrialListingsScreen(navController, true)
+        }
         composable(route = BottomBarItems.Trails.route) {
             MyTrials(navHostController= navController)
         }
@@ -134,6 +138,11 @@ fun BottomNavGraph(navController: NavHostController) {
         composable( route = Route.Notification.route) {
             NotificationsScreen()
         }
+
+        composable( route = Route.LogInd.route) {
+            LogIn(navHostController= navController)
+        }
+
 
 
 

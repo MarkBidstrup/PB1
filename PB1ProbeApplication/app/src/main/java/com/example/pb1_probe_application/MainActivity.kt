@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    Greeting("Android")
 //                    EditProfileScreen("researcher")
+
                        MainHome()
                     //ProfileScreen("patient")
                 }
