@@ -31,6 +31,9 @@ import com.example.pb1_probe_application.data.trials
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.ui.theme.*
 
+ enum class TrialPostIcons() {
+     NotificationOn, NotificationOff, Contact
+ }
 
  @Composable
 fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
@@ -58,7 +61,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
                     items(trials) {
-                        TrialItem(trial = it)
+                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn)
                         if (trials.indexOf(it) != trials.lastIndex)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -86,14 +89,14 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
 }
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
-            .border(2.dp, StrokeColor, RoundedCornerShape(10.dp))
+            .border(1.dp, StrokeColor, RoundedCornerShape(10.dp))
 
     ) {
         Column(
@@ -111,7 +114,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
             ) {
                 TrialTitle(trial.titel)
                 Spacer(Modifier.weight(1f))
-                NotificationButton(add = true, onClick = {})
+                NotificationButton(add = iconUsed, onClick = {})
                 Spacer(Modifier.weight(1f))
                 TrialExpandButton(
                     expanded = expanded,
@@ -155,15 +158,24 @@ fun TrialExpandButton(
 
 @Composable
 fun NotificationButton(
-    add: Boolean,
+    add: TrialPostIcons,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = if (add) Icons.Filled.NotificationAdd else Icons.Filled.NotificationsOff,
+            imageVector =
+                if (add == TrialPostIcons.NotificationOn)
+                    Icons.Filled.NotificationAdd
+                else {
+                    if (add == TrialPostIcons.NotificationOff)
+                        Icons.Filled.NotificationsOff
+                    else
+                        Icons.Filled.Message
+                }
+            ,
             //tint = MaterialTheme.colors.secondary,
-            contentDescription = stringResource(if (add) R.string.notifikationTil else R.string.notifikationFra),
+            contentDescription = stringResource(R.string.placeholder), // TODO
             modifier = modifier
                 .scale(1f)
         )

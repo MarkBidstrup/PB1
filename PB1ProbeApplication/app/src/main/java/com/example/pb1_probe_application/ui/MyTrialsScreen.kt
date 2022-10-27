@@ -192,7 +192,10 @@ private fun PostNewTrialButton(modifier: Modifier) {
 
 @Composable
 fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) { //TODO - call the function with different parameters depending on selectedTabIndex
-    TrialItem(trial = trial)
+    if(selectedTabIndex == 0)
+        TrialItem(trial = trial, iconUsed = TrialPostIcons.Contact)
+    else
+        TrialItem(trial = trial, iconUsed = TrialPostIcons.NotificationOff)
 }
 
 @Composable
