@@ -67,7 +67,7 @@ fun RowScope.addItem(
             Text(text = screen.title,
             fontFamily = Cairo,
             fontSize = 14.sp,
-                color = Color.DarkGray
+              color = Color.DarkGray
             )
 
         },
@@ -75,12 +75,12 @@ fun RowScope.addItem(
             Icon(
                 imageVector = screen.icon,
                 contentDescription = "Navigation Icon"
-
             )
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
         } == true,
+
         // unselected items will appear less brighter with this code
         unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
         onClick = {
@@ -129,6 +129,14 @@ fun BottomNavGraph(navController: NavHostController) {
         composable( route = Route.EditProfile.route) {
             EditProfileScreen(user = "patient")
         }
+        // navigate to notification screen
+        composable( route = Route.Notification.route) {
+            NotificationsScreen()
+        }
+
+
+
+
 
     }
 }

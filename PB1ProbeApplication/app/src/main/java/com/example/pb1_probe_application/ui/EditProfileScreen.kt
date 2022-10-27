@@ -49,18 +49,20 @@ fun EditProfileScreen(user: String) {
 
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+    val navController = rememberNavController()
    
 
     Scaffold(
         topBar = {
-//            val navController = rememberNavController()
+
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                 IconButton(onClick = {
-//                     navController.navigate("EditProfile")
+                 IconButton(
+                     onClick = {
+                         navController.navigate("Profile")
 
                  }) {
                      Icon(
