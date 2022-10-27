@@ -166,18 +166,17 @@ fun NotificationButton(
 ) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector =
-                if (add == TrialPostIcons.NotificationOn)
-                    Icons.Filled.NotificationAdd
-                else {
-                    if (add == TrialPostIcons.NotificationOff)
-                        Icons.Filled.NotificationsOff
-                    else
-                        Icons.Filled.Message
-                }
-            ,
+            imageVector = when (add) {
+                TrialPostIcons.NotificationOn -> Icons.Filled.NotificationAdd
+                TrialPostIcons.NotificationOff -> Icons.Filled.NotificationsOff
+                else -> {Icons.Filled.Message}
+            },
             //tint = MaterialTheme.colors.secondary,
-            contentDescription = stringResource(R.string.placeholder), // TODO
+            contentDescription = when (add) {
+                TrialPostIcons.NotificationOn -> "notificationsOn"
+                TrialPostIcons.NotificationOff -> "notificationsOff"
+                else -> "messageContact"
+            },
             modifier = modifier
                 .scale(1f)
         )
