@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -13,43 +14,73 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Trial
 import com.example.pb1_probe_application.data.trials
-import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
-import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
-import com.example.pb1_probe_application.ui.theme.StrokeColor
-import com.example.pb1_probe_application.ui.theme.Typography
 import androidx.navigation.NavHostController
+import com.example.pb1_probe_application.ui.theme.*
 
 
  @Composable
-fun TrialListingsScreen(navHostController: NavHostController) {
+fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
     Scaffold(
         topBar = {
             ProbeTopBar()
         },
         content = {
-            LazyColumn(modifier = Modifier.background(MaterialTheme.colors.background)) {
-                items(trials) {
-                    TrialItem(trial = it)
+            Column(modifier = Modifier.padding(all = 8.dp)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                        text = stringResource(R.string.nyesteStudier), style = Typography.h2
+                    )
+                    Spacer(Modifier.weight(1f))
+                    FilterButton(onClick = {})
+                }
+
+                LazyColumn(
+                    contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.background)
+                        .weight(4f)) {
+                    items(trials) {
+                        TrialItem(trial = it)
+                        if (trials.indexOf(it) != trials.lastIndex)
+                            Spacer(modifier = Modifier.height(15.dp))
+                    }
+                }
+                Spacer(modifier = Modifier.weight(.2f))
+                if (!loggedIn) {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentWidth(Alignment.CenterHorizontally)
+                            .padding(bottom = 20.dp)
+                    ) {
+                        Spacer(Modifier.weight(1f))
+                        LoginButton(onClick = {}, R.string.logInd, false)
+                        LoginButton(onClick = {}, R.string.registrer, true)
+                        Spacer(Modifier.weight(1f))
+                    }
                 }
             }
         },
         bottomBar = {
-            BottomBar(navController = navHostController)
+            if (navHostController != null)
+                BottomBar(navController = navHostController)
         }
     )
 }
@@ -62,10 +93,8 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
-            .padding(8.dp)
-            .border(
-                1.dp, StrokeColor, RoundedCornerShape(10.dp)
-            )
+            .border(2.dp, StrokeColor, RoundedCornerShape(10.dp))
+
     ) {
         Column(
             modifier = Modifier.animateContentSize(
@@ -82,6 +111,8 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
             ) {
                 TrialTitle(trial.titel)
                 Spacer(Modifier.weight(1f))
+                NotificationButton(add = true, onClick = {})
+                Spacer(Modifier.weight(1f))
                 TrialExpandButton(
                     expanded = expanded,
                     onClick = { expanded = !expanded })
@@ -95,7 +126,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier) {
                 Text(
                     text = stringResource(R.string.mereInfo),
                     style = MaterialTheme.typography.body2,
-                    color = Color.Blue,
+                    color = ReadMoreColor,
                     modifier = modifier.padding(start = 8.dp, top = 16.dp),)
                 Spacer(Modifier.weight(1f))
                 TrialApplyButton(onClick = {})
@@ -122,6 +153,22 @@ fun TrialExpandButton(
     }
 }
 
+@Composable
+fun NotificationButton(
+    add: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = if (add) Icons.Filled.NotificationAdd else Icons.Filled.NotificationsOff,
+            //tint = MaterialTheme.colors.secondary,
+            contentDescription = stringResource(if (add) R.string.notifikationTil else R.string.notifikationFra),
+            modifier = modifier
+                .scale(1f)
+        )
+    }
+}
 
 @Composable
 fun TrialTitle(@StringRes title: Int, modifier: Modifier = Modifier) {
@@ -130,7 +177,7 @@ fun TrialTitle(@StringRes title: Int, modifier: Modifier = Modifier) {
         style = MaterialTheme.typography.h3,
         modifier = modifier
             .padding(top = 4.dp, start = 4.dp)
-            .width(300.dp)
+            .width(245.dp)
     )
 }
 
@@ -156,7 +203,7 @@ fun TrialInfo(
         Text(
             text = stringResource(R.string.tilmeldingsfrist) +" "+ stringResource(trial.tilmeldingsfrist),
             style = MaterialTheme.typography.body2,
-            modifier = modifier.padding(bottom = 8.dp),
+            modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
             Text(
@@ -190,7 +237,6 @@ fun TrialInfo(
 @Composable
 fun TrialApplyButton(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     Button(
         contentPadding = PaddingValues(0.dp),
@@ -210,6 +256,31 @@ fun TrialApplyButton(
     }
 }
 
+@Composable
+fun LoginButton(
+    onClick: () -> Unit,
+    text: Int,
+    filled: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        modifier = Modifier
+            .width(184.dp)
+            .height(58.dp)
+            .padding(start = 6.dp, end = 6.dp)
+            .border(2.dp, ButtonColorGreen, RoundedCornerShape(6.dp)),
+        onClick = onClick,
+        shape = RoundedCornerShape(6.dp),
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 10.dp,
+            pressedElevation = 10.dp ),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (filled) ButtonColorGreen else Color.White)
+    ) {
+        Text(stringResource(text), style = Typography.button,
+            fontWeight = FontWeight.Bold, color = Color.Black)
+    }
+}
+
 /**
  * Composable that displays a Top Bar with an icon and text.
  *
@@ -218,16 +289,51 @@ fun TrialApplyButton(
 @Composable
 fun ProbeTopBar(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier
+        Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colors.primary)
-            .height(60.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(60.dp)
+            .wrapContentWidth(Alignment.CenterHorizontally)
     ) {
-        Text(
-            text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.h1
+        Image(
+            painter = painterResource(R.drawable.final_icon),
+            contentDescription = stringResource(R.string.logo),
+            modifier = modifier
+                .wrapContentWidth(Alignment.CenterHorizontally)
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
         )
+        /*Icon(
+            imageVector = Icons.Filled.Search,
+            contentDescription = stringResource(R.string.soegForklaring),
+            modifier = modifier
+                .height(16.dp)
+                .wrapContentWidth((Alignment.End))
+                .padding(8.dp)
+        )*/
+    }
+
+}
+
+@Composable
+fun FilterButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
+        elevation = ButtonDefaults.elevation(0.dp)
+        ) {
+        Icon(
+            imageVector = Icons.Filled.FilterAlt,
+            contentDescription = stringResource(R.string.filtrer_forklaring),
+            modifier = modifier
+                .height(16.dp)
+                .padding(end = 2.dp)
+        )
+        Text(
+            text = stringResource(R.string.filtrer),
+            style = MaterialTheme.typography.body2,)
     }
 }
 
@@ -238,17 +344,6 @@ fun ProbeTopBar(modifier: Modifier = Modifier) {
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-//        TrialListingsScreen()
-    }
-}
-
-/**
- * Composable that displays what the UI of the app looks like in dark theme in the design tab.
- */
-@Preview
-@Composable
-fun TrialDarkThemePreview() {
-    PB1ProbeApplicationTheme(darkTheme = true) {
-//        TrialListingsScreen()
+        TrialListingsScreen(null, false)
     }
 }
