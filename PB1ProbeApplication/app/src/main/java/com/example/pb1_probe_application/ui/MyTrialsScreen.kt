@@ -61,7 +61,7 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
         content = {
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 80.dp)) {
+                .padding(bottom = 70.dp)) {
                 if(role == Role.RESEARCHER) {
                     Text(
                         modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),

@@ -109,7 +109,7 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(navController, true)
+            TrialListingsScreen(navController, false)
         }
         composable(route = BottomBarItems.Trails.route) {
             MyTrials(navHostController= navController)

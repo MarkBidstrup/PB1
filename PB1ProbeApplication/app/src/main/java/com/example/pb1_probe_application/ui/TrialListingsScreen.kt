@@ -17,6 +17,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -42,7 +43,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
             ProbeTopBar()
         },
         content = {
-            Column(modifier = Modifier.padding(all = 8.dp)) {
+            Column(modifier = Modifier.padding(all = 8.dp).padding(bottom = 46.dp)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -56,7 +57,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                 }
 
                 LazyColumn(
-                    contentPadding = PaddingValues(start = 12.dp, end = 12.dp),
+                    contentPadding = PaddingValues(start = 9.dp, end = 9.dp),
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
@@ -70,13 +71,11 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                 if (!loggedIn) {
                     Row(
                         modifier = Modifier
-                            .wrapContentWidth(Alignment.CenterHorizontally)
                             .padding(bottom = 20.dp)
+                            .align(alignment = CenterHorizontally)
                     ) {
-                        Spacer(Modifier.weight(1f))
                         LoginButton(onClick = {}, R.string.logInd, false)
                         LoginButton(onClick = {}, R.string.registrer, true)
-                        Spacer(Modifier.weight(1f))
                     }
                 }
             }
