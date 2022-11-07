@@ -1,0 +1,11 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+scale 350 width
+[*] --> NotLoggedIn
+
+state NotLoggedIn {
+    [*] --> HomeScreen
+}
+
+@enduml
