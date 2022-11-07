@@ -11,6 +11,7 @@ object TrialParticipant {
     Gender
     Age
     Weight
+    Height
     Diagnoses
     Phone number
 }
