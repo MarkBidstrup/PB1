@@ -265,7 +265,7 @@ fun TrialApplyButton(
         elevation = ButtonDefaults.elevation(
             defaultElevation = 10.dp,
             pressedElevation = 10.dp ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen, disabledBackgroundColor = LockedApplyButtonColor)
     ) {
         Text(stringResource(R.string.ansoeg), style = Typography.body1,//use body1 for slightly larger fontsize
             fontWeight = FontWeight.Bold, color = Color.Black)
