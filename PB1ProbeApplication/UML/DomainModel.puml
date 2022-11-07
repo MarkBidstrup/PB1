@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+object User {
+    Name
+    Last name
+    Email
+}
+
+object TrialParticipant {
+    Gender
+    Age
+    Weight
+    Diagnoses
+    Phone number
+}
+
+object Researcher {
+    Research institution
+}
+
+object Trial {
+    Name
+    Purpose
+    Short description
+    Number of participants
+    Location
+    Deadline for application
+    Incl. and excl. criteria
+    Compensation
+    Duration
+    Start and end dates
+    Diagnoses
+    Intervention
+    "Forsøgsbeskrivelse"
+    "Deltager information"
+}
+
+User <|-- TrialParticipant
+User <|-- Researcher
+TrialParticipant "0..*" --> "0..* " Trial : applies to
+Researcher "1 " --> "0..*" Trial : manages
+
+
+@enduml
