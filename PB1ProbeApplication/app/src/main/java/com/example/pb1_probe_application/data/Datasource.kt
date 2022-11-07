@@ -70,4 +70,43 @@ class Datasource() {
             ),
         )
     }
+
+    fun loadDeltagerInfo(): String {
+        return "Hvem kan deltage i forsøget? \n" +
+                "• Personer med type 1-diabetes\n" +
+                "• Både børn og unge i alderen fra 5-18 år, og voksne over 18 år (myndige voksne)\n" +
+                "• Personer uden væsentlige kroniske sygdomme ud over diabetes\n" +
+                "• Personer uden væsentlige øjensygdomme ud over diabetisk nethindesygdom\n" +
+                "Derudover søges også raske kontrolpersoner, både børn og unge i alderen 5-18 år og myndige voksne " +
+                "over 18 år, uden væsentlige kroniske sygdomme eller øjensygdomme.\n" +
+                "\n" +
+                "Forsøgsperiode \n" +
+                "Fra 11. august 2020 til 30. september 2022.\n" +
+                "\n" +
+                "Resume \n" +
+                "Det er velkendt, at diabetes på langt sigt kan medføre komplikationer i øjet, oftest i form af " +
+                "nethindesygdom. Forud for disse senkomplikationer forekommer symptomfrie abnormiteter i nethindens " +
+                "nervevæv og blodkar. Projektet vil opspore disse forandringer i nethinden tidligere end hidtil og i større " +
+                "detaljegrad med nye metoder til øjenundersøgelse.\n" +
+                "\n" +
+                "Lokationer \n" +
+                "Rigshospitalets Afdeling for Øjensygdomme\n" +
+                "Valdemar Hansens Vej 13\n" +
+                "2600 Glostrup\n" +
+                "\n" +
+                "Forsøgets forløb for forsøgspersonen \n" +
+                "Øjenundersøgelsen foregår på Rigshospitalets Afdeling for Øjensygdomme i Glostrup, Valdemar " +
+                "Hansens Vej 13, 2600 Glostrup. Som deltager vil du få foretaget: måling af synsstyrke og brillestyrke, " +
+                "undersøgelser af øjets nattesyn og nervefunktion, samt skanninger og fotos af nethinden og dens " +
+                "blodforsyning. Øjenundersøgelsen forventes at vare ca. 2 timer.\n" +
+                "Der vil også blive taget en blodprøve.\n" +
+                "Hvis barnet/den unge er under 18 år, skal forældrene give samtykke til deltagelse i projektet. Inden endelig " +
+                "stillingtagen til deltagelse vil du/I modtage mundtlig " +
+                "og skriftlig information om projektet.\n" +
+                "\n" +
+                "Tilbydes der betaling eller dækning af udgifter for forsøgspersonen? \n" +
+                "Transportudgifter til øjenundersøgelsen på Rigshospitalets Afdeling for Øjensygdomme i " +
+                "Glostrup dækkes med op til 500 kr. mod forevisning " +
+                "af kvitteringer efter statens fastsatte takst.\n"
+    }
 }

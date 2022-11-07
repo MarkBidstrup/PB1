@@ -7,4 +7,5 @@ sealed class Route(val route: String) {
     object Notification: Route("Notification")
     object LogInd: Route("logInd")
     object HomeLoggedIn : Route("HomeLoggedIn")
+    object Applied : Route("Applied")
 }
