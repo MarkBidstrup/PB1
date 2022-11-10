@@ -38,8 +38,8 @@ object Trial {
 }
 
 User <|-- TrialParticipant
-User <|-- Researcher
-TrialParticipant "0..*" --> "0..* " Trial : applies to
+Researcher -|> User
+Trial "0..*" <- "0..* " TrialParticipant : applies to
 Researcher "1 " --> "0..*" Trial : manages
 
 
