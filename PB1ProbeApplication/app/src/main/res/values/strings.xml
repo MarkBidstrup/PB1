@@ -121,4 +121,7 @@
     <string name="diagnoseSymptomer">Diagnose / symptomer</string>
     <string name="vælgDiagnoseSymptomer">Vælg diagnose / symptomer</string>
 
+    <!--Edit Trial Strings-->
+    <string name="redigerStudie">Rediger studie</string>
+
 </resources>

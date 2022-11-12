@@ -34,8 +34,6 @@ fun SettingsScreen(role: Role) {
 @Composable
 fun SettingsPatientScreen() {
 
-//    val navController = rememberNavController()
-
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -48,7 +46,7 @@ fun SettingsPatientScreen() {
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
-//                    navController.navigate("Home")
+                    //TODO: implement onClick
                 }) {
                     Icon(
 

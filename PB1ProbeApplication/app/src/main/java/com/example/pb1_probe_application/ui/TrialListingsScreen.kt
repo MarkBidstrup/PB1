@@ -54,7 +54,9 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                         text = stringResource(R.string.nyesteStudier), style = Typography.h2
                     )
                     Spacer(Modifier.weight(1f))
-                    FilterButton(onClick = {})
+                    FilterButton(onClick = {
+                        //TODO: implement onClick
+                    })
                 }
 
                 LazyColumn(
@@ -78,7 +80,9 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                         LoginButton(onClick = {
                             navHostController?.navigate("logInd")
                         }, R.string.logInd, false)
-                        LoginButton(onClick = {}, R.string.registrer, true)
+                        LoginButton(onClick = {
+                            //TODO: implement onClick
+                        }, R.string.registrer, true)
                     }
                 }
             }
@@ -116,7 +120,9 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
             ) {
                 TrialTitle(trial.titel)
                 Spacer(Modifier.weight(1f))
-                NotificationButton(add = iconUsed, onClick = {})
+                NotificationButton(add = iconUsed, onClick = {
+                    //TODO: implement onClick
+                })
                 Spacer(Modifier.weight(1f))
                 TrialExpandButton(
                     expanded = expanded,

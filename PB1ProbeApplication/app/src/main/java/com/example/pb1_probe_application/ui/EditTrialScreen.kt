@@ -39,29 +39,27 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun CreateTrialScreen() {
+fun EditTrialScreen() {
 
     val focusManager = LocalFocusManager.current
 
-    CreateTrialList(createTrialList = Datasource().loadCreateTrialList(), focusManager = focusManager)
+    EditTrialList(createTrialList = Datasource().loadCreateTrialList(), focusManager = focusManager)
 }
 
 @Composable
-fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusManager, modifier: Modifier = Modifier) {
 
     Scaffold(
         topBar = {
 
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.opretNytStudie), style = Typography.h1, ) },
+                title = { Text(stringResource(R.string.redigerStudie), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
-                    onClick = {
-                        //TODO: implement onClick
-
-                    }) {
+                    onClick = { //TODO: implement onClick
+                         }) {
                     Icon(
 
                         Icons.Default.ArrowBack,
@@ -76,9 +74,10 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    items(createTrialList) { CreateTrialField ->
-                        CreateTrialField(
-                            createTrialField = CreateTrialField,
+                    items(createTrialList) { EditTrialField ->
+                        EditTrialField(
+                            createTrialField = EditTrialField,
+                            label = R.string.placeholder, // TODO: make this variable
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Text,
                                 imeAction = ImeAction.Done
@@ -87,7 +86,7 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
                                 onDone = { focusManager.clearFocus() }
                             )
                         )
-                        if (!(createTrialList.lastIndexOf(element = CreateTrialField) == createTrialList.lastIndex)) {
+                        if (!(createTrialList.lastIndexOf(element = EditTrialField) == createTrialList.lastIndex)) {
                             Divider(
                                 modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
                                 thickness = 1.dp,
@@ -119,8 +118,9 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
 
 
 @Composable
-fun CreateTrialField(
+fun EditTrialField(
     createTrialField: CreateTrialField,
+    @StringRes label: Int,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier) {
@@ -137,7 +137,7 @@ fun CreateTrialField(
         OutlinedTextField(
             value = input,
             singleLine = true,
-            label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+            label = { Text(text = stringResource(label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 17.dp, end = 17.dp),
