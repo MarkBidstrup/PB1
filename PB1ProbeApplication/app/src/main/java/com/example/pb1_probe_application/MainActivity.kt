@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
 //                       MainHome()
-                    EditTrialScreen()
+                    ManageTrialScreen()
                 }
             }
         }

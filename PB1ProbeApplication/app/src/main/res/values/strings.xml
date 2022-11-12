@@ -124,4 +124,10 @@
     <!--Edit Trial Strings-->
     <string name="redigerStudie">Rediger studie</string>
 
+    <!--Manage Trial Strings-->
+    <string name="håndterStudie">Håndter studie</string>
+    <string name="seDeltagerliste">Se deltagerliste</string>
+    <string name="sletStudie">Slet studie</string>
+
+
 </resources>
