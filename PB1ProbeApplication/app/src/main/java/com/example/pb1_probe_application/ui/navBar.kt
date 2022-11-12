@@ -2,12 +2,10 @@ package com.example.pb1_probe_application.ui
 
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
@@ -18,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.BottomBarItems
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Route
@@ -36,7 +33,7 @@ fun MainHome(){
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
         BottomBarItems.Home,
-        BottomBarItems.Trails,
+        BottomBarItems.Trials,
         BottomBarItems.Messages,
         BottomBarItems.Profile
     )
@@ -115,12 +112,13 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = Route.HomeLoggedIn.route) {
             TrialListingsScreen(navController, true)
         }
-        composable(route = BottomBarItems.Trails.route) {
+        composable(route = BottomBarItems.Trials.route) {
             MyTrials(navHostController= navController)
         }
         composable(route = BottomBarItems.Messages.route) {
-            NotImplemented(navController)
+            DeltagerInfo("", navController)
         }
+
         composable(route = BottomBarItems.Profile.route) {
 
             ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
@@ -143,6 +141,9 @@ fun BottomNavGraph(navController: NavHostController) {
             LogIn(navHostController= navController)
         }
 
+        composable( route = Route.Applied.route) {
+            AppliedScreen(navHostController= navController)
+        }
 
 
 

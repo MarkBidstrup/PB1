@@ -63,7 +63,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
                     items(trials) {
-                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn)
+                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
                         if (trials.indexOf(it) != trials.lastIndex)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -91,7 +91,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
 }
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons) {
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -134,7 +134,8 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     color = ReadMoreColor,
                     modifier = modifier.padding(start = 8.dp, top = 16.dp),)
                 Spacer(Modifier.weight(1f))
-                TrialApplyButton(onClick = {})
+                TrialApplyButton(buttonEnabled, onClick = { //TODO
+                })
             }
         }
     }
@@ -249,6 +250,7 @@ fun TrialInfo(
 
 @Composable
 fun TrialApplyButton(
+    enabled: Boolean,
     onClick: () -> Unit,
 ) {
     Button(
@@ -258,13 +260,14 @@ fun TrialApplyButton(
             .height(40.dp)
             .padding(bottom = 4.dp),
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(20.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 10.dp,
             pressedElevation = 10.dp ),
-        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+        colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen, disabledBackgroundColor = LockedApplyButtonColor)
     ) {
-        Text(stringResource(R.string.ansoeg), style = Typography.button,
+        Text(stringResource(R.string.ansoeg), style = Typography.body1,//use body1 for slightly larger fontsize
             fontWeight = FontWeight.Bold, color = Color.Black)
     }
 }

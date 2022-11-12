@@ -13,7 +13,7 @@ val TextColorRed = Color(0xFFFF0000)
 val TextColorGrey = Color(0xFF8C8383)
 val StrokeColor = Color(0xFFD9D9D9)
 val ReadMoreColor = Color(0xFF4595CF)
-val LockedApplyButtonColor = Color(0xFFAEAEAE)
+val LockedApplyButtonColor = Color(0xFFD4D2D2)
 val MediumGrey = Color(0xFF706F6F)
 
 

@@ -71,6 +71,10 @@
     <string name="sygdom_1">Diabetes type 2</string>
     <string name="intervention_1">Blodprøve, sundhedsundersøgelse</string>
 
+    <string name="deltager_info">Deltagerinformation</string>
+    <string name="samtykkeerklaering">Jeg er indforstået med, at ved at trykke “Ansøg” så deles mine data med tredjeparts databehandler ansvarlig for forsøget, og jeg giver samtykke til at blive kontaktet telefonisk med henblik på booking af screening. Se yderligere om vores privatlivspolitik på https://probe.dk/privatlivspolitik/</string>
+    <string name="ansoegt">Din ansøgning er modtaget\n\nDu kan nu følge studiet under\n“Mine studier”</string>
+
     <!--Search Strings-->
     <string name="filtrer">Filtrer</string>
     <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>

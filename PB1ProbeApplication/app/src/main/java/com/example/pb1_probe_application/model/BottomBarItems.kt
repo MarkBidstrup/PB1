@@ -15,7 +15,7 @@ sealed class BottomBarItems (
         title = "Hjem",
         icon = Icons.Default.Home
     )
-    object Trails : BottomBarItems(
+    object Trials : BottomBarItems(
         route = "Trials",
         title = "Mine studier",
         icon = Icons.Default.ListAlt
