@@ -80,4 +80,41 @@
     <string name="logInd">LOG IND</string>
     <string name="registrer">REGISTRER</string>
 
+    <!--Create Trial Strings-->
+    <string name="opretNytStudie">Opret nyt studie</string>
+    <string name="annuller">ANNULLER</string>
+    <string name="bekræft">BEKRÆFT</string>
+    <string name="deltagerinformation">Deltagerinformation</string>
+    <string name="vedhæftFil">Vedhæft fil...</string>
+    <string name="titelPåStudie">Titel på studie</string>
+    <string name="indtastTitel">Indtast titel</string>
+    <string name="antalDeltagere">Antal deltagere</string>
+    <string name="indtastDeltagere">Indtast antal deltagere</string>
+    <string name="inklKriterier">Inklusionskriterier</string>
+    <string name="indtastInklKriterier">Indtast inklusionskriterier</string>
+    <string name="ekslKriterier">Ekslusionskriterier</string>
+    <string name="indtastEkslKriterier">Indtast ekslusionskriterier</string>
+    <string name="honorar">Honorar</string>
+    <string name="indtastHonorar">Indtast honorar</string>
+    <string name="lokationer">Lokation(er)</string>
+    <string name="indtastLokationer">Indtast lokation(er)</string>
+    <string name="kørselsgodtgørelse">Kørselsgodtgørelse</string>
+    <string name="indtastKørselsgodtgørelse">Indtast kørselsgodtgørelse</string>
+    <string name="transport">Transport</string>
+    <string name="tilbydesTransport">Tilbydes transport?</string>
+    <string name="tabtArbejdsfortjeneste">Tabt arbejdsfortjeneste</string>
+    <string name="tilbydesTabtArbejdsfortjeneste">Tilbydes tabt arbejdsfortjeneste?</string>
+    <string name="projektetsVarighed">Projektets varighed</string>
+    <string name="indtastVarighed">Indtast varighed</string>
+    <string name="antalBesøg">Antal besøg</string>
+    <string name="indtastAntalBesøg">Indtast antal besøg</string>
+    <string name="længdeAfHvertBesøg">Længde af hvert besøg</string>
+    <string name="indtastLængdeAfHvertBesøg">Indtast længde af hvert besøg</string>
+    <string name="forventetAfslutningsdato">Forventet afslutningsdato</string>
+    <string name="indtastAfslutningsdato">Indtast afslutningsdato</string>
+    <string name="datoForSvar">Dato for svar</string>
+    <string name="indtastDatoForSvar">Indtast dato for svar</string>
+    <string name="diagnoseSymptomer">Diagnose / symptomer</string>
+    <string name="vælgDiagnoseSymptomer">Vælg diagnose / symptomer</string>
+
 </resources>

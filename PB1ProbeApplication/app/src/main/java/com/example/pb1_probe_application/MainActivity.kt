@@ -24,21 +24,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-//                    Greeting("Android")
-//                    EditProfileScreen("researcher")
 
-                       MainHome()
-                    //ProfileScreen("patient")
+//                       MainHome()
+                    CreateTrialScreen()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
 
 @Preview(showBackground = true)
 @Composable
