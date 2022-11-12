@@ -20,17 +20,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
@@ -45,7 +37,7 @@ fun EditProfileScreen(role: Role) {
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
     if (currentUser.equals(Role.RESEARCHER))
-        EditUserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), focusManager = LocalFocusManager.current)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current)
 }
 
 @Composable

@@ -1,11 +1,9 @@
 package com.example.pb1_probe_application.data
 
-import androidx.compose.ui.res.stringResource
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.model.CreateTrialField
 import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.UserInfo
-import java.util.*
 
 class Datasource() {
 
@@ -24,7 +22,7 @@ class Datasource() {
     }
 
     // TODO: fix state variables
-    fun loadProfileResercherInfo(): List<UserInfo> {
+    fun loadProfileResearcherInfo(): List<UserInfo> {
         return listOf<UserInfo>(
             UserInfo(R.string.navn,""),
             UserInfo(R.string.efternavn,""),

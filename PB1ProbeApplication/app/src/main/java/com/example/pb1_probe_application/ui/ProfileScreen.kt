@@ -1,6 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,13 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.UserInfo
-import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
@@ -32,7 +29,7 @@ fun ProfileScreen(role: Role, navHostController: NavHostController) {
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         UserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), navHostController = navHostController)
     if (currentUser.equals(Role.RESEARCHER))
-        UserInfoList(userInfoList = Datasource().loadProfileResercherInfo(), navHostController = navHostController)
+        UserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), navHostController = navHostController)
 }
 
 @Composable
