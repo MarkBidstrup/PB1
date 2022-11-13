@@ -79,6 +79,21 @@
     <string name="filtrer">Filtrer</string>
     <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>
     <string name="soegForklaring">Søg efter et studie</string>
+    <string name="filtrerStudier">Filtrer studier</string>
+    <string name="afstand">Afstand</string>
+    <string name="postnr">Indtast postnummer</string>
+    <string name="postnrPlaceholder">e.g. 4200</string>
+    <string name="maksAfstand">Marks afstand til forsøgssted</string>
+    <string name="kompensation">Kompensation tilbudt</string>
+    <string name="koersel">Kørselsgodsgørelse</string>
+    <string name="arbejdsgodtgoersel">Tabt arbejdsfortjeneste</string>
+    <string name="varighed_Filter">Varighed</string>
+    <string name="maksVarighed">Maks længde på forsøg</string>
+    <string name="maaned1">1 måned</string>
+    <string name="maaned3">3 måneder</string>
+    <string name="maaned6">6 måneder</string>
+    <string name="filtrerKnap">FILTRER</string>
+
 
     <!--Login Strings-->
     <string name="logInd">LOG IND</string>
