@@ -20,11 +20,7 @@ sealed class BottomBarItems (
         title = "Mine studier",
         icon = Icons.Default.ListAlt
     )
-    object Messages : BottomBarItems(
-        route = "Messages",
-        title = "Beskeder",
-        icon = Icons.Default.Email
-    )
+
     object Profile : BottomBarItems(
         route = "Profile",
         title = "Min profil",

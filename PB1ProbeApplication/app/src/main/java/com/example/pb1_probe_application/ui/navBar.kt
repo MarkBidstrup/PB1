@@ -34,7 +34,6 @@ fun BottomBar(navController: NavHostController){
     val screens = listOf(
         BottomBarItems.Home,
         BottomBarItems.Trials,
-        BottomBarItems.Messages,
         BottomBarItems.Profile
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,9 +114,6 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarItems.Trials.route) {
             MyTrials(navHostController= navController)
         }
-        composable(route = BottomBarItems.Messages.route) {
-            DeltagerInfo("", navController)
-        }
 
         composable(route = BottomBarItems.Profile.route) {
 
@@ -125,8 +121,9 @@ fun BottomNavGraph(navController: NavHostController) {
         }
 
         // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
-    composable( route = Route.Setting.route) {
+    composable( route = Route.Setting.route,) {
         SettingsScreen(role = Role.TRIAL_PARTICIPANT)
+
     }
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
