@@ -17,11 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.model.BottomBarItems
+import com.example.pb1_probe_application.model.BottomBarItems.Home.route
 
 import com.example.pb1_probe_application.model.Role
+import com.example.pb1_probe_application.model.Route
 
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
@@ -42,7 +52,9 @@ fun SettingsScreen(role: Role) {
 @Composable
 fun SettingsPatientScreen() {
 
-    val navController = rememberNavController()
+//    val navController = rememberNavController()
+//    Navigation(navController = navController)
+
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -57,8 +69,7 @@ fun SettingsPatientScreen() {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick =  {
                     //TODO: implement onClick
-                    navController.navigate("Profile")
-
+//                  navController.popBackStack()
 
 
                 }) {
@@ -71,9 +82,11 @@ fun SettingsPatientScreen() {
             }
         },
         content = {
+//            val navHostController = rememberNavController()
             Column() {
                 Row() {
                     Column() {
+
                         Text(
                             text = stringResource(R.string.tilgaengelighed),
                             style = Typography.body1,
@@ -106,6 +119,20 @@ fun SettingsPatientScreen() {
                     text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+//                        .clickable {
+//                            navController.navigate(Route.Notification.route) {
+//                                popUpTo(navController.graph.findStartDestination().id) {
+//                                    saveState = true
+//                                }
+//
+//                                launchSingleTop = true
+//                                restoreState = true
+//
+//                            }
+//
+//
+//                        }
+
                 )
                 Divider(
                     thickness = 1.dp,
@@ -115,7 +142,9 @@ fun SettingsPatientScreen() {
                 Text(
                     text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+
                 )
                 Divider(
                     thickness = 1.dp,
@@ -137,8 +166,9 @@ fun SettingsPatientScreen() {
 
 @Composable
 fun SettingsResearcherScreen() {
+//    val navController = rememberNavController()
+//    Navigation(navController = navController)
 
-    val navController = rememberNavController()
     Scaffold(
 
         topBar = {
@@ -148,7 +178,9 @@ fun SettingsResearcherScreen() {
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
-                    navController.navigate("Profile")
+//                   navController.popBackStack()
+
+
 
 
 
@@ -162,10 +194,25 @@ fun SettingsResearcherScreen() {
         },
         content = {
             Column() {
+//                val navHostController = rememberNavController()
                 Text(
                     text = stringResource(R.string.notifikationer),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+//                        .clickable {
+//                            navHostController.navigate(Route.Notification.route) {
+//                                popUpTo(navHostController.graph.findStartDestination().id) {
+//                                    saveState = true
+//                                }
+//
+//                                launchSingleTop = true
+//                                restoreState = true
+//
+//                            }
+//
+//
+//                        }
                 )
                 Divider(
                     thickness = 1.dp,
@@ -200,8 +247,18 @@ fun SettingsResearcherScreen() {
         }
     )
 }
-
-
+// har prøvet at lave en anden navHost for at fikse navigation men :(
+//@Composable
+//fun Navigation(navController: NavHostController) {
+//    NavHost(navController = navController,
+//        startDestination = Route.Setting.route
+//    ) {
+//        composable( route = Route.Setting.route) {
+//            SettingsScreen(role = Role.TRIAL_PARTICIPANT)
+//
+//        }
+//    }
+//}
 
 @Preview
 @Composable

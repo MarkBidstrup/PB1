@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -101,6 +102,7 @@ fun RowScope.addItem(
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
+
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     ) {

@@ -15,9 +15,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.BottomBarItems
 import com.example.pb1_probe_application.model.Role
+import com.example.pb1_probe_application.model.Route
 import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
@@ -34,6 +38,7 @@ fun ProfileScreen(role: Role, navHostController: NavHostController) {
 
 @Composable
 fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, navHostController: NavHostController) {
+
 
     Scaffold(
         topBar = {
@@ -100,8 +105,10 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
     }
 }
 
+
 @Preview
 @Composable
 private fun ProfileUserScreenPreview() {
 //    UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
 }
+
