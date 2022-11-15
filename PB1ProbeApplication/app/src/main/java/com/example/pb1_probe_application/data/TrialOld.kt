@@ -21,7 +21,7 @@ import com.example.pb1_probe_application.R
 /**
  * A data class to represent the information presented in the dog card
  */
-data class Trial(
+data class TrialOld(
     @StringRes var titel: Int,
     @StringRes var formaal: Int,
     @StringRes var tilmeldingsfrist: Int,
@@ -35,7 +35,7 @@ data class Trial(
 )
 
 val trials = listOf(
-    Trial (
+    TrialOld (
         R.string.titel_1,
         R.string.formaal_1,
         R.string.tilmeldingsfrist_1,
@@ -45,7 +45,7 @@ val trials = listOf(
         R.string.sygdom_1,
         R.string.intervention_1,
     ),
-    Trial (
+    TrialOld (
         R.string.titel_1,
         R.string.formaal_1,
         R.string.tilmeldingsfrist_1,
@@ -55,7 +55,7 @@ val trials = listOf(
         R.string.sygdom_1,
         R.string.intervention_1,
     ),
-    Trial (
+    TrialOld (
         R.string.titel_1,
         R.string.formaal_1,
         R.string.tilmeldingsfrist_1,
@@ -65,7 +65,7 @@ val trials = listOf(
         R.string.sygdom_1,
         R.string.intervention_1,
     ),
-    Trial (
+    TrialOld (
         R.string.titel_1,
         R.string.formaal_1,
         R.string.tilmeldingsfrist_1,

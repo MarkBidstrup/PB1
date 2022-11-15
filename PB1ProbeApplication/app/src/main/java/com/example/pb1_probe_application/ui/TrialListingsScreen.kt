@@ -1,6 +1,6 @@
  package com.example.pb1_probe_application.ui
 
-import androidx.annotation.StringRes
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -27,15 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Trial
-import com.example.pb1_probe_application.data.trials
 import androidx.navigation.NavHostController
+import com.example.pb1_probe_application.model.Trial
+import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.*
 
  enum class TrialPostIcons() {
      NotificationOn, NotificationOff, Contact
  }
 
+ @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
 
@@ -64,6 +65,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
+                    val trials = TrialsViewModel().getViewModelTrials() // TODO - fix view model impl
                     items(trials) {
                         TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
                         if (trials.indexOf(it) != trials.lastIndex)
@@ -118,7 +120,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                TrialTitle(trial.titel)
+                TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
                 NotificationButton(add = iconUsed, onClick = {
                     //TODO: implement onClick
@@ -191,9 +193,9 @@ fun NotificationButton(
 }
 
 @Composable
-fun TrialTitle(@StringRes title: Int, modifier: Modifier = Modifier) {
+fun TrialTitle(title: String, modifier: Modifier = Modifier) {
     Text(
-        text = stringResource(title),
+        text = title,
         style = MaterialTheme.typography.h3,
         modifier = modifier
             .padding(top = 4.dp, start = 4.dp)
@@ -216,38 +218,38 @@ fun TrialInfo(
         )
     ) {
         Text(
-            text = stringResource(R.string.formaal) +" "+ stringResource(trial.formaal),
+            text = stringResource(R.string.formaal) +" "+ trial.purpose,
             style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
-            text = stringResource(R.string.tilmeldingsfrist) +" "+ stringResource(trial.tilmeldingsfrist),
+            text = stringResource(R.string.tilmeldingsfrist) +" "+ trial.registrationDeadline,
             style = MaterialTheme.typography.body2,
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
             Text(
-                text = stringResource(R.string.lokation) +" "+ stringResource(trial.tilmeldingsfrist),
+                text = stringResource(R.string.lokation) +" "+ trial.locations[0].hospitalName,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
-                text = stringResource(R.string.forloeb) +" "+ stringResource(trial.forloeb),
+                text = stringResource(R.string.forloeb) +" "+ trial.startDate + "-" + trial.endDate,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
-                text = stringResource(R.string.varighed) +" "+ stringResource(trial.varighed),
+                text = stringResource(R.string.varighed) +" "+ trial.trialDuration,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
-                text = stringResource(R.string.sygdom) +" "+ stringResource(trial.sygdom),
+                text = stringResource(R.string.sygdom) +" "+ trial.diagnoses[0],
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
             Text(
-                text = stringResource(R.string.intervention) +" "+ stringResource(trial.intervention),
+                text = stringResource(R.string.intervention) +" "+ trial.interventions,
                 style = MaterialTheme.typography.body2,
             )
         }

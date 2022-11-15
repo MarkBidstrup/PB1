@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,9 +23,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Trial
+import com.example.pb1_probe_application.data.TrialOld
 import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.model.Role
+import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
@@ -34,21 +36,20 @@ import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
-enum class TabPage() {
+enum class TabPage {
     APPLIED, FOLLOWING
 }
 
 @Composable
 fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val trials by trialsViewModel.uiState.collectAsState()
-// TODO - check when/ how often things recompose when using kotlin flows
-// TODO - check if a different state needs to be passed in depending on whether it's a researcher or patient
+    val trials = trialsViewModel.getViewModelTrials()
     TrialsList(trials, Modifier, navHostController, role)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
+fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,7 +81,7 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                         ) {
                             items(trialList) {
                                 ResearcherTrialPost(trialInfo = it)
-                                if (!(trialList.indexOf(it) == trialList.lastIndex))
+                                if (trialList.indexOf(it) != trialList.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
@@ -122,9 +123,9 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                         } else {
                             LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                             ) {
-                                items(trials) {
+                                items(trialList) {
                                     ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
-                                    if (!(trials.indexOf(element = it) == trials.lastIndex))
+                                    if (trialList.indexOf(element = it) != trialList.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
                             }
@@ -178,7 +179,7 @@ private fun PostNewTrialButton(modifier: Modifier) {
             pressedElevation = 10.dp ),
         colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
     ) {
-        Row( ) {
+        Row {
             Icon(
                 Icons.Default.Add,
                 contentDescription = "add",
@@ -201,7 +202,7 @@ fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) {
 }
 
 @Composable
-fun ResearcherTrialPost(trialInfo: TrialState) {
+fun ResearcherTrialPost(trialInfo: Trial) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -217,7 +218,7 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
                 .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = trialInfo.trialName,
+                    text = trialInfo.title,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
@@ -227,10 +228,10 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
                     text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipantsRegistered,
+                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numPotentialParticipants,
+                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numParticipants,
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }

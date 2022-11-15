@@ -1,16 +1,25 @@
 package com.example.pb1_probe_application.model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.service.TrialService
+import com.example.pb1_probe_application.model.service.TrialServiceImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel containing the app data and methods to process the data
  */
 
 class TrialsViewModel : ViewModel(){
-    private val _uiState = MutableStateFlow(Datasource().loadTrials())
-    val uiState: StateFlow<List<TrialState>> = _uiState.asStateFlow()
+    var trials: MutableList<Trial> = ArrayList()
+    fun getViewModelTrials(): List<Trial> {
+        viewModelScope.launch {
+            TrialServiceImpl().getTrial("5BDtV4LFGXQnWVpgX4tH")?.let { trials.add(it) }
+        }
+        return trials
+    }
 }
