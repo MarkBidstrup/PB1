@@ -16,11 +16,11 @@ class TrialServiceImpl : TrialService {
     private val firestore: FirebaseFirestore = Firebase.firestore
 
     override val trials: Flow<List<Trial>>
-        get() = currentCollection().snapshots().map { snapshot -> snapshot.toObjects() }
+        get() = trialDB().snapshots().map { snapshot -> snapshot.toObjects() }
 
     override suspend fun getAllTrials(): List<Trial>? {
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = currentCollection().get().await()
+        val snapshot = trialDB().get().await()
         snapshot.forEach { t -> list.add(t.toObject()) }
         return if(list.size == 0)
             null
@@ -29,7 +29,7 @@ class TrialServiceImpl : TrialService {
     }
 
     override suspend fun getTrial(trialId: String): Trial? {
-        return currentCollection().document(trialId).get().await().toObject<Trial>()
+        return trialDB().document(trialId).get().await().toObject<Trial>()
     }
 
     override suspend fun getFilteredTrials(
@@ -41,21 +41,61 @@ class TrialServiceImpl : TrialService {
     }
 
     override suspend fun addNew(trial: Trial) {
-        currentCollection().add(trial).await()
+        trialDB().add(trial).await()
     }
 
     override suspend fun update(trial: Trial) {
-        currentCollection().document(trial.trialID).set(trial).await()
+        trialDB().document(trial.trialID).set(trial).await()
     }
 
     override suspend fun delete(trialId: String) {
-        currentCollection().document(trialId).delete().await()
+        trialDB().document(trialId).delete().await()
     }
 
-    private fun currentCollection(): CollectionReference =
+    override suspend fun registerForTrial(trialId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMyTrials(): List<Trial>? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun subscribeToTrial(trialId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun unsubscribeFromTrial(trialId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMySubscribedTrials(): List<Trial>? {
+        TODO("Not yet implemented")
+    }
+
+    // TODO - test this
+    override suspend fun getSubscribedParticipants(trialId: String): List<String>? {
+        val ref = trialDB().document(trialId)
+        val emailList: MutableList<String> = ArrayList()
+        val snapshot = registrationDB().whereEqualTo("trialID", ref).get().await()
+        snapshot.forEach { t -> t.getString("participantEmail")?.let { emailList.add(it) } }
+        return if(emailList.size == 0)
+            null
+        else
+            emailList
+    }
+
+    private fun trialDB(): CollectionReference =
         firestore.collection(TRIAL_COLLECTION)
+
+    private fun registrationDB(): CollectionReference =
+        firestore.collection(TRIAL_REGISTRATION)
+
+    private fun subscriptionDB(): CollectionReference =
+        firestore.collection(TRIAL_SUBSCRIPTION)
 
     companion object {
         private const val TRIAL_COLLECTION = "trials"
+        private const val TRIAL_REGISTRATION = "trialRegistrations"
+        private const val TRIAL_SUBSCRIPTION = "trialSubscriptions"
     }
 }
