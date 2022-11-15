@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.model.Trial
@@ -38,14 +39,16 @@ import com.example.pb1_probe_application.ui.theme.*
 
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
-fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
+fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean) {
 
     Scaffold(
         topBar = {
             ProbeTopBar()
         },
         content = {
-            Column(modifier = Modifier.padding(all = 8.dp).padding(bottom = 46.dp)) {
+            Column(modifier = Modifier
+                .padding(all = 8.dp)
+                .padding(bottom = 46.dp)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -65,7 +68,7 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    val trials = TrialsViewModel().getViewModelTrials() // TODO - fix view model impl
+                    val trials = trialsViewModel.getViewModelTrials() // TODO - fix view model impl
                     items(trials) {
                         TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
                         if (trials.indexOf(it) != trials.lastIndex)
@@ -228,8 +231,11 @@ fun TrialInfo(
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
+            var locations = stringResource(R.string.lokation) +" "+ trial.locations[0].hospitalName
+            for (i in 2 .. trial.locations.size)
+                locations += ", " + trial.locations[i-1].hospitalName
             Text(
-                text = stringResource(R.string.lokation) +" "+ trial.locations[0].hospitalName,
+                text = locations,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
@@ -243,8 +249,11 @@ fun TrialInfo(
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
+            var diagnoses = stringResource(R.string.sygdom) +" "+ trial.diagnoses[0]
+            for (i in 2 .. trial.diagnoses.size)
+                diagnoses += ", " + trial.diagnoses[i-1]
             Text(
-                text = stringResource(R.string.sygdom) +" "+ trial.diagnoses[0],
+                text = diagnoses,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
@@ -368,6 +377,6 @@ fun FilterButton(
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        TrialListingsScreen(null, false)
+        TrialListingsScreen(navHostController = null, loggedIn = false)
     }
 }

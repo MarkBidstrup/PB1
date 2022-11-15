@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph
@@ -20,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.model.BottomBarItems
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Route
+import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -102,19 +104,20 @@ fun RowScope.addItem(
 
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
+    val viewModel: TrialsViewModel = viewModel()  // TODO fix this temp solution
 
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(navController, false)
+            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = false)
         }
         // TODO loggedInd temp solution
         composable(route = Route.HomeLoggedIn.route) {
-            TrialListingsScreen(navController, true)
+            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = true)
         }
         composable(route = BottomBarItems.Trials.route) {
-            MyTrials(navHostController= navController)
+            MyTrials(trialsViewModel = viewModel, navHostController= navController)
         }
 
         composable(route = BottomBarItems.Profile.route) {

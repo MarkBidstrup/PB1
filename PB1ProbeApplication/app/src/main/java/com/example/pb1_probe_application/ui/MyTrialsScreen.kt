@@ -23,11 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.TrialOld
-import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Trial
-import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
@@ -121,7 +118,8 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                                 )
                             }
                         } else {
-                            LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
+                            LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp),
+                                modifier = Modifier.fillMaxSize()
                             ) {
                                 items(trialList) {
                                     ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
@@ -282,6 +280,6 @@ fun ResearcherTrialPost(trialInfo: Trial) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials(role = Role.RESEARCHER)
+        MyTrials(role = Role.TRIAL_PARTICIPANT)
     }
 }

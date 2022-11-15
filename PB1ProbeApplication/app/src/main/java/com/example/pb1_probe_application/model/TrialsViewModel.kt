@@ -18,7 +18,7 @@ class TrialsViewModel : ViewModel(){
     var trials: MutableList<Trial> = ArrayList()
     fun getViewModelTrials(): List<Trial> {
         viewModelScope.launch {
-            TrialServiceImpl().getTrial("5BDtV4LFGXQnWVpgX4tH")?.let { trials.add(it) }
+            trials = TrialServiceImpl().getAllTrials() as MutableList<Trial>
         }
         return trials
     }

@@ -27,7 +27,7 @@ data class Trial (
     )
 
 data class TrialLocation (
-    @DocumentId val hospitalName: String = "",
+    val hospitalName: String = "",
     val address: String = "",
     val postCode: String = "",
     val city: String = ""
