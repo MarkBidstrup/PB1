@@ -9,6 +9,9 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
 
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
@@ -23,6 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+//                    BottomNavGraph(navController= rememberNavController())
 //                    ManageTrialScreen()
                       MainHome()
 //                    NotificationsScreen()
@@ -40,3 +44,4 @@ fun DefaultPreview() {
     PB1ProbeApplicationTheme {
     }
 }
+

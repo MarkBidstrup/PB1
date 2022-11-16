@@ -121,19 +121,21 @@ fun BottomNavGraph(navController: NavHostController) {
 
             ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
         }
+        navigationAppHost(navController = navController)
 
-        // navigate to settingscreen page in order to navigate // ved ikke om det skal være her
+//         navigate to settingscreen page in order to navigate // ved ikke om det skal være her
     composable( route = Route.Setting.route,) {
         SettingsScreen(role = Role.TRIAL_PARTICIPANT)
 
     }
+//        // navigate to notification screen
+//        composable( route = Route.Notification.route) {
+//            NotificationsScreen()
+//        }
+
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
             EditProfileScreen(role = Role.TRIAL_PARTICIPANT)
-        }
-        // navigate to notification screen
-        composable( route = Route.Notification.route) {
-            NotificationsScreen()
         }
 
         composable( route = Route.LogInd.route) {
