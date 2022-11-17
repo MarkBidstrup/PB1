@@ -10,19 +10,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.*
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.graphs.BottomBarItems
 
 
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.graphs.Route
 
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography

@@ -12,10 +12,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import com.example.pb1_probe_application.graphs.BottomBarItems
+import com.example.pb1_probe_application.navigation.BottomBarItems
 
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.graphs.Route
+import com.example.pb1_probe_application.navigation.Graph
+import com.example.pb1_probe_application.navigation.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -144,9 +145,5 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
         }
         }
     }
-object Graph {
-    const val SETTING = "setting_graph"
-    const val NOTIFICATION = "notification_graph"
-}
 
 

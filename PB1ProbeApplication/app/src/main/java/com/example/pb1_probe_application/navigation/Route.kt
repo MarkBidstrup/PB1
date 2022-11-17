@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.graphs
+package com.example.pb1_probe_application.navigation
 // routes ( bottombar items routes not included )
 sealed class Route(val route: String) {
 
