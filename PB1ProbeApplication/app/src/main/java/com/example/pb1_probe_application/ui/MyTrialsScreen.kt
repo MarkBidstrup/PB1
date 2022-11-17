@@ -39,14 +39,19 @@ enum class TabPage {
 
 @Composable
 fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val trials = trialsViewModel.getViewModelTrials()
-    TrialsList(trials, Modifier, navHostController, role)
+    val trials = trialsViewModel.trials.collectAsState(emptyList()) // TODO - get myTrials instead of full
+    val subscribedTrials =
+        if (role == Role.TRIAL_PARTICIPANT)
+            trialsViewModel.subscribedTrials.collectAsState(emptyList()).value
+        else
+            ArrayList()
+    TrialsList(myTrials = trials.value, subscribedTrials = subscribedTrials, role = role, navHostController = navHostController)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
+fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -65,7 +70,7 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                         modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
                         text = stringResource(R.string.aktiveStudier), style = Typography.h2
                     )
-                    if (trialList.isEmpty()) {
+                    if (myTrials.isEmpty()) {
                         Spacer(modifier = Modifier.height(250.dp))
                         Text(
                             modifier = Modifier.align(CenterHorizontally),
@@ -76,9 +81,9 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                             modifier = modifier.weight(4f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
-                            items(trialList) {
+                            items(myTrials) {
                                 ResearcherTrialPost(trialInfo = it)
-                                if (trialList.indexOf(it) != trialList.lastIndex)
+                                if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
@@ -104,7 +109,12 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                     )
                     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f))
                     { index ->
-                        if (trialList.isEmpty()) {
+                        val trials =
+                            if(pagerState.currentPage == 0)
+                                myTrials
+                            else
+                                subscribedTrials
+                        if (trials.isEmpty()) {
                             Column(modifier = Modifier.fillMaxSize()) {
                                 val str =
                                     if (TabPage.values()[index]  == TabPage.FOLLOWING)
@@ -113,7 +123,9 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                                         stringResource(R.string.ingenAktiveStudier)
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    modifier = modifier.align(CenterHorizontally).weight(1.2f),
+                                    modifier = modifier
+                                        .align(CenterHorizontally)
+                                        .weight(1.2f),
                                     text = str, style = Typography.body1
                                 )
                             }
@@ -121,9 +133,9 @@ fun TrialsList(trialList: List<Trial>, modifier: Modifier = Modifier, navHostCon
                             LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                items(trialList) {
+                                items(trials) {
                                     ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
-                                    if (trialList.indexOf(element = it) != trialList.lastIndex)
+                                    if (trials.indexOf(element = it) != trials.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
                             }

@@ -15,11 +15,9 @@ import kotlinx.coroutines.launch
  */
 
 class TrialsViewModel : ViewModel(){
-    var trials: MutableList<Trial> = ArrayList()
-    fun getViewModelTrials(): List<Trial> {
-        viewModelScope.launch {
-            trials = TrialServiceImpl().getAllTrials() as MutableList<Trial>
-        }
-        return trials
-    }
+    val trials = TrialServiceImpl().trials
+    val myTrials = TrialServiceImpl().myTrials
+    val subscribedTrials = TrialServiceImpl().trials //TODO change to TrialServiceImpl().subscribedTrials
+
+
 }

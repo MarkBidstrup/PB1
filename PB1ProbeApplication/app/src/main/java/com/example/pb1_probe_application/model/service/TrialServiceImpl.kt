@@ -18,15 +18,21 @@ class TrialServiceImpl : TrialService {
     override val trials: Flow<List<Trial>>
         get() = trialDB().snapshots().map { snapshot -> snapshot.toObjects() }
 
-    override suspend fun getAllTrials(): List<Trial>? {
-        val list: MutableList<Trial> = ArrayList()
-        val snapshot = trialDB().get().await()
-        snapshot.forEach { t -> list.add(t.toObject()) }
-        return if(list.size == 0)
-            null
-        else
-            list
-    }
+    override val myTrials: Flow<List<Trial>> // TODO - update this
+        get() = trialDB().snapshots().map { snapshot -> snapshot.toObjects() }
+
+    override val subscribedTrials: Flow<List<Trial>>
+        get() = TODO("Not yet implemented") // TODO - update this
+
+//    override suspend fun getAllTrials(): List<Trial>? {
+//        val list: MutableList<Trial> = ArrayList()
+//        val snapshot = trialDB().get().await()
+//        snapshot.forEach { t -> list.add(t.toObject()) }
+//        return if(list.size == 0)
+//            null
+//        else
+//            list
+//    }
 
     override suspend fun getTrial(trialId: String): Trial? {
         return trialDB().document(trialId).get().await().toObject<Trial>()
@@ -56,10 +62,6 @@ class TrialServiceImpl : TrialService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getMyTrials(): List<Trial>? {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun subscribeToTrial(trialId: String) {
         TODO("Not yet implemented")
     }
@@ -68,9 +70,6 @@ class TrialServiceImpl : TrialService {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getMySubscribedTrials(): List<Trial>? {
-        TODO("Not yet implemented")
-    }
 
     // TODO - test this
     override suspend fun getSubscribedParticipants(trialId: String): List<String>? {

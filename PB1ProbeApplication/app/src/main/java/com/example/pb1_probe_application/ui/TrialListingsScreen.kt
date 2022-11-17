@@ -40,6 +40,7 @@ import com.example.pb1_probe_application.ui.theme.*
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean) {
+     val trials = trialsViewModel.trials.collectAsState(emptyList())
 
     Scaffold(
         topBar = {
@@ -68,10 +69,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    val trials = trialsViewModel.getViewModelTrials() // TODO - fix view model impl
-                    items(trials) {
+                    items(trials.value) {
                         TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
-                        if (trials.indexOf(it) != trials.lastIndex)
+                        if (trials.value.indexOf(it) != trials.value.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
                 }
