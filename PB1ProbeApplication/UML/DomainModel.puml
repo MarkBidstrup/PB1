@@ -5,6 +5,7 @@ object User {
     Name
     Last name
     Email
+    UserType
 }
 
 object TrialParticipant {
