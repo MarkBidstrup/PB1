@@ -37,21 +37,15 @@ enum class TabPage {
     APPLIED, FOLLOWING
 }
 
-@Composable
-fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val trials = trialsViewModel.trials.collectAsState(emptyList()) // TODO - get myTrials instead of full
-    val subscribedTrials =
-        if (role == Role.TRIAL_PARTICIPANT)
-            trialsViewModel.subscribedTrials.collectAsState(emptyList()).value
-        else
-            ArrayList()
-    TrialsList(myTrials = trials.value, subscribedTrials = subscribedTrials, role = role, navHostController = navHostController)
-}
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
+fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+    val trials = trialsViewModel.trials.collectAsState(emptyList()) // TODO - get myTrials instead of full list
+    val myTrials = trials.value
+    var subscribedTrials: List<Trial> by remember { mutableStateOf(ArrayList())}
+    if (role == Role.TRIAL_PARTICIPANT)
+        subscribedTrials = trialsViewModel.getViewModelSubscribedTrials()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,7 +72,7 @@ fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: M
                         )
                     } else {
                         LazyColumn(
-                            modifier = modifier.weight(4f),
+                            modifier = Modifier.weight(4f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
@@ -109,12 +103,12 @@ fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: M
                     )
                     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f))
                     { index ->
-                        val trials =
+                        val trials1 =
                             if(pagerState.currentPage == 0)
                                 myTrials
                             else
                                 subscribedTrials
-                        if (trials.isEmpty()) {
+                        if (trials1.isEmpty()) {
                             Column(modifier = Modifier.fillMaxSize()) {
                                 val str =
                                     if (TabPage.values()[index]  == TabPage.FOLLOWING)
@@ -123,7 +117,7 @@ fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: M
                                         stringResource(R.string.ingenAktiveStudier)
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    modifier = modifier
+                                    modifier = Modifier
                                         .align(CenterHorizontally)
                                         .weight(1.2f),
                                     text = str, style = Typography.body1
@@ -133,9 +127,16 @@ fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: M
                             LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                items(trials) {
-                                    ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
-                                    if (trials.indexOf(element = it) != trials.lastIndex)
+                                items(trials1) {
+                                    val onClick: () -> Unit =
+                                        if(pagerState.currentPage == 0) {
+                                            {} // TODO contact button
+                                        }
+                                        else
+                                            { {trialsViewModel.unsubscribeFromTrial(it)
+                                            subscribedTrials = trialsViewModel.getViewModelSubscribedTrials()} }
+                                    ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage, onClick = onClick)
+                                    if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
                             }
@@ -204,11 +205,11 @@ private fun PostNewTrialButton(modifier: Modifier) {
 }
 
 @Composable
-fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) {
-    if(selectedTabIndex == 0)
-        TrialItem(trial = trial, iconUsed = TrialPostIcons.Contact, buttonEnabled = false)
-    else
-        TrialItem(trial = trial, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true)
+fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int, onClick: () -> Unit) {
+    if(selectedTabIndex == 0) // mytrials
+        TrialItem(trial = trial, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, onClick = onClick)
+    else // subscribedTrials
+        TrialItem(trial = trial, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true, onClick = onClick)
 }
 
 @Composable
@@ -292,6 +293,6 @@ fun ResearcherTrialPost(trialInfo: Trial) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials(role = Role.TRIAL_PARTICIPANT)
+        MyTrials(role = Role.RESEARCHER)
     }
 }

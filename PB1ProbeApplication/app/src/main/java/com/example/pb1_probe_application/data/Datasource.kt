@@ -2,7 +2,6 @@ package com.example.pb1_probe_application.data
 
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.model.CreateTrialField
-import com.example.pb1_probe_application.model.TrialState
 import com.example.pb1_probe_application.model.UserInfo
 
 class Datasource() {

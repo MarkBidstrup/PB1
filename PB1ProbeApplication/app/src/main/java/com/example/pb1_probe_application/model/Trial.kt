@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.model
 
 import com.google.firebase.firestore.DocumentId
+import com.google.firebase.firestore.DocumentReference
 
 
 data class Trial (
@@ -32,3 +33,7 @@ data class TrialLocation (
     val postCode: String = "",
     val city: String = ""
 )
+
+data class dbRegistrations(
+    val participantEmail: String = "",
+    val trialID: String = "")

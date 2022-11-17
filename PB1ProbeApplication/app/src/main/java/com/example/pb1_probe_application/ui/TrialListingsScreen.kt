@@ -1,4 +1,4 @@
- package com.example.pb1_probe_application.ui
+package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
@@ -70,7 +70,20 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
                     items(trials) {
-                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
+                        var icon by remember { mutableStateOf(TrialPostIcons.NotificationOn) }
+                        var onClick = if(loggedIn) {
+                            { trialsViewModel.subscribeToTrial(it)
+                            icon = TrialPostIcons.NotificationOff }
+                            } else {
+                                {}  // TODO - navigate to "log in to see this screen"
+                             }
+                        if(loggedIn && trialsViewModel.getViewModelSubscribedTrials().contains(it)) {
+                            icon = TrialPostIcons.NotificationOff
+                            onClick = { trialsViewModel.unsubscribeFromTrial(it)
+                                        icon = TrialPostIcons.NotificationOn }
+                        }
+                        TrialItem(trial = it, iconUsed = icon,
+                            buttonEnabled = true, onClick = onClick)
                         if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -103,7 +116,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean) {
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean, onClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -128,9 +141,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
             ) {
                 TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
-                NotificationButton(add = iconUsed, onClick = {
-                    //TODO: implement onClick
-                })
+                NotificationButton(add = iconUsed, onClick = onClick)
                 Spacer(Modifier.weight(1f))
                 TrialExpandButton(
                     expanded = expanded,
