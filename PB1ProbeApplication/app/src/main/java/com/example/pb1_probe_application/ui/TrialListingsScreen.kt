@@ -1,7 +1,6 @@
  package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -41,7 +40,7 @@ import com.example.pb1_probe_application.ui.theme.*
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean) {
-     val trials = trialsViewModel.trials.collectAsState(emptyList())
+     val trials = trialsViewModel.trials.collectAsState(emptyList()).value
 
     Scaffold(
         topBar = {
@@ -70,9 +69,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    items(trials.value) {
+                    items(trials) {
                         TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOn, buttonEnabled = true)
-                        if (trials.value.indexOf(it) != trials.value.size)
+                        if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
                 }

@@ -142,5 +142,5 @@ fun CreateTrialField(
 @Preview
 @Composable
 private fun ProfileUserScreenPreview() {
-    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
+//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
 }
