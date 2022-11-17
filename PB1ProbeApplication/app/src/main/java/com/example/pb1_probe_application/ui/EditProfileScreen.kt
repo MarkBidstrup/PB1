@@ -45,9 +45,6 @@ fun EditProfileScreen(role: Role,onClick: () -> Unit) {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit) {
-//    val navController = rememberNavController()
-
-
     Scaffold(
         topBar = {
 
@@ -62,7 +59,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
 
                  }) {
                      Icon(
-                         
                          Icons.Default.ArrowBack,
                          contentDescription = "edit",
                      )
@@ -108,9 +104,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
     )
 
 }
-
-
-
 @Composable
 fun EditUserInfoField(
     userInfo: UserInfo,

@@ -1,7 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-
-
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ fun MainHome(){
     val navController = rememberNavController()
     BottomNavGraph(navController = navController)
 }
-
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -41,16 +38,12 @@ fun BottomBar(navController: NavHostController){
     BottomNavigation(
         // Customize navigationBAR here :)
         backgroundColor = NavBarColorGreen,
-
-
         ) {
         screens.forEach{
                 screens ->
             addItem(screen = screens, currentDestination =currentDestination , navController =navController )
         }
-
     }
-
 }
 @Composable
 fun RowScope.addItem(
@@ -65,7 +58,6 @@ fun RowScope.addItem(
             fontSize = 14.sp,
               color = Color.DarkGray
             )
-
         },
         icon = {
             Icon(
@@ -90,14 +82,6 @@ fun RowScope.addItem(
     )
 
 }
-
-
-
-
-
-
-
-
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
 
@@ -122,32 +106,15 @@ fun BottomNavGraph(navController: NavHostController) {
 
         navigationAppHost(navController = navController)
         notificationNav(navController= navController)
-
-//         navigate to settingscreen page in order to navigate // ved ikke om det skal være her
-//    composable( route = Route.Setting.route,) {
-//        SettingsScreen(role = Role.TRIAL_PARTICIPANT) {
-//            navController.
-//        }
-//
-//    }
-//        // navigate to notification screen
-//        composable( route = Route.Notification.route) {
-//            NotificationsScreen()
-//        }
-
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
             EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
                 navController.popBackStack()
-
             }
-
         }
-
         composable( route = Route.LogInd.route) {
             LogIn(navHostController= navController)
         }
-
         composable( route = Route.Applied.route) {
             AppliedScreen(navHostController= navController)
         }
@@ -162,30 +129,12 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
                navController.popBackStack()
            },
                onClickNav = {
-
                    navController.navigate(Route.Notification.route)
-
                }
-
                )
-
-
-
-
-
        }
-
-//        composable(route = Route.Notification.route) {
-//            NotificationsScreen() {
-//                navController.popBackStack()
-//
-//            }
-//        }
     }
 }
-
-
-
 fun NavGraphBuilder.notificationNav(navController: NavHostController) {
     navigation(route = Graph.NOTIFICATION ,startDestination = BottomBarItems.Profile.route) {
         composable(route = Route.Notification.route) {
@@ -193,19 +142,11 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
                 navController.popBackStack()
             }
         }
-
         }
     }
-
-
 object Graph {
-    const val ROOT = "root_graph"
-    const val PROFILE = "profile_graph"
-    const val HOME = "home_graph"
     const val SETTING = "setting_graph"
     const val NOTIFICATION = "notification_graph"
-
-
 }
 
 

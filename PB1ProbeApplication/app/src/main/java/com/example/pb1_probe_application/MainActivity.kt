@@ -27,10 +27,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-//                    RootNavigationGraph(navController= rememberNavController())
-                    BottomNavGraph(navController= rememberNavController())
+
 //                    ManageTrialScreen()
-//                      MainHome()
+                      MainHome()
 //                    NotificationsScreen()
 //                    ManageTrialScreen()
                 }

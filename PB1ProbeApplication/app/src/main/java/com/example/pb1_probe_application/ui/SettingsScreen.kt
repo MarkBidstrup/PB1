@@ -30,26 +30,20 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
 fun SettingsScreen(role: Role, onClick: () -> Unit,onClickNav :() -> Unit) {
-
     val currentUser: Role = role
-
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         SettingsPatientScreen( onClick = onClick,onClickNav = onClickNav)
     if (currentUser.equals(Role.RESEARCHER))
         SettingsResearcherScreen( onClick = onClick,onClickNav = onClickNav)
 }
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
 ) {
-    val navController = rememberNavController()
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
     Scaffold(
-
-
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
@@ -60,7 +54,6 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
                     onClick()
                 }) {
                     Icon(
-
                         Icons.Default.ArrowBack,
                         contentDescription = "back arrow"
                     )
@@ -107,10 +100,8 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
                     modifier = Modifier
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
-
                             onClickNav()
                         }
-
                 )
                 Divider(
                     thickness = 1.dp,
@@ -122,7 +113,6 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
                     style = Typography.body1,
                     modifier = Modifier
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
-
                 )
                 Divider(
                     thickness = 1.dp,
@@ -139,13 +129,9 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
         }
     )
 }
-
-
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -173,7 +159,6 @@ fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             onClickNav()
-
                         }
                 )
                 Divider(
@@ -196,14 +181,6 @@ fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
                     style = Typography.body1,
                     color = TextColorRed,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
-                        //log ud
-//                        .clickable {
-//                            navController.navigate("Home") {
-//                                popUpTo(route="Home") {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        }
                 )
             }
         }
