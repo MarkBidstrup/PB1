@@ -22,21 +22,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.CreateTrialField
-import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Route
-import com.example.pb1_probe_application.model.UserInfo
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
-import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
@@ -60,7 +49,8 @@ fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusMa
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
-                    onClick = { //TODO: implement onClick
+                    onClick = {
+
                          }) {
                     Icon(
 
@@ -151,8 +141,8 @@ fun EditTrialField(
     }
 }
 
-@Preview
-@Composable
-private fun ProfileUserScreenPreview() {
-    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-}
+//@Preview
+//@Composable
+//private fun ProfileUserScreenPreview() {
+//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
+//}

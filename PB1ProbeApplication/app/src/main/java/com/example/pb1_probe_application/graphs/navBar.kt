@@ -10,16 +10,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.pb1_probe_application.model.BottomBarItems
+import androidx.navigation.compose.*
+import com.example.pb1_probe_application.graphs.BottomBarItems
+
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Route
+import com.example.pb1_probe_application.graphs.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -121,13 +119,16 @@ fun BottomNavGraph(navController: NavHostController) {
 
             ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
         }
+
         navigationAppHost(navController = navController)
 
 //         navigate to settingscreen page in order to navigate // ved ikke om det skal være her
-    composable( route = Route.Setting.route,) {
-        SettingsScreen(role = Role.TRIAL_PARTICIPANT)
-
-    }
+//    composable( route = Route.Setting.route,) {
+//        SettingsScreen(role = Role.TRIAL_PARTICIPANT) {
+//            navController.
+//        }
+//
+//    }
 //        // navigate to notification screen
 //        composable( route = Route.Notification.route) {
 //            NotificationsScreen()
@@ -135,7 +136,11 @@ fun BottomNavGraph(navController: NavHostController) {
 
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
-            EditProfileScreen(role = Role.TRIAL_PARTICIPANT)
+            EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
+                navController.popBackStack()
+
+            }
+
         }
 
         composable( route = Route.LogInd.route) {
@@ -145,10 +150,64 @@ fun BottomNavGraph(navController: NavHostController) {
         composable( route = Route.Applied.route) {
             AppliedScreen(navHostController= navController)
         }
-
-
-
-
-
     }
 }
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
+    navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
+       composable(Route.Setting.route) {
+
+           SettingsScreen(role = Role.RESEARCHER, onClick =
+           {
+               navController.popBackStack()
+           },
+               onClickNav = {
+                   notificationNav(navController= navController)
+                   navController.navigate(Graph.NOTIFICATION)
+                   navController.navigate(Route.Notification.route)
+
+               }
+
+               )
+
+
+
+
+
+       }
+
+//        composable(route = Route.Notification.route) {
+//            NotificationsScreen() {
+//                navController.popBackStack()
+//
+//            }
+//        }
+    }
+}
+
+
+
+fun NavGraphBuilder.notificationNav(navController: NavHostController) {
+    navigation(route = Graph.NOTIFICATION ,startDestination = BottomBarItems.Profile.route) {
+        composable(route = Route.Notification.route) {
+            NotificationsScreen() {
+                navController.popBackStack()
+
+
+            }
+        }
+
+        }
+    }
+
+
+object Graph {
+    const val ROOT = "root_graph"
+    const val PROFILE = "profile_graph"
+    const val HOME = "home_graph"
+    const val SETTING = "setting_graph"
+    const val NOTIFICATION = "notification_graph"
+
+
+}
+
+

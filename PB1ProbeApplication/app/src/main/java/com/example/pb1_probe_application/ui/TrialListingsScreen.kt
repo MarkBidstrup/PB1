@@ -31,6 +31,7 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Trial
 import com.example.pb1_probe_application.data.trials
 import androidx.navigation.NavHostController
+
 import com.example.pb1_probe_application.ui.theme.*
 
  enum class TrialPostIcons() {
@@ -46,7 +47,9 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
             ProbeTopBar()
         },
         content = {
-            Column(modifier = Modifier.padding(all = 8.dp).padding(bottom = 46.dp)) {
+            Column(modifier = Modifier
+                .padding(all = 8.dp)
+                .padding(bottom = 46.dp)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,8 +96,11 @@ fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean
             if (navHostController != null)
                 BottomBar(navController = navHostController)
         }
+
     )
+
 }
+
 
 @Composable
 fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean) {

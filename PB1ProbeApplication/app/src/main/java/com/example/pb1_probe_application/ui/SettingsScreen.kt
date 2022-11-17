@@ -1,12 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.annotation.NonNull
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -15,44 +9,41 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.*
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.model.BottomBarItems
-import com.example.pb1_probe_application.model.BottomBarItems.Home.route
+import com.example.pb1_probe_application.graphs.BottomBarItems
+
 
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Route
+import com.example.pb1_probe_application.graphs.Route
 
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role) {
+fun SettingsScreen(role: Role, onClick: () -> Unit,onClickNav :() -> Unit) {
 
     val currentUser: Role = role
 
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        SettingsPatientScreen(navController = rememberNavController())
+        SettingsPatientScreen( onClick = onClick,onClickNav = onClickNav)
     if (currentUser.equals(Role.RESEARCHER))
-        SettingsResearcherScreen(navController = rememberNavController())
+        SettingsResearcherScreen( onClick = onClick,onClickNav = onClickNav)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen( navController: NavHostController
+fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
 ) {
-
+    val navController = rememberNavController()
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -65,11 +56,8 @@ fun SettingsPatientScreen( navController: NavHostController
                 title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick =  {
-                    //TODO: implement onClick
-                  navController.popBackStack()
-
-
+                IconButton(onClick = {
+                    onClick()
                 }) {
                     Icon(
 
@@ -120,7 +108,7 @@ fun SettingsPatientScreen( navController: NavHostController
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
 
-                            navController.navigate("Notification")
+                            onClickNav()
                         }
 
                 )
@@ -156,7 +144,7 @@ fun SettingsPatientScreen( navController: NavHostController
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen(navController: NavHostController) {
+fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
 
     Scaffold(
         topBar = {
@@ -166,8 +154,7 @@ fun SettingsResearcherScreen(navController: NavHostController) {
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(onClick = {
-                navController.popBackStack()
-
+                    onClick()
                 }) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -185,7 +172,7 @@ fun SettingsResearcherScreen(navController: NavHostController) {
                     modifier = Modifier
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
-                            navController.navigate(Route.Notification.route)
+                            onClickNav()
 
                         }
                 )
@@ -223,28 +210,4 @@ fun SettingsResearcherScreen(navController: NavHostController) {
     )
 }
 
-@Preview
-@Composable
-fun SettingsScreenPreview() {
 
-    SettingsPatientScreen(navController = rememberNavController())
-
-}
-
-
-
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
-   navigation(route = Route.Setting.route,startDestination = BottomBarItems.Profile.route) {
-//       composable(Route.Setting.route) {
-//           SettingsScreen(role = Role.RESEARCHER)
-//       }
-       composable(route = Route.Notification.route) {
-         NotificationsScreen()
-       }
-
-
-
-
-
-    }
-}
