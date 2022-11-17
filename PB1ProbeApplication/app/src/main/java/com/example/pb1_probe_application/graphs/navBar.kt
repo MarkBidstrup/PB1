@@ -1,7 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-
-
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -10,16 +8,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.pb1_probe_application.model.BottomBarItems
+import androidx.navigation.compose.*
+import com.example.pb1_probe_application.graphs.BottomBarItems
+
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Route
+import com.example.pb1_probe_application.graphs.Route
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
@@ -29,7 +25,6 @@ fun MainHome(){
     val navController = rememberNavController()
     BottomNavGraph(navController = navController)
 }
-
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -43,16 +38,12 @@ fun BottomBar(navController: NavHostController){
     BottomNavigation(
         // Customize navigationBAR here :)
         backgroundColor = NavBarColorGreen,
-
-
         ) {
         screens.forEach{
                 screens ->
             addItem(screen = screens, currentDestination =currentDestination , navController =navController )
         }
-
     }
-
 }
 @Composable
 fun RowScope.addItem(
@@ -67,7 +58,6 @@ fun RowScope.addItem(
             fontSize = 14.sp,
               color = Color.DarkGray
             )
-
         },
         icon = {
             Icon(
@@ -92,14 +82,6 @@ fun RowScope.addItem(
     )
 
 }
-
-
-
-
-
-
-
-
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
 
@@ -121,34 +103,50 @@ fun BottomNavGraph(navController: NavHostController) {
 
             ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
         }
+
         navigationAppHost(navController = navController)
-
-//         navigate to settingscreen page in order to navigate // ved ikke om det skal være her
-    composable( route = Route.Setting.route,) {
-        SettingsScreen(role = Role.TRIAL_PARTICIPANT)
-
-    }
-//        // navigate to notification screen
-//        composable( route = Route.Notification.route) {
-//            NotificationsScreen()
-//        }
-
+        notificationNav(navController= navController)
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
-            EditProfileScreen(role = Role.TRIAL_PARTICIPANT)
+            EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
+                navController.popBackStack()
+            }
         }
-
         composable( route = Route.LogInd.route) {
             LogIn(navHostController= navController)
         }
-
         composable( route = Route.Applied.route) {
             AppliedScreen(navHostController= navController)
         }
-
-
-
-
-
     }
 }
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
+    navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
+       composable(Route.Setting.route) {
+           notificationNav(navController= navController)
+           SettingsScreen(role = Role.RESEARCHER, onClick =
+           {
+               navController.popBackStack()
+           },
+               onClickNav = {
+                   navController.navigate(Route.Notification.route)
+               }
+               )
+       }
+    }
+}
+fun NavGraphBuilder.notificationNav(navController: NavHostController) {
+    navigation(route = Graph.NOTIFICATION ,startDestination = BottomBarItems.Profile.route) {
+        composable(route = Route.Notification.route) {
+            NotificationsScreen() {
+                navController.popBackStack()
+            }
+        }
+        }
+    }
+object Graph {
+    const val SETTING = "setting_graph"
+    const val NOTIFICATION = "notification_graph"
+}
+
+

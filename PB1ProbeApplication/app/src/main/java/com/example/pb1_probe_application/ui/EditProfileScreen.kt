@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.Role
@@ -30,23 +31,20 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun EditProfileScreen(role: Role) {
+fun EditProfileScreen(role: Role,onClick: () -> Unit) {
 
     val currentUser: Role = role
     val focusManager = LocalFocusManager.current
 
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current,onClick = onClick)
     if (currentUser.equals(Role.RESEARCHER))
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current,onClick = onClick)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier) {
-//    val navController = rememberNavController()
-   
-
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit) {
     Scaffold(
         topBar = {
 
@@ -57,11 +55,10 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(
                      onClick = {
-//                         navController.navigate("Profile")
+                         onClick()
 
                  }) {
                      Icon(
-                         
                          Icons.Default.ArrowBack,
                          contentDescription = "edit",
                      )
@@ -107,9 +104,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
     )
 
 }
-
-
-
 @Composable
 fun EditUserInfoField(
     userInfo: UserInfo,
@@ -142,8 +136,8 @@ fun EditUserInfoField(
     }
 }
 
-@Preview
-@Composable
-private fun ProfileUserScreenPreview() {
-    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-}
+//@Preview
+//@Composable
+//private fun ProfileUserScreenPreview() {
+//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
+//}

@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.model
+package com.example.pb1_probe_application.graphs
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*

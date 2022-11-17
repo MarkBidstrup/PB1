@@ -20,7 +20,8 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NotificationsScreen() {
+fun NotificationsScreen(onClick: () -> Unit ) {
+
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -31,7 +32,9 @@ fun NotificationsScreen() {
                 title = { Text(stringResource(R.string.notificationsHeading), style = Typography.h1) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    onClick()
+                }) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "back arrow"
@@ -108,8 +111,3 @@ fun NotificationsScreen() {
     )
 }
 
-@Preview
-@Composable
-fun NotificationsScreenPreview() {
-    NotificationsScreen()
-}
