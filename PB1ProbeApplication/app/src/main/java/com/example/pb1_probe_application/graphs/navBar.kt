@@ -121,6 +121,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
 
         navigationAppHost(navController = navController)
+        notificationNav(navController= navController)
 
 //         navigate to settingscreen page in order to navigate // ved ikke om det skal være her
 //    composable( route = Route.Setting.route,) {
@@ -155,14 +156,13 @@ fun BottomNavGraph(navController: NavHostController) {
 fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
        composable(Route.Setting.route) {
-
+           notificationNav(navController= navController)
            SettingsScreen(role = Role.RESEARCHER, onClick =
            {
                navController.popBackStack()
            },
                onClickNav = {
-                   notificationNav(navController= navController)
-                   navController.navigate(Graph.NOTIFICATION)
+
                    navController.navigate(Route.Notification.route)
 
                }
@@ -191,8 +191,6 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
         composable(route = Route.Notification.route) {
             NotificationsScreen() {
                 navController.popBackStack()
-
-
             }
         }
 
