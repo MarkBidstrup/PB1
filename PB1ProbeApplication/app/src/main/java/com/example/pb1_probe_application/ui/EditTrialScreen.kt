@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -46,6 +47,7 @@ fun EditTrialScreen() {
     EditTrialList(createTrialList = Datasource().loadCreateTrialList(), focusManager = focusManager)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusManager, modifier: Modifier = Modifier) {
 

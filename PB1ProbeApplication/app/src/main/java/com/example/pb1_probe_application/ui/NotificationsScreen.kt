@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NotificationsScreen() {
     var checkedPlaceholder: Boolean = true;

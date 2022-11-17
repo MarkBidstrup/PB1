@@ -1,5 +1,6 @@
  package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -36,6 +37,7 @@ import com.example.pb1_probe_application.ui.theme.*
      NotificationOn, NotificationOff, Contact
  }
 
+ @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(navHostController: NavHostController?, loggedIn: Boolean) {
 

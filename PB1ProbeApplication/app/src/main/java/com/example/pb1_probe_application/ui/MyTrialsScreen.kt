@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,6 +47,7 @@ fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: 
     TrialsList(trials, Modifier, navHostController, role)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {

@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -27,6 +28,7 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.ui.theme.Typography
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DeltagerInfo(trialID: String, navHostController: NavHostController = rememberNavController()) {
     // TODO - get data from database based on the trialID

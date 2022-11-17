@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -18,6 +19,7 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.Typography
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AppliedScreen(navHostController: NavHostController = rememberNavController()) {
     Scaffold(
