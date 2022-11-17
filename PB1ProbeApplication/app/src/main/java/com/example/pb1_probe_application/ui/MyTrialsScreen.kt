@@ -23,10 +23,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Trial
-import com.example.pb1_probe_application.data.trials
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.TrialState
+import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
@@ -35,22 +33,25 @@ import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
-enum class TabPage() {
+enum class TabPage {
     APPLIED, FOLLOWING
 }
 
 @Composable
 fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val trials by trialsViewModel.uiState.collectAsState()
-// TODO - check when/ how often things recompose when using kotlin flows
-// TODO - check if a different state needs to be passed in depending on whether it's a researcher or patient
-    TrialsList(trials, Modifier, navHostController, role)
+    val trials = trialsViewModel.trials.collectAsState(emptyList()) // TODO - get myTrials instead of full
+    val subscribedTrials =
+        if (role == Role.TRIAL_PARTICIPANT)
+            trialsViewModel.subscribedTrials.collectAsState(emptyList()).value
+        else
+            ArrayList()
+    TrialsList(myTrials = trials.value, subscribedTrials = subscribedTrials, role = role, navHostController = navHostController)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
+fun TrialsList(myTrials: List<Trial>, subscribedTrials: List<Trial>, modifier: Modifier = Modifier, navHostController: NavHostController, role: Role = Role.TRIAL_PARTICIPANT) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,7 +70,7 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                         modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
                         text = stringResource(R.string.aktiveStudier), style = Typography.h2
                     )
-                    if (trialList.isEmpty()) {
+                    if (myTrials.isEmpty()) {
                         Spacer(modifier = Modifier.height(250.dp))
                         Text(
                             modifier = Modifier.align(CenterHorizontally),
@@ -80,9 +81,9 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                             modifier = modifier.weight(4f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
-                            items(trialList) {
+                            items(myTrials) {
                                 ResearcherTrialPost(trialInfo = it)
-                                if (!(trialList.indexOf(it) == trialList.lastIndex))
+                                if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
@@ -108,7 +109,12 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                     )
                     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f))
                     { index ->
-                        if (trialList.isEmpty()) {
+                        val trials =
+                            if(pagerState.currentPage == 0)
+                                myTrials
+                            else
+                                subscribedTrials
+                        if (trials.isEmpty()) {
                             Column(modifier = Modifier.fillMaxSize()) {
                                 val str =
                                     if (TabPage.values()[index]  == TabPage.FOLLOWING)
@@ -117,16 +123,19 @@ fun TrialsList(trialList: List<TrialState>, modifier: Modifier = Modifier, navHo
                                         stringResource(R.string.ingenAktiveStudier)
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    modifier = modifier.align(CenterHorizontally).weight(1.2f),
+                                    modifier = modifier
+                                        .align(CenterHorizontally)
+                                        .weight(1.2f),
                                     text = str, style = Typography.body1
                                 )
                             }
                         } else {
-                            LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
+                            LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp),
+                                modifier = Modifier.fillMaxSize()
                             ) {
                                 items(trials) {
                                     ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage)
-                                    if (!(trials.indexOf(element = it) == trials.lastIndex))
+                                    if (trials.indexOf(element = it) != trials.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
                             }
@@ -180,7 +189,7 @@ private fun PostNewTrialButton(modifier: Modifier) {
             pressedElevation = 10.dp ),
         colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
     ) {
-        Row( ) {
+        Row {
             Icon(
                 Icons.Default.Add,
                 contentDescription = "add",
@@ -203,7 +212,7 @@ fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int) {
 }
 
 @Composable
-fun ResearcherTrialPost(trialInfo: TrialState) {
+fun ResearcherTrialPost(trialInfo: Trial) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -219,7 +228,7 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
                 .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = trialInfo.trialName,
+                    text = trialInfo.title,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
@@ -229,10 +238,10 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
                     text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipantsRegistered,
+                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numPotentialParticipants,
+                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numParticipants,
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }
@@ -283,6 +292,6 @@ fun ResearcherTrialPost(trialInfo: TrialState) {
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials(role = Role.RESEARCHER)
+        MyTrials(role = Role.TRIAL_PARTICIPANT)
     }
 }
