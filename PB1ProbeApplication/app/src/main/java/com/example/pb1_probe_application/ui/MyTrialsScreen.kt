@@ -40,12 +40,11 @@ enum class TabPage {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val trials = trialsViewModel.trials.collectAsState(emptyList()) // TODO - get myTrials instead of full list
-    val myTrials = trials.value
+fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+    val myTrials = trialsViewModel.getViewModelMyTrials()
     var subscribedTrials: List<Trial> by remember { mutableStateOf(ArrayList())}
     if (role == Role.TRIAL_PARTICIPANT)
-        subscribedTrials = trialsViewModel.getViewModelSubscribedTrials()
+        subscribedTrials = trialsViewModel.getViewModelSubscribedTrials().minus(myTrials.toSet())
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,35 +57,42 @@ fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: 
         content = {
             Column(modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 70.dp)) {
+                .padding(bottom = 70.dp)
+            ) {
                 if(role == Role.RESEARCHER) {
                     Text(
                         modifier = Modifier.padding(start = 17.dp, bottom = 12.dp),
                         text = stringResource(R.string.aktiveStudier), style = Typography.h2
                     )
                     if (myTrials.isEmpty()) {
-                        Spacer(modifier = Modifier.height(250.dp))
+                        Spacer(modifier = Modifier.height(200.dp))
                         Text(
-                            modifier = Modifier.align(CenterHorizontally),
-                            text = stringResource(R.string.ingenAktiveStudier), style = Typography.body1
+                            text = stringResource(R.string.ingenAktiveStudier), style = Typography.body1,
+                            modifier = Modifier.align(CenterHorizontally) )
+                        Spacer(modifier = modifier.weight(1f))
+                        PostNewTrialButton(
+                            Modifier
+                                .height(45.dp)
+                                .padding(bottom = 5.dp)
+                                .align(CenterHorizontally)
                         )
                     } else {
                         LazyColumn(
-                            modifier = Modifier.weight(4f),
+                            modifier = modifier.weight(1f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
-                                ResearcherTrialPost(trialInfo = it)
+                                ResearcherTrialPost(it, trialsViewModel.getViewModelSubscribedParticipants(it.trialID).size)
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
-                        Spacer(modifier = Modifier.weight(.2f))
+                        Spacer(modifier = Modifier.height(20.dp))
                         PostNewTrialButton(
-                            Modifier
-                                .align(CenterHorizontally)
+                            modifier
                                 .height(45.dp)
                                 .padding(bottom = 5.dp)
+                                .align(CenterHorizontally)
                         )
                     }
                 } else { // trial participant
@@ -101,7 +107,7 @@ fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: 
                         },
                         pagerState
                     )
-                    HorizontalPager(state = pagerState, modifier = Modifier.weight(1f))
+                    HorizontalPager(state = pagerState, modifier = modifier)
                     { index ->
                         val trials1 =
                             if(pagerState.currentPage == 0)
@@ -134,8 +140,11 @@ fun MyTrials(trialsViewModel: TrialsViewModel = viewModel(), navHostController: 
                                         }
                                         else
                                             { {trialsViewModel.unsubscribeFromTrial(it)
-                                            subscribedTrials = trialsViewModel.getViewModelSubscribedTrials()} }
-                                    ParticipantTrialPost(trial = it, selectedTabIndex = pagerState.currentPage, onClick = onClick)
+                                            subscribedTrials = trialsViewModel.getViewModelSubscribedTrials().minus(myTrials.toSet())} }
+                                    if(pagerState.currentPage == 0) // mytrials
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
+                                    else // subscribedTrials
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true, iconOnClick = onClick, applyOnClick = {navHostController.navigate("DeltagerInfo")})
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
@@ -205,15 +214,7 @@ private fun PostNewTrialButton(modifier: Modifier) {
 }
 
 @Composable
-fun ParticipantTrialPost(trial: Trial, selectedTabIndex: Int, onClick: () -> Unit) {
-    if(selectedTabIndex == 0) // mytrials
-        TrialItem(trial = trial, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, onClick = onClick)
-    else // subscribedTrials
-        TrialItem(trial = trial, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true, onClick = onClick)
-}
-
-@Composable
-fun ResearcherTrialPost(trialInfo: Trial) {
+fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -229,20 +230,20 @@ fun ResearcherTrialPost(trialInfo: Trial) {
                 .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
-                    text = trialInfo.title,
+                    text = trial.title,
                     style = MaterialTheme.typography.body1,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
                 )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
-                    text = stringResource(R.string.tilmeldingsfrist) + " "+ trialInfo.registrationDeadline,
+                    text = stringResource(R.string.tilmeldingsfrist) + " "+ trial.registrationDeadline,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.antalTilmeldte) + " "+ trialInfo.numParticipants,
+                    text = stringResource(R.string.antalTilmeldte) + " "+ numRegisteredParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trialInfo.numParticipants,
+                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }

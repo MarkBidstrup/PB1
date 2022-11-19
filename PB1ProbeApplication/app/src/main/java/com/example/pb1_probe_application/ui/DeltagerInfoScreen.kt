@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Paint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -22,17 +21,16 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerInfo(trialID: String, navHostController: NavHostController = rememberNavController()) {
-    // TODO - get data from database based on the trialID
-    val data = Datasource().loadDeltagerInfo()
+fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel(), onClick: () -> Unit) {
+    val trial = trialsViewModel.getTrial(trialID)
+    val data = trial?.deltagerInformation
 
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button
@@ -61,7 +59,9 @@ fun DeltagerInfo(trialID: String, navHostController: NavHostController = remembe
                 .padding(bottom = 20.dp)
                 .fillMaxSize()
                 .verticalScroll(scrollState) ){
-                Text(text = data, lineHeight = 24.sp)
+                if (data != null) {
+                    Text(text = data, lineHeight = 24.sp)
+                }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row (modifier = Modifier.padding(end = 20.dp)){
                     Checkbox(
@@ -81,8 +81,10 @@ fun DeltagerInfo(trialID: String, navHostController: NavHostController = remembe
                 TrialApplyButton(
                     consentBoxChecked, // scrollState.value == scrollState.maxValue
                     onClick = {
-                        // TODO - update state
-                        navHostController.navigate("Applied")
+                        if (trial != null) {
+                            trialsViewModel.registerForTrial(trial)
+                            onClick.invoke()
+                        }
                 })
             }
         }

@@ -8,4 +8,6 @@ sealed class Route(val route: String) {
     object LogInd: Route("logInd")
     object HomeLoggedIn : Route("HomeLoggedIn")
     object Applied : Route("Applied")
+    object DeltagerInfo : Route("DeltagerInfo")
+
 }

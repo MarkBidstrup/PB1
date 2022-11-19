@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -33,7 +32,7 @@ import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.*
 
- enum class TrialPostIcons() {
+ enum class TrialPostIcons {
      NotificationOn, NotificationOff, Contact
  }
 
@@ -69,6 +68,8 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
+                    val myTrialsList = trialsViewModel.getViewModelMyTrials()
+
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.NotificationOn) }
                         var onClick = if(loggedIn) {
@@ -82,8 +83,18 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             onClick = { trialsViewModel.unsubscribeFromTrial(it)
                                         icon = TrialPostIcons.NotificationOn }
                         }
-                        TrialItem(trial = it, iconUsed = icon,
-                            buttonEnabled = true, onClick = onClick)
+                        // TODO - applyButton should NOT be enabled for researcher profiles
+                        val applyButtonEnabled = !myTrialsList.contains(it)
+                        val applyOnClick: () -> Unit =
+                            if(loggedIn)
+                            { {  navHostController?.navigate("DeltagerInfo") } }
+                                    // TODO navigate with trialID argument
+                            else { {}}
+                        //TODO
+                        // if logged in as trial participant, leads to Deltagerinformation-page
+                        // if not logged in, onClick leads to "log in to see this page"
+                        TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
+                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
                         if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -116,7 +127,8 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean, onClick: () -> Unit) {
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,
+              iconOnClick: () -> Unit, applyOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -141,7 +153,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
             ) {
                 TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
-                NotificationButton(add = iconUsed, onClick = onClick)
+                NotificationButton(add = iconUsed, onClick = iconOnClick)
                 Spacer(Modifier.weight(1f))
                 TrialExpandButton(
                     expanded = expanded,
@@ -159,8 +171,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     color = ReadMoreColor,
                     modifier = modifier.padding(start = 8.dp, top = 16.dp),)
                 Spacer(Modifier.weight(1f))
-                TrialApplyButton(buttonEnabled, onClick = { //TODO
-                })
+                TrialApplyButton(buttonEnabled, onClick = applyOnClick)
             }
         }
     }
@@ -339,13 +350,13 @@ fun ProbeTopBar(modifier: Modifier = Modifier) {
         Modifier
             .fillMaxWidth()
             .height(60.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally)
+            .wrapContentWidth(CenterHorizontally)
     ) {
         Image(
             painter = painterResource(R.drawable.final_icon),
             contentDescription = stringResource(R.string.logo),
             modifier = modifier
-                .wrapContentWidth(Alignment.CenterHorizontally)
+                .wrapContentWidth(CenterHorizontally)
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
         )

@@ -122,6 +122,13 @@ fun BottomNavGraph(navController: NavHostController) {
         composable( route = Route.Applied.route) {
             AppliedScreen(navHostController= navController)
         }
+
+        composable( route = Route.DeltagerInfo.route) {
+            // TODO - remove hardcoded trialID - navigate with arguments!
+            DeltagerInfo("5BDtV4LFGXQnWVpgX4tH", viewModel) {
+                navController.navigate(Route.Applied.route)
+            }
+        }
     }
 }
 fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {

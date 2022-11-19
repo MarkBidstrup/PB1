@@ -52,30 +52,41 @@ class TrialServiceImpl : TrialService {
     }
 
     override suspend fun getMyTrials(): List<Trial> {
-        TODO("Not yet implemented")
+        //TODO update, remove hardcoded email
+        val email = "testemail@email.com"
+        val list: MutableList<Trial> = ArrayList()
+        val snapshot = registrationDB().whereEqualTo("participantEmail", email).get().await()
+        snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
+        return list
     }
 
     override suspend fun getSubscribedTrials(): List<Trial> {
         //TODO update, remove hardcoded email
+        val email = "testemail@email.com"
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = subscriptionDB().whereEqualTo("participantEmail", "testemail@email.com").get().await()
+        val snapshot = subscriptionDB().whereEqualTo("participantEmail", email).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
         return list
     }
 
     override suspend fun registerForTrial(trialId: String) {
-        TODO("Not yet implemented")
+        //TODO update, remove hardcoded email
+        val email = "testemail@email.com"
+        registrationDB().document(email + "_$trialId")
+            .set(dbRegistrations(email, trialId)).await()
     }
 
     override suspend fun subscribeToTrial(trialId: String) {
         //TODO update, remove hardcoded email
-        subscriptionDB().document("testemail@email.com_$trialId")
-            .set(dbRegistrations("testemail@email.com", trialId)).await()
+        val email = "testemail@email.com"
+        subscriptionDB().document(email + "_$trialId")
+            .set(dbRegistrations(email, trialId)).await()
     }
 
     override suspend fun unsubscribeFromTrial(trialId: String) {
         //TODO update, remove hardcoded email
-        subscriptionDB().document("testemail@email.com_$trialId").delete().await()
+        val email = "testemail@email.com"
+        subscriptionDB().document(email + "_$trialId").delete().await()
     }
 
 
@@ -86,6 +97,7 @@ class TrialServiceImpl : TrialService {
         snapshot.forEach { t -> t.getString("participantEmail")?.let { emailList.add(it) } }
         return emailList
     }
+
 
     private fun trialDB(): CollectionReference =
         firestore.collection(TRIAL_COLLECTION)
