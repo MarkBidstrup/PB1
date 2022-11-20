@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.model.Trial
-import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.*
 
  enum class TrialPostIcons {

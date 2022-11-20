@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -20,15 +19,14 @@ import com.example.pb1_probe_application.navigation.BottomBarItems
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.navigation.Graph
 import com.example.pb1_probe_application.navigation.Route
-import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
 
 @Composable
-fun MainHome(authViewModel: AuthViewModel){
+fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
     val navController = rememberNavController()
-    BottomNavGraph(navController = navController, authViewModel = authViewModel)
+    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
 }
 
 @Composable
@@ -89,21 +87,19 @@ fun RowScope.addItem(
 
 }
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?) {
-    val viewModel: TrialsViewModel = viewModel()  // TODO fix this temp solution
-
+fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
+            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
         // TODO loggedInd temp solution
         composable(route = Route.HomeLoggedIn.route) {
-            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
+            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
         composable(route = BottomBarItems.Trials.route) {
-            MyTrials(trialsViewModel = viewModel, navHostController= navController)
+            MyTrials(trialsViewModel = trialsViewModel, navHostController= navController)
         }
 
         composable(route = BottomBarItems.Profile.route) {
@@ -128,7 +124,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
         composable( route = Route.DeltagerInfo.route) {
             // TODO - remove hardcoded trialID - navigate with arguments!
-            DeltagerInfo("5BDtV4LFGXQnWVpgX4tH", viewModel) {
+            DeltagerInfo("5BDtV4LFGXQnWVpgX4tH", trialsViewModel) {
                 navController.navigate(Route.Applied.route)
             }
         }

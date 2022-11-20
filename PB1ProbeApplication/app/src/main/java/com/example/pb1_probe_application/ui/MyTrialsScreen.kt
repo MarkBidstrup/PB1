@@ -25,7 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Trial
-import com.example.pb1_probe_application.model.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.MediumGrey

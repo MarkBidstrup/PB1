@@ -1,10 +1,9 @@
-package com.example.pb1_probe_application.model.service
+package com.example.pb1_probe_application.data.trials
 
 import com.example.pb1_probe_application.model.Trial
-import com.example.pb1_probe_application.model.UserPatient
 import kotlinx.coroutines.flow.Flow
 
-interface TrialService {
+interface TrialRepository {
     val trials: Flow<List<Trial>>
 
     // TODO - change parameters depending on filtering implementation
@@ -24,6 +23,6 @@ interface TrialService {
     suspend fun subscribeToTrial(trialId: String)
     suspend fun unsubscribeFromTrial(trialId: String)
 
-    suspend fun getSubscribedParticipants(trialId: String): List<String>?
+    suspend fun getSubscribedParticipants(trialId: String): List<String>
 
 }

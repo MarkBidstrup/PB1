@@ -1,52 +1,58 @@
-package com.example.pb1_probe_application.model
+package com.example.pb1_probe_application.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pb1_probe_application.model.service.TrialServiceImpl
+import com.example.pb1_probe_application.data.trials.TrialRepository
+import com.example.pb1_probe_application.model.Trial
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 /**
  * ViewModel containing the app data and methods to process the data
  */
 
-class TrialsViewModel : ViewModel(){
-    val trials = TrialServiceImpl().trials
+@HiltViewModel
+class TrialsViewModel @Inject constructor(
+    private val repository: TrialRepository
+) : ViewModel(){
+    val trials = repository.trials
     private var myTrials: List<Trial> = ArrayList()
     private var subscribedTrials: List<Trial> = ArrayList()
 
     init {
         viewModelScope.launch {
-            subscribedTrials = TrialServiceImpl().getSubscribedTrials()
-            myTrials = TrialServiceImpl().getMyTrials()
+            subscribedTrials = repository.getSubscribedTrials()
+            myTrials = repository.getMyTrials()
         }
     }
 
     fun getTrial(trialID: String): Trial? {
         var trial: Trial?
         runBlocking {
-            trial = TrialServiceImpl().getTrial(trialID)
+            trial = repository.getTrial(trialID)
         }
         return trial
     }
 
     fun getViewModelMyTrials(): List<Trial> {
         viewModelScope.launch {
-            myTrials = TrialServiceImpl().getMyTrials()
+            myTrials = repository.getMyTrials()
         }
         return myTrials
     }
 
     fun getViewModelSubscribedTrials(): List<Trial> {
         viewModelScope.launch {
-            subscribedTrials = TrialServiceImpl().getSubscribedTrials()
+            subscribedTrials = repository.getSubscribedTrials()
         }
         return subscribedTrials
     }
 
     fun subscribeToTrial(trial: Trial) {
         viewModelScope.launch {
-            TrialServiceImpl().subscribeToTrial(trial.trialID)
+            repository.subscribeToTrial(trial.trialID)
         }
         if(!subscribedTrials.contains(trial)) {
             val trials = subscribedTrials.toMutableList()
@@ -57,7 +63,7 @@ class TrialsViewModel : ViewModel(){
 
     fun unsubscribeFromTrial(trial: Trial) {
         viewModelScope.launch {
-            TrialServiceImpl().unsubscribeFromTrial(trial.trialID)
+            repository.unsubscribeFromTrial(trial.trialID)
         }
         val trials = subscribedTrials.toMutableList()
         trials.remove(trial)
@@ -66,7 +72,7 @@ class TrialsViewModel : ViewModel(){
 
     fun registerForTrial(trial: Trial) {
         viewModelScope.launch {
-            TrialServiceImpl().registerForTrial(trial.trialID)
+            repository.registerForTrial(trial.trialID)
         }
         if(!myTrials.contains(trial)) {
             val trials = myTrials.toMutableList()
@@ -78,26 +84,26 @@ class TrialsViewModel : ViewModel(){
     fun getViewModelSubscribedParticipants(trialID: String): List<String> {
         var list: List<String>
         runBlocking {
-            list = TrialServiceImpl().getSubscribedParticipants(trialID)
+            list = repository.getSubscribedParticipants(trialID)
         }
         return list
     }
 
     fun createNewTrial(trial: Trial) {
         viewModelScope.launch {
-            TrialServiceImpl().addNew(trial)
+            repository.addNew(trial)
         }
     }
 
     fun updateTrial(trial: Trial) {
         viewModelScope.launch {
-            TrialServiceImpl().update(trial)
+            repository.update(trial)
         }
     }
 
     fun deleteTrial(trialID: String) {
         viewModelScope.launch {
-            TrialServiceImpl().delete(trialID)
+            repository.delete(trialID)
         }
     }
 }

@@ -2,7 +2,12 @@ package com.example.pb1_probe_application.data.auth.DependencyInjection
 
 import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.data.auth.AuthRepositoryImpl
+import com.example.pb1_probe_application.data.trials.TrialRepository
+import com.example.pb1_probe_application.data.trials.TrialRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,4 +23,10 @@ class AppModule {
 
     @Provides
     fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
+
+    @Provides
+    fun provideFirestore(): FirebaseFirestore = Firebase.firestore
+
+    @Provides
+    fun provideTrialsRepository(impl: TrialRepositoryImpl): TrialRepository = impl
 }

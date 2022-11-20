@@ -1,20 +1,20 @@
-package com.example.pb1_probe_application.model.service
+package com.example.pb1_probe_application.data.trials
 
 import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.model.dbRegistrations
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.snapshots
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class TrialServiceImpl : TrialService {
-    private val firestore: FirebaseFirestore = Firebase.firestore
+class TrialRepositoryImpl @Inject constructor(
+    private val firestore: FirebaseFirestore, // TODO add private val accountService
+) : TrialRepository {
 
     override val trials: Flow<List<Trial>>
         get() = trialDB().snapshots().map { snapshot -> snapshot.toObjects() }
