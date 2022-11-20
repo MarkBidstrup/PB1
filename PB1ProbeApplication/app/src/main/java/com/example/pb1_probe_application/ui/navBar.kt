@@ -13,6 +13,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.model.LoggedIn
 import com.example.pb1_probe_application.navigation.BottomBarItems
 
 import com.example.pb1_probe_application.model.Role
@@ -24,10 +26,11 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
 
 @Composable
-fun MainHome(){
+fun MainHome(authViewModel: AuthViewModel){
     val navController = rememberNavController()
-    BottomNavGraph(navController = navController)
+    BottomNavGraph(navController = navController, authViewModel = authViewModel)
 }
+
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -86,18 +89,18 @@ fun RowScope.addItem(
 
 }
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?) {
     val viewModel: TrialsViewModel = viewModel()  // TODO fix this temp solution
 
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = false)
+            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
         // TODO loggedInd temp solution
         composable(route = Route.HomeLoggedIn.route) {
-            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = true)
+            TrialListingsScreen(trialsViewModel = viewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
         composable(route = BottomBarItems.Trials.route) {
             MyTrials(trialsViewModel = viewModel, navHostController= navController)
@@ -117,7 +120,7 @@ fun BottomNavGraph(navController: NavHostController) {
             }
         }
         composable( route = Route.LogInd.route) {
-            LogIn(navHostController= navController)
+            LogIn(navHostController= navController, authViewModel = authViewModel)
         }
         composable( route = Route.Applied.route) {
             AppliedScreen(navHostController= navController)

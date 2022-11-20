@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -62,10 +64,16 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
     implementation "com.google.accompanist:accompanist-pager:0.18.0"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.18.0"
+    //dagger
+    implementation 'com.google.dagger:dagger:2.44'
+    kapt 'com.google.dagger:dagger-compiler:2.44'
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation platform('com.google.firebase:firebase-bom:31.0.3')
     // TODO: Add the dependencies for Firebase products you want to use
@@ -74,4 +82,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
+}
+kapt {
+    correctErrorTypes = true
 }
