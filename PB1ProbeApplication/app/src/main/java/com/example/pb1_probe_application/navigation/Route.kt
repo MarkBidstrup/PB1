@@ -7,6 +7,6 @@ sealed class Route(val route: String) {
     object Notification: Route("Notification")
     object LogInd: Route("logInd")
     object Applied : Route("Applied")
-    object DeltagerInfo : Route("DeltagerInfo")
+    object DeltagerInfo : Route("DeltagerInfo/{trialID}")
 
 }

@@ -1,10 +1,11 @@
 package com.example.pb1_probe_application.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -13,7 +14,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.data.auth.AuthViewModel
-import com.example.pb1_probe_application.model.LoggedIn
 import com.example.pb1_probe_application.navigation.BottomBarItems
 
 import com.example.pb1_probe_application.model.Role
@@ -26,6 +26,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
     val navController = rememberNavController()
+    authViewModel?.logout() // TODO - potentially remove this if user can stay logged in
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
 }
 
@@ -42,7 +43,7 @@ fun BottomBar(navController: NavHostController){
     BottomNavigation(
         // Customize navigationBAR here :)
         backgroundColor = NavBarColorGreen,
-        ) {
+    ) {
         screens.forEach{
                 screens ->
             addItem(screen = screens, currentDestination = currentDestination , navController = navController)
@@ -59,9 +60,9 @@ fun RowScope.addItem(
     BottomNavigationItem(
         label = {
             Text(text = screen.title,
-            fontFamily = Cairo,
-            fontSize = 14.sp,
-              color = Color.DarkGray
+                fontFamily = Cairo,
+                fontSize = 14.sp,
+                color = Color.DarkGray
             )
         },
         icon = {
@@ -89,16 +90,17 @@ fun RowScope.addItem(
 
 @Composable
 fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
+    val ctx = LocalContext.current
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
-    ) {
-        composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
-        }
+    )
+    {
 
-        // TODO loggedInd temp solution
-        composable(route = Route.HomeLoggedIn.route) {
-            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
+
+        composable(route = BottomBarItems.Home.route) {
+            var loggedIn by remember { mutableStateOf(false)  }
+            loggedIn = authViewModel?.currentUser != null
+            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
 
         composable(route = BottomBarItems.Trials.route) {
@@ -130,30 +132,35 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
         composable(route = Route.DeltagerInfo.route) {
             // TODO - remove hardcoded trialID - navigate with arguments!
-            DeltagerInfo("5BDtV4LFGXQnWVpgX4tH", trialsViewModel) {
-                navController.navigate(Route.Applied.route)
+            navBackStackEntry ->
+            val trialID = navBackStackEntry.arguments?.getString("trialID")
+            if(trialID == null) {
+                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
+            } else {
+                DeltagerInfo(trialID = trialID, trialsViewModel) {
+                    navController.navigate(Route.Applied.route)
+            }
+
             }
         }
     }
 }
-
 fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
-    navigation(route = Graph.SETTING, startDestination = BottomBarItems.Profile.route) {
-       composable(Route.Setting.route) {
-           notificationNav(navController= navController)
-           SettingsScreen(role = Role.RESEARCHER, onClick =
-           {
-               navController.popBackStack()
-           },
-               onClickNav = {
-                   navController.navigate(Route.Notification.route)
-               },
-               authViewModel = authViewModel ,
-               logOutNav = {
-                   navController.navigate(BottomBarItems.Home.route)
-               }
-           )
-       }
+    navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
+        composable(Route.Setting.route) {
+            notificationNav(navController= navController)
+            SettingsScreen(role = Role.RESEARCHER, authViewModel = authViewModel, onClick =
+            {
+                navController.popBackStack()
+            },
+                onClickNav = {
+                    navController.navigate(Route.Notification.route)
+                },
+                logOutNav = {
+                    navController.navigate(BottomBarItems.Home.route)
+                }
+            )
+        }
     }
 }
 
@@ -166,5 +173,3 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
         }
     }
 }
-
-
