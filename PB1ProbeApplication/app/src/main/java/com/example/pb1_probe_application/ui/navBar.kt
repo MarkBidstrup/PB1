@@ -2,8 +2,7 @@ package com.example.pb1_probe_application.ui
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
@@ -13,7 +12,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.data.auth.AuthViewModel
-import com.example.pb1_probe_application.model.LoggedIn
 import com.example.pb1_probe_application.navigation.BottomBarItems
 
 import com.example.pb1_probe_application.model.Role
@@ -26,6 +24,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
     val navController = rememberNavController()
+    authViewModel?.logout() // TODO - potentially remove this if user can stay logged in
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
 }
 
@@ -92,12 +91,11 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         startDestination = BottomBarItems.Home.route
     ) {
         composable(route = BottomBarItems.Home.route) {
-            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
+            var loggedIn by remember { mutableStateOf(false)  }
+            loggedIn = authViewModel?.currentUser != null
+            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
-        // TODO loggedInd temp solution
-        composable(route = Route.HomeLoggedIn.route) {
-            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
-        }
+
         composable(route = BottomBarItems.Trials.route) {
             MyTrials(trialsViewModel = trialsViewModel, navHostController= navController)
         }
@@ -107,7 +105,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
         }
 
-        navigationAppHost(navController = navController)
+        navigationAppHost(navController = navController, authViewModel = authViewModel)
         notificationNav(navController= navController)
         // navigate to editprofile screen
         composable( route = Route.EditProfile.route) {
@@ -130,16 +128,19 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
     }
 }
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
        composable(Route.Setting.route) {
            notificationNav(navController= navController)
-           SettingsScreen(role = Role.RESEARCHER, onClick =
+           SettingsScreen(role = Role.RESEARCHER, authViewModel = authViewModel, onClick =
            {
                navController.popBackStack()
            },
                onClickNav = {
                    navController.navigate(Route.Notification.route)
+               },
+               logOutNav = {
+                   navController.navigate(BottomBarItems.Home.route)
                }
                )
        }

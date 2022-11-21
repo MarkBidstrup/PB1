@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.data.auth.AuthViewModel
 
 
 import com.example.pb1_probe_application.model.Role
@@ -23,16 +24,22 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role, onClick: () -> Unit,onClickNav :() -> Unit) {
+fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
     val currentUser: Role = role
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        SettingsPatientScreen( onClick = onClick,onClickNav = onClickNav)
+        SettingsPatientScreen( onClick = onClick,onClickNav = onClickNav, logOutNav = {
+            authViewModel?.logout()
+            logOutNav.invoke()
+        })
     if (currentUser.equals(Role.RESEARCHER))
-        SettingsResearcherScreen( onClick = onClick,onClickNav = onClickNav)
+        SettingsResearcherScreen( onClick = onClick,onClickNav = onClickNav, logOutNav = {
+            authViewModel?.logout()
+            logOutNav.invoke()
+        })
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
+fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, logOutNav :() -> Unit
 ) {
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
@@ -117,7 +124,13 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
                     text = stringResource(R.string.logUd),
                     style = Typography.body1,
                     color = TextColorRed,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier.padding(
+                        start = 17.dp,
+                        end = 17.dp,
+                        bottom = 10.dp,
+                        top = 10.dp
+                    )
+                        .clickable { logOutNav }
                 )
             }
         }
@@ -125,7 +138,7 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
+fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit , logOutNav :() -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -175,6 +188,8 @@ fun SettingsResearcherScreen( onClick: () -> Unit,onClickNav :() -> Unit ) {
                     style = Typography.body1,
                     color = TextColorRed,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                        .clickable { logOutNav }
+
                 )
             }
         }
