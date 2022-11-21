@@ -142,9 +142,6 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
            },
                onClickNav = {
                    navController.navigate(Route.Notification.route)
-               },
-               logOutNav = {
-                   navController.navigate(BottomBarItems.Home.route)
                }
                )
        }
