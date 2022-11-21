@@ -22,7 +22,7 @@ class TrialsViewModel @Inject constructor(
     private var subscribedTrials: List<Trial> = ArrayList()
 
     init {
-        viewModelScope.launch {
+        runBlocking {
             subscribedTrials = repository.getSubscribedTrials()
             myTrials = repository.getMyTrials()
         }
