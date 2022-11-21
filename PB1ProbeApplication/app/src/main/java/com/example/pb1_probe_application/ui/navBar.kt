@@ -45,10 +45,11 @@ fun BottomBar(navController: NavHostController){
         ) {
         screens.forEach{
                 screens ->
-            addItem(screen = screens, currentDestination =currentDestination , navController =navController )
+            addItem(screen = screens, currentDestination = currentDestination , navController = navController)
         }
     }
 }
+
 @Composable
 fun RowScope.addItem(
     screen: BottomBarItems,
@@ -84,8 +85,8 @@ fun RowScope.addItem(
             }
         }
     )
-
 }
+
 @Composable
 fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
     NavHost(navController = navController,
@@ -94,35 +95,40 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         composable(route = BottomBarItems.Home.route) {
             TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
+
         // TODO loggedInd temp solution
         composable(route = Route.HomeLoggedIn.route) {
             TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = LoggedIn.loggedIn)
         }
+
         composable(route = BottomBarItems.Trials.route) {
-            MyTrials(trialsViewModel = trialsViewModel, navHostController= navController)
+            MyTrials(trialsViewModel = trialsViewModel, navHostController = navController)
         }
 
         composable(route = BottomBarItems.Profile.route) {
 
-            ProfileScreen(role = Role.TRIAL_PARTICIPANT,navHostController= navController)
+            ProfileScreen(role = Role.TRIAL_PARTICIPANT, navHostController = navController)
         }
 
-        navigationAppHost(navController = navController)
-        notificationNav(navController= navController)
+        navigationAppHost(navController = navController, authViewModel)
+        notificationNav(navController = navController)
+
         // navigate to editprofile screen
-        composable( route = Route.EditProfile.route) {
+        composable(route = Route.EditProfile.route) {
             EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
                 navController.popBackStack()
             }
         }
-        composable( route = Route.LogInd.route) {
-            LogIn(navHostController= navController, authViewModel = authViewModel)
-        }
-        composable( route = Route.Applied.route) {
-            AppliedScreen(navHostController= navController)
+
+        composable(route = Route.LogInd.route) {
+            LogIn(navHostController = navController, authViewModel = authViewModel)
         }
 
-        composable( route = Route.DeltagerInfo.route) {
+        composable(route = Route.Applied.route) {
+            AppliedScreen(navHostController = navController)
+        }
+
+        composable(route = Route.DeltagerInfo.route) {
             // TODO - remove hardcoded trialID - navigate with arguments!
             DeltagerInfo("5BDtV4LFGXQnWVpgX4tH", trialsViewModel) {
                 navController.navigate(Route.Applied.route)
@@ -130,8 +136,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
     }
 }
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
-    navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
+
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
+    navigation(route = Graph.SETTING, startDestination = BottomBarItems.Profile.route) {
        composable(Route.Setting.route) {
            notificationNav(navController= navController)
            SettingsScreen(role = Role.RESEARCHER, onClick =
@@ -140,19 +147,20 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController) {
            },
                onClickNav = {
                    navController.navigate(Route.Notification.route)
-               }
-               )
+               },
+               authViewModel = authViewModel)
        }
     }
 }
+
 fun NavGraphBuilder.notificationNav(navController: NavHostController) {
-    navigation(route = Graph.NOTIFICATION ,startDestination = BottomBarItems.Profile.route) {
+    navigation(route = Graph.NOTIFICATION, startDestination = BottomBarItems.Profile.route) {
         composable(route = Route.Notification.route) {
             NotificationsScreen() {
                 navController.popBackStack()
             }
         }
-        }
     }
+}
 
 
