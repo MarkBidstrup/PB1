@@ -60,6 +60,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
                         //TODO: implement onClick
+                        navHostController?.navigate("Filter")
                     })
                 }
 
@@ -89,9 +90,11 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                                 !trialsViewModel.getViewModelMyTrials().contains(it) && role == Role.TRIAL_PARTICIPANT
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
-                            { {  navHostController?.navigate("DeltagerInfo") } }
+                            { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
                                     // TODO navigate with trialID argument
-                            else { {}} // TODO - navigate to "log in to see this screen"
+                            else { {
+                                navHostController?.navigate("logInd")
+                            }} // TODO - navigate to "log in to see this screen"
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
                             buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
                         if (trials.indexOf(it) != trials.size)

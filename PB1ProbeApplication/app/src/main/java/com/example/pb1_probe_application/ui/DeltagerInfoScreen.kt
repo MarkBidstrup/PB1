@@ -22,14 +22,18 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.navigation.Route
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel(), onClick: () -> Unit) {
+fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel(), onClick: () -> Unit,onClickNav: () -> Unit) {
     val trial = trialsViewModel.getTrial(trialID)
     val data = trial?.deltagerInformation
+    val navController = rememberNavController()
 
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button
@@ -41,9 +45,8 @@ fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel()
                 title = { Text(stringResource(R.string.deltager_info), style = Typography.h1) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = {
+                IconButton(onClick = onClickNav
                 //TODO - go back
-                    }
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -83,7 +86,10 @@ fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel()
                         if (trial != null) {
                             trialsViewModel.registerForTrial(trial)
                             onClick.invoke()
+
+
                         }
+//                        navController.navigate(Route.Applied.route)
                 })
             }
         }

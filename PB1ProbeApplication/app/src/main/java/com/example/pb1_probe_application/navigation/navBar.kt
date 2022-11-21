@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
@@ -102,6 +103,11 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             loggedIn = authViewModel?.currentUser != null
             TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
+        composable(route = Route.Filter.route) {
+            FilterScreen(onClickNav = {
+                navController.navigate("Home")
+            })
+        }
 
         composable(route = BottomBarItems.Trials.route) {
             MyTrials(trialsViewModel = trialsViewModel, navHostController = navController)
@@ -114,6 +120,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
         navigationAppHost(navController = navController, authViewModel)
         notificationNav(navController = navController)
+        deltagerInfoNav(navController = navController,trialsViewModel = trialsViewModel)
 
         // navigate to editprofile screen
         composable(route = Route.EditProfile.route) {
@@ -126,23 +133,23 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             LogIn(navHostController = navController, authViewModel = authViewModel)
         }
 
-        composable(route = Route.Applied.route) {
-            AppliedScreen(navHostController = navController)
-        }
-
-        composable(route = Route.DeltagerInfo.route) {
-            // TODO - remove hardcoded trialID - navigate with arguments!
-            navBackStackEntry ->
-            val trialID = navBackStackEntry.arguments?.getString("trialID")
-            if(trialID == null) {
-                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-            } else {
-                DeltagerInfo(trialID = trialID, trialsViewModel) {
-                    navController.navigate(Route.Applied.route)
-            }
-
-            }
-        }
+//        composable(route = Route.Applied.route) {
+//            AppliedScreen(navHostController = navController)
+//        }
+//
+//        composable(route = Route.DeltagerInfo.route) {
+//            // TODO - remove hardcoded trialID - navigate with arguments!
+//            navBackStackEntry ->
+//            val trialID = navBackStackEntry.arguments?.getString("trialID")
+//            if(trialID == null) {
+//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
+//            } else {
+//                DeltagerInfo(trialID = trialID, trialsViewModel) {
+//                    navController.navigate(Route.Applied.route)
+//            }
+//
+//            }
+//        }
     }
 }
 fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
@@ -173,3 +180,32 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
         }
     }
 }
+
+
+
+
+
+fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
+    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
+
+        composable(Route.DeltagerInfo.route) {
+            navBackStackEntry ->
+            val trialID = navBackStackEntry.arguments?.getString("trialID")
+            if(trialID == null) {
+                val ctx = LocalContext.current
+                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
+            } else {
+                DeltagerInfo(trialID = trialID, trialsViewModel ,
+                    onClick = {
+                        navController.navigate(Route.Applied.route)
+                },onClickNav = {
+                    navController.navigate("Home")
+                })
+            }
+        }
+
+        composable(route = Route.Applied.route) {
+            AppliedScreen(navHostController = navController)
+        }
+        }
+    }
