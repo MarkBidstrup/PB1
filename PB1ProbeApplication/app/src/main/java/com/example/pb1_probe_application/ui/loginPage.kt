@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.ui
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,9 +29,13 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
 
     // changes for login
     val loginFlow = authViewModel?.loginFlow?.collectAsState()
+    // changes for register
+    val signupFlow = authViewModel?.signupFlow?.collectAsState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()){
 
@@ -45,7 +50,7 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
             TextField(
                 label = { Text(text = "E-mail") },
                 value = email,
-                visualTransformation = PasswordVisualTransformation(),
+//                visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 onValueChange = { email = it })
             Spacer(modifier = Modifier.height(20.dp))
@@ -61,7 +66,6 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
             Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
                 Button(
                     onClick = {
-
                         // changes for login
                         authViewModel?.login(email,password)
                     },
@@ -70,23 +74,36 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
                         .fillMaxWidth()
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
-
-
                 ) {
                     Text(text = "Login")
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
+            Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
+                Button(
+                    onClick = {
+                        // changes for register
+                          signup(authViewModel = authViewModel, email = email, password = password, context)
+                    },
+                    shape = RoundedCornerShape(50.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ButtonColorGreen)
+                ) {
+                    Text(text = "Register")
+                }
+            }
         }
-
         // changes for login
         loginFlow?.value?.let {
             when(it) {
                 is Resource.Failure -> {
-                    val context = LocalContext.current
+//                    val context = LocalContext.current
                     Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
                 }
                 Resource.Loading -> {
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
@@ -95,10 +112,25 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
                 }
             }
         }
+        // changes for register
+        signupFlow?.value?.let {
+            when(it) {
+                is Resource.Failure -> {
+                    Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                }
+                Resource.Loading -> {
+                }
+                is Resource.Success -> {
+                }
+            }
+        }
     }
+}
 
-
-
+private fun signup(authViewModel: AuthViewModel?, email: String, password: String, context: Context) {
+    authViewModel?.signup(email,password)
+    if (!(email.equals("") && password.equals("")))
+        Toast.makeText(context,"Registration completed",Toast.LENGTH_LONG).show()
 }
 
 //@Preview
