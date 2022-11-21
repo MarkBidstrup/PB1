@@ -26,7 +26,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
     val navController = rememberNavController()
-    authViewModel?.logout() // TODO - potentially remove this if user can stay logged in
+    authViewModel.logout() // TODO - potentially remove this if user can stay logged in
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
 }
 
