@@ -107,7 +107,7 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
                 }
                 is Resource.Success -> {
                     LaunchedEffect(Unit) {
-                        navHostController?.navigate("HomeLoggedIn")
+                        navHostController?.navigate("Home")
                     }
                 }
             }

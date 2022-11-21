@@ -2,7 +2,6 @@ package com.example.pb1_probe_application.data.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pb1_probe_application.model.LoggedIn
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +32,6 @@ class AuthViewModel @Inject constructor(
         _loginFlow.value = Resource.Loading
         val result = repository.login(email,password)
         _loginFlow.value = result
-        LoggedIn.loggedIn = true
     }
 
     fun signup(email: String, password: String) = viewModelScope.launch {
