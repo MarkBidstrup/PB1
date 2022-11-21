@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
+import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.ui.theme.*
 
@@ -37,7 +38,7 @@ import com.example.pb1_probe_application.ui.theme.*
 
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
-fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean) {
+fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
      val trials = trialsViewModel.trials.collectAsState(emptyList()).value
 
     Scaffold(
@@ -82,16 +83,12 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             onClick = { trialsViewModel.unsubscribeFromTrial(it)
                                         icon = TrialPostIcons.NotificationOn }
                         }
-                        // TODO - applyButton should NOT be enabled for researcher profiles
-                        val applyButtonEnabled = !myTrialsList.contains(it)
+                        val applyButtonEnabled = !myTrialsList.contains(it) && role == Role.TRIAL_PARTICIPANT
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
                             { {  navHostController?.navigate("DeltagerInfo") } }
                                     // TODO navigate with trialID argument
-                            else { {}}
-                        //TODO
-                        // if logged in as trial participant, leads to Deltagerinformation-page
-                        // if not logged in, onClick leads to "log in to see this page"
+                            else { {}} // TODO - navigate to "log in to see this screen"
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
                             buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
                         if (trials.indexOf(it) != trials.size)

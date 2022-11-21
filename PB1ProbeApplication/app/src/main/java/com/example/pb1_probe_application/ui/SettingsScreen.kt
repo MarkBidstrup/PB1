@@ -24,16 +24,16 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?) {
+fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
     val currentUser: Role = role
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel)
+        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
     if (currentUser.equals(Role.RESEARCHER))
-        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel)
+        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?) {
+fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -121,6 +121,7 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authView
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             authViewModel?.logout()
+                            logOutNav()
 
                         }
                 )
@@ -130,7 +131,7 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authView
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?) {
+fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -183,7 +184,7 @@ fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authVi
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             authViewModel?.logout()
-                            onClickNav()
+                            logOutNav()
                         }
                 )
             }
