@@ -69,7 +69,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-
+                    val myTrials = trialsViewModel.getViewModelMyTrials()
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.NotificationOn) }
                         var onClick = if(loggedIn) {
@@ -87,7 +87,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             if (!loggedIn)
                                 true
                             else
-                                !trialsViewModel.getViewModelMyTrials().contains(it) && role == Role.TRIAL_PARTICIPANT
+                                !myTrials.contains(it) && role == Role.TRIAL_PARTICIPANT
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
                             { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
