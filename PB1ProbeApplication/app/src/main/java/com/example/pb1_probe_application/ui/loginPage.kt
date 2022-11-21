@@ -32,8 +32,8 @@ fun LogIn(navHostController: NavHostController?, authViewModel: AuthViewModel?){
     // changes for register
     val signupFlow = authViewModel?.signupFlow?.collectAsState()
 
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("test@test.com") }
+    var password by remember { mutableStateOf("123456") }
 
     val context = LocalContext.current
 
