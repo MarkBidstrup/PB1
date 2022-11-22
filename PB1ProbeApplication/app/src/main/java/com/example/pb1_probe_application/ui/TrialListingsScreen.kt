@@ -60,6 +60,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
                         //TODO: implement onClick
+                        navHostController?.navigate("Filter")
                     })
                 }
 
@@ -68,7 +69,6 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    val myTrialsList = trialsViewModel.getViewModelMyTrials()
 
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.NotificationOn) }
@@ -83,12 +83,18 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             onClick = { trialsViewModel.unsubscribeFromTrial(it)
                                         icon = TrialPostIcons.NotificationOn }
                         }
-                        val applyButtonEnabled = !myTrialsList.contains(it) && role == Role.TRIAL_PARTICIPANT
+                        val applyButtonEnabled: Boolean =
+                            if (!loggedIn)
+                                true
+                            else
+                                !trialsViewModel.getViewModelMyTrials().contains(it) && role == Role.TRIAL_PARTICIPANT
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
-                            { {  navHostController?.navigate("DeltagerInfo") } }
+                            { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
                                     // TODO navigate with trialID argument
-                            else { {}} // TODO - navigate to "log in to see this screen"
+                            else { {
+                                navHostController?.navigate("logInd")
+                            }} // TODO - navigate to "log in to see this screen"
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
                             buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
                         if (trials.indexOf(it) != trials.size)

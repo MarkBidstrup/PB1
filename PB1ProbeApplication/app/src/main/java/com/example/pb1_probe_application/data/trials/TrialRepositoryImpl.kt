@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.data.trials
 
+import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.model.dbRegistrations
 import com.google.firebase.firestore.CollectionReference
@@ -13,7 +14,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class TrialRepositoryImpl @Inject constructor(
-    private val firestore: FirebaseFirestore, // TODO add private val accountService
+    private val firestore: FirebaseFirestore, private val auth: AuthRepository
 ) : TrialRepository {
 
     override val trials: Flow<List<Trial>>
@@ -52,8 +53,7 @@ class TrialRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyTrials(): List<Trial> {
-        //TODO update, remove hardcoded email
-        val email = "testemail@email.com"
+        val email = auth.currentUser?.email
         val list: MutableList<Trial> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("participantEmail", email).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
@@ -61,8 +61,7 @@ class TrialRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSubscribedTrials(): List<Trial> {
-        //TODO update, remove hardcoded email
-        val email = "testemail@email.com"
+        val email = auth.currentUser?.email
         val list: MutableList<Trial> = ArrayList()
         val snapshot = subscriptionDB().whereEqualTo("participantEmail", email).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
@@ -70,27 +69,25 @@ class TrialRepositoryImpl @Inject constructor(
     }
 
     override suspend fun registerForTrial(trialId: String) {
-        //TODO update, remove hardcoded email
-        val email = "testemail@email.com"
-        registrationDB().document(email + "_$trialId")
+        val email = auth.currentUser?.email
+        if(email != null)
+            registrationDB().document(email + "_$trialId")
             .set(dbRegistrations(email, trialId)).await()
     }
 
     override suspend fun subscribeToTrial(trialId: String) {
-        //TODO update, remove hardcoded email
-        val email = "testemail@email.com"
-        subscriptionDB().document(email + "_$trialId")
+        val email = auth.currentUser?.email
+        if(email != null)
+            subscriptionDB().document(email + "_$trialId")
             .set(dbRegistrations(email, trialId)).await()
     }
 
     override suspend fun unsubscribeFromTrial(trialId: String) {
-        //TODO update, remove hardcoded email
-        val email = "testemail@email.com"
-        subscriptionDB().document(email + "_$trialId").delete().await()
+        val email = auth.currentUser?.email
+        if(email != null)
+            subscriptionDB().document(email + "_$trialId").delete().await()
     }
 
-
-    // TODO - test this
     override suspend fun getSubscribedParticipants(trialId: String): List<String> {
         val emailList: MutableList<String> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("trialID", trialId).get().await()

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
@@ -24,7 +25,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun FilterScreen() {
+fun FilterScreen(onClickNav: () -> Unit) {
     Scaffold(
         topBar = {
 
@@ -34,7 +35,9 @@ fun FilterScreen() {
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
-                    onClick = { /* TODO */ }
+                    onClick = onClickNav
+                    /*
+                    TODO */
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -225,10 +228,10 @@ fun CheckOption(
 
 
 
-@Preview
-@Composable
-fun FilterPreview() {
-    PB1ProbeApplicationTheme(darkTheme = false) {
-        FilterScreen()
-    }
-}
+//@Preview
+//@Composable
+//fun FilterPreview() {
+//    PB1ProbeApplicationTheme(darkTheme = false) {
+//        FilterScreen(onClickNav = onClickNav)
+//    }
+//}
