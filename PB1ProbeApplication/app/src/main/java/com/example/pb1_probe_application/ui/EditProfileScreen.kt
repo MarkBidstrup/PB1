@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,87 +20,105 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.UserInfo
+import com.example.pb1_probe_application.model.UserPatient
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun EditProfileScreen(role: Role,onClick: () -> Unit) {
 
-    val currentUser: Role = role
-    val focusManager = LocalFocusManager.current
-
-    if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current,onClick = onClick)
-    if (currentUser.equals(Role.RESEARCHER))
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current,onClick = onClick)
+    if (role == Role.TRIAL_PARTICIPANT)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
+    if (role == Role.RESEARCHER)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit) {
+    var input by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
-
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                 IconButton(
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = {
+                        val data = UserPatient()
+                        val s: String = FirebaseAuth.getInstance().currentUser!!.uid
+                        //TODO connect to database
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Save,
+                        contentDescription = "save changes",
+                    )
+                }
+                IconButton(
                      onClick = {
                          onClick()
-
-                 }) {
+                     }
+                ) {
                      Icon(
                          Icons.Default.ArrowBack,
-                         contentDescription = "edit",
+                         contentDescription = "return",
                      )
-                 }
+                }
             }
-                 },
+                },
         content = {
-                    LazyColumn {
-                        items(userInfoList) { UserInfo ->
-                            EditUserInfoField(
-                                userInfo = UserInfo,
-                                label = R.string.placeholder, // TODO: make this variable
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Text,
-                                    imeAction = ImeAction.Done
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onDone = { focusManager.clearFocus() }
-                                )
-                            )
-                            if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
-                                Divider(
-                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
-                                    thickness = 1.dp,
-                                    color = androidx.compose.ui.graphics.Color.LightGray
-                                )
-                            } else {
-                                Divider(
-                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
-                                    thickness = 1.dp,
-                                    color = androidx.compose.ui.graphics.Color.LightGray
-                                )
-                                Text(
-                                    text = stringResource(R.string.sletProfil),
-                                    style = Typography.body1,
-                                    color = TextColorRed,
-                                    modifier = Modifier.padding(start = 17.dp, end = 17.dp)
-                                )
-                            }
-                        }
+            LazyColumn {
+                items(userInfoList) { UserInfo ->
+                    EditUserInfoField(
+                        userInfo = UserInfo,
+                        label = R.string.placeholder, // TODO: make this variable
+                        inputField = input,
+                        onChange = { input = it },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        )
+                    )
+                    if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex) {
+                        Divider(
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
+                            thickness = 1.dp,
+                            color = androidx.compose.ui.graphics.Color.LightGray
+                        )
+                    } else {
+                        Divider(
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
+                            thickness = 1.dp,
+                            color = androidx.compose.ui.graphics.Color.LightGray
+                        )
+                        Text(
+                            text = stringResource(R.string.sletProfil),
+                            style = Typography.body1,
+                            color = TextColorRed,
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
                     }
+                }
+            }
         },
     )
 
@@ -108,11 +127,11 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
 fun EditUserInfoField(
     userInfo: UserInfo,
     @StringRes label: Int,
+    inputField: String,
+    onChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier) {
-
-    var input by remember { mutableStateOf("") }
 
     Column {
         Text(
@@ -122,13 +141,13 @@ fun EditUserInfoField(
             color = TextColorGreen
         )
         OutlinedTextField(
-            value = input,
+            value = inputField,
             singleLine = true,
             label = { Text(text = stringResource(label)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 17.dp, end = 17.dp),
-            onValueChange = { input = it },
+            onValueChange = onChange,
             textStyle = Typography.body1,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions
