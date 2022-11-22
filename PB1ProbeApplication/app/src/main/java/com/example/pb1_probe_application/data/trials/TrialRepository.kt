@@ -7,7 +7,7 @@ interface TrialRepository {
     val trials: Flow<List<Trial>>
 
     // TODO - change parameters depending on filtering implementation
-    suspend fun getFilteredTrials(searchText: String?, location: String?, compensationOffered: Boolean?): List<Trial>?
+    suspend fun getFilteredTrials(searchText: String?, location: String?, compensationOffered: Boolean?): List<Trial>
 
     suspend fun getTrial(trialId: String): Trial?
 
@@ -15,7 +15,8 @@ interface TrialRepository {
     suspend fun update(trial: Trial)
     suspend fun delete(trialId: String)
 
-    suspend fun getMyTrials(): List<Trial>
+    suspend fun getMyTrialsParticipant(): List<Trial>
+    suspend fun getMyTrialsResearcher(): List<Trial>
     suspend fun getSubscribedTrials(): List<Trial>
 
     suspend fun registerForTrial(trialId: String)

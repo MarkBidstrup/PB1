@@ -1,6 +1,5 @@
 package com.example.pb1_probe_application.ui
 
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
@@ -27,7 +26,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
     val navController = rememberNavController()
-    authViewModel.logout() // TODO - potentially remove this if user can stay logged in
+    authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
 }
 

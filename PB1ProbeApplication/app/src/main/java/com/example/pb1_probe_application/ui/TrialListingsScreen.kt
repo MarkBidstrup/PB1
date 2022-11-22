@@ -33,7 +33,7 @@ import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.ui.theme.*
 
  enum class TrialPostIcons {
-     NotificationOn, NotificationOff, Contact
+     NotificationOn, NotificationOff, Contact, None
  }
 
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -69,25 +69,29 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    val myTrials = trialsViewModel.getViewModelMyTrials()
+                    var myTrials: List<Trial> = ArrayList()
+                    if(loggedIn && role == Role.TRIAL_PARTICIPANT)
+                        myTrials = trialsViewModel.getViewModelMyTrialsParticipants()
                     items(trials) {
-                        var icon by remember { mutableStateOf(TrialPostIcons.NotificationOn) }
-                        var onClick = if(loggedIn) {
-                            { trialsViewModel.subscribeToTrial(it)
-                            icon = TrialPostIcons.NotificationOff }
-                            } else {
-                                {}  // TODO - navigate to "log in to see this screen"
-                             }
-                        if(loggedIn && trialsViewModel.getViewModelSubscribedTrials().contains(it)) {
-                            icon = TrialPostIcons.NotificationOff
-                            onClick = { trialsViewModel.unsubscribeFromTrial(it)
-                                        icon = TrialPostIcons.NotificationOn }
+                        var icon by remember { mutableStateOf(TrialPostIcons.None) }
+                        var onClick: () -> Unit = {}
+                        if(loggedIn && role == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
+                            if(trialsViewModel.getViewModelSubscribedTrials().contains(it)) {
+                                icon = TrialPostIcons.NotificationOff
+                                onClick = { trialsViewModel.unsubscribeFromTrial(it)
+                                            icon = TrialPostIcons.NotificationOn }
+                            }
+                            else {
+                                icon = TrialPostIcons.NotificationOn
+                                onClick = { trialsViewModel.subscribeToTrial(it)
+                                icon = TrialPostIcons.NotificationOff }
+                            }
                         }
                         val applyButtonEnabled: Boolean =
                             if (!loggedIn)
                                 true
                             else
-                                !myTrials.contains(it) && role == Role.TRIAL_PARTICIPANT
+                                role == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
                             { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
@@ -155,8 +159,10 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
             ) {
                 TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
-                NotificationButton(add = iconUsed, onClick = iconOnClick)
-                Spacer(Modifier.weight(1f))
+                if(iconUsed != TrialPostIcons.None) {
+                    NotificationButton(add = iconUsed, onClick = iconOnClick)
+                    Spacer(Modifier.weight(1f))
+                }
                 TrialExpandButton(
                     expanded = expanded,
                     onClick = { expanded = !expanded })

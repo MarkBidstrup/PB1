@@ -20,12 +20,6 @@ class TrialRepositoryImpl @Inject constructor(
     override val trials: Flow<List<Trial>>
         get() = trialDB().snapshots().map { snapshot -> snapshot.toObjects() }
 
-//    override suspend fun getAllTrials(): List<Trial> {
-//        val list: MutableList<Trial> = ArrayList()
-//        val snapshot = trialDB().get().await()
-//        snapshot.forEach { t -> list.add(t.toObject()) }
-//        return list
-//    }
 
     override suspend fun getTrial(trialId: String): Trial? {
         return trialDB().document(trialId).get().await().toObject<Trial>()
@@ -35,8 +29,12 @@ class TrialRepositoryImpl @Inject constructor(
         searchText: String?,
         location: String?,
         compensationOffered: Boolean?
-    ): List<Trial>? {
+    ): List<Trial> {
         TODO("Not yet implemented")
+//        val list: MutableList<Trial> = ArrayList()
+//        val snapshot = trialDB().get().await()
+//        snapshot.forEach { t -> list.add(t.toObject()) }
+//        return list
     }
 
     override suspend fun addNew(trial: Trial) {
@@ -52,11 +50,19 @@ class TrialRepositoryImpl @Inject constructor(
         // TODO - also delete from subscribed list etc. Notify users first?
     }
 
-    override suspend fun getMyTrials(): List<Trial> {
+    override suspend fun getMyTrialsParticipant(): List<Trial> {
         val email = auth.currentUser?.email
         val list: MutableList<Trial> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("participantEmail", email).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
+        return list
+    }
+
+    override suspend fun getMyTrialsResearcher(): List<Trial> {
+        val email = auth.currentUser?.email
+        val list: MutableList<Trial> = ArrayList()
+        val snapshot = trialDB().whereEqualTo("researcherEmail", email).get().await()
+        snapshot.forEach { t -> list.add(t.toObject()) }
         return list
     }
 

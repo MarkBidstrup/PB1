@@ -40,10 +40,15 @@ enum class TabPage {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
-    val myTrials = trialsViewModel.getViewModelMyTrials()
+    val myTrials: List<Trial>
     var subscribedTrials: List<Trial> by remember { mutableStateOf(ArrayList())}
-    if (role == Role.TRIAL_PARTICIPANT)
+    if (role == Role.TRIAL_PARTICIPANT) {
+        myTrials = trialsViewModel.getViewModelMyTrialsParticipants()
         subscribedTrials = trialsViewModel.getViewModelSubscribedTrials().minus(myTrials.toSet())
+    }
+    else
+        myTrials = trialsViewModel.getViewModelMyTrialsResearchers()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -242,7 +247,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int) {
                     text = stringResource(R.string.antalTilmeldte) + " "+ numRegisteredParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO
+                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO - what do we show here?
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }

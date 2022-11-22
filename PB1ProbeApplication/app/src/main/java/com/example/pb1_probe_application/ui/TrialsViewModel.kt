@@ -18,13 +18,13 @@ class TrialsViewModel @Inject constructor(
     private val repository: TrialRepository
 ) : ViewModel(){
     val trials = repository.trials
-    private var myTrials: List<Trial> = ArrayList()
+    private var myTrialsParticipants: List<Trial> = ArrayList()
     private var subscribedTrials: List<Trial> = ArrayList()
+    private var myTrialsResearchers: List<Trial> = ArrayList()
 
     init {
-        runBlocking {
+        viewModelScope.launch {
             subscribedTrials = repository.getSubscribedTrials()
-            myTrials = repository.getMyTrials()
         }
     }
 
@@ -36,11 +36,18 @@ class TrialsViewModel @Inject constructor(
         return trial
     }
 
-    fun getViewModelMyTrials(): List<Trial> {
-        viewModelScope.launch {
-            myTrials = repository.getMyTrials()
+    fun getViewModelMyTrialsParticipants(): List<Trial> {
+        runBlocking {
+            myTrialsParticipants = repository.getMyTrialsParticipant()
         }
-        return myTrials
+        return myTrialsParticipants
+    }
+
+    fun getViewModelMyTrialsResearchers(): List<Trial> {
+        runBlocking {
+            myTrialsResearchers = repository.getMyTrialsResearcher()
+        }
+        return myTrialsResearchers
     }
 
     fun getViewModelSubscribedTrials(): List<Trial> {
@@ -74,10 +81,10 @@ class TrialsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.registerForTrial(trial.trialID)
         }
-        if(!myTrials.contains(trial)) {
-            val trials = myTrials.toMutableList()
+        if(!myTrialsParticipants.contains(trial)) {
+            val trials = myTrialsParticipants.toMutableList()
             trials.add(trial)
-            myTrials = trials
+            myTrialsParticipants = trials
         }
     }
 
@@ -93,17 +100,38 @@ class TrialsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.addNew(trial)
         }
+        if(!myTrialsResearchers.contains(trial)) {
+            val trials = myTrialsResearchers.toMutableList()
+            trials.add(trial)
+            myTrialsResearchers = trials
+        }
     }
 
     fun updateTrial(trial: Trial) {
         viewModelScope.launch {
             repository.update(trial)
         }
+        var index = -1
+        for (t in myTrialsResearchers) {
+            if(t.trialID == trial.trialID)
+                index = myTrialsResearchers.indexOf(t)
+        }
+        if(index > -1) {
+            val trials = myTrialsResearchers.toMutableList()
+            trials.removeAt(index)
+            trials.add(index, trial)
+            myTrialsResearchers = trials
+        }
     }
 
-    fun deleteTrial(trialID: String) {
+    fun deleteTrial(trial: Trial) {
         viewModelScope.launch {
-            repository.delete(trialID)
+            repository.delete(trial.trialID)
+        }
+        if(myTrialsResearchers.contains(trial)) {
+            val trials = myTrialsResearchers.toMutableList()
+            trials.remove(trial)
+            myTrialsResearchers = trials
         }
     }
 }
