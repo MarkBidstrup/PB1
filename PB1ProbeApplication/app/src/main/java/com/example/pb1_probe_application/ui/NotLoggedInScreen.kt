@@ -16,7 +16,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 fun NotLoggedInScreen(logInOnClick: () -> Unit, registerOnClick: () -> Unit, navigateBack: () -> Unit){
         Scaffold(
         topBar = {
-            ProbeTopBar(icon = TopBarIcons.Clear, onClick = navigateBack) // TODO - implement onClick navigate back
+            ProbeTopBar(icon = TopBarIcons.Clear, onClick = navigateBack)
         },
         content = {
         Column(

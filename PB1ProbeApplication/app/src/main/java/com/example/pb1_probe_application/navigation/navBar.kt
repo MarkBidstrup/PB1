@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.ui
+package com.example.pb1_probe_application.navigation
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
@@ -14,11 +14,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.data.auth.AuthViewModel
-import com.example.pb1_probe_application.navigation.BottomBarItems
 
 import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.navigation.Graph
-import com.example.pb1_probe_application.navigation.Route
+import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 

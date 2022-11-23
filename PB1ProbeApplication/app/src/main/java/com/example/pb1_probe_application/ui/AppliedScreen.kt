@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.Typography
 

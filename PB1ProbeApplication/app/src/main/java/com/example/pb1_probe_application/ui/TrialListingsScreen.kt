@@ -32,6 +32,7 @@ import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.model.Trial
+import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
 
  enum class TrialPostIcons {
