@@ -16,6 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -358,37 +360,35 @@ fun LoginButton(
  */
 @Composable
 fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Row(
+    Box(
         Modifier
             .fillMaxWidth()
-            .height(60.dp),
-        horizontalArrangement = Arrangement.Center
+            .height(60.dp)
     ) {
         Image(
             painter = painterResource(R.drawable.final_icon),
             contentDescription = stringResource(R.string.logo),
-            modifier = modifier
+            modifier = modifier.align(Center)
                 .wrapContentWidth(CenterHorizontally)
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
+                .padding(top = 10.dp),
         )
-        // TODO display icon in top right corner
         if (icon != TopBarIcons.None) {
-//            IconButton(onClick = onClick) {
-//                Icon(
-//                    imageVector = when (icon) {
-//                        TopBarIcons.Clear -> Icons.Filled.Clear
-//                        else -> {Icons.Filled.Search}
-//                    },
-//                    //tint = MaterialTheme.colors.secondary,
-//                    contentDescription = when (icon) {
-//                        TopBarIcons.Clear -> "clear"
-//                        else -> "search"
-//                    },
-//                    modifier = modifier
-//                        .scale(1f)
-//                )
-//            }
+            IconButton(onClick = onClick, modifier = modifier
+                .padding(end = 10.dp)
+                .align(Alignment.BottomEnd)) {
+                Icon(
+                    imageVector = when (icon) {
+                        TopBarIcons.Clear -> Icons.Filled.Clear
+                        else -> {Icons.Filled.Search}
+                    },
+                    contentDescription = when (icon) {
+                        TopBarIcons.Clear -> "clear"
+                        else -> "search"
+                    },
+                    modifier = modifier
+                        .scale(1.2f)
+                )
+            }
         }
     }
 

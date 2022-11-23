@@ -98,8 +98,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
 
         composable(route = BottomBarItems.Home.route) {
-            var loggedIn by remember { mutableStateOf(false)  }
-            loggedIn = authViewModel?.currentUser != null
+            val loggedIn = authViewModel?.currentUser != null
             TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
         composable(route = Route.Filter.route) {
@@ -109,12 +108,23 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = BottomBarItems.Trials.route) {
-            MyTrials(trialsViewModel = trialsViewModel, navHostController = navController)
+            val loggedIn = authViewModel?.currentUser != null
+            if(loggedIn)
+                MyTrials(trialsViewModel = trialsViewModel, navHostController = navController)
+            else
+                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+                    navController.popBackStack()
+                }
         }
 
         composable(route = BottomBarItems.Profile.route) {
-
-            ProfileScreen(role = Role.TRIAL_PARTICIPANT, navHostController = navController)
+            val loggedIn = authViewModel?.currentUser != null
+            if(loggedIn)
+                ProfileScreen(role = Role.TRIAL_PARTICIPANT, navHostController = navController)
+            else
+                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+                    navController.popBackStack()
+                }
         }
 
         navigationAppHost(navController = navController, authViewModel)
