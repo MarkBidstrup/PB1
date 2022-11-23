@@ -9,6 +9,9 @@ sealed class Route(val route: String) {
     object Applied : Route("Applied")
     object Filter : Route("Filter")
     object DeltagerInfo : Route("DeltagerInfo/{trialID}")
+    object NotLoggedIn : Route("NotLoggedIn")
+    object Register : Route("Register")
+
 //    {
 //        fun createRoute(trialID: String) = "DeltagerInfo/$trialID"
 //    }

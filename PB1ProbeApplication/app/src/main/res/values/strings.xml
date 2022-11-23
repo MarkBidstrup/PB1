@@ -1,8 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">PB1-Probe-Application</string>
 
-    <string name="password">Adgangskode</string>
-
     <!--Patient profile Strings-->
     <string name="navn">Navn</string>
     <string name="efternavn">Efternavn</string>
@@ -91,7 +89,17 @@
     <!--Login Strings-->
     <string name="logInd">LOG IND</string>
     <string name="logInd2">Log ind</string>
+    <string name="notLoggedIn">Log ind for at se denne skærm</string>
     <string name="registrer">REGISTRER</string>
+    <string name="createProfile">Opret profil</string>
+    <string name="createProfileCAPS">OPRET PROFIL</string>
+    <string name="password">Adgangskode</string>
+    <string name="repeatPassword">Gentag adgangskode</string>
+    <string name="trialParticipantOrResearcher">Er du Forsøgsperson eller Forsker?</string>
+    <string name="trialParticipant">Forsøgsperson</string>
+    <string name="researcher">Forsker</string>
+
+
 
     <!--Create Trial Strings-->
     <string name="opretNytStudie">Opret nyt studie</string>

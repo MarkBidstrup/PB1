@@ -101,8 +101,8 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
                                     // TODO navigate with trialID argument
                             else { {
-                                navHostController?.navigate("logInd")
-                            }} // TODO - navigate to "log in to see this screen"
+                                navHostController?.navigate("NotLoggedIn")
+                            }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
                             buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
                         if (trials.indexOf(it) != trials.size)

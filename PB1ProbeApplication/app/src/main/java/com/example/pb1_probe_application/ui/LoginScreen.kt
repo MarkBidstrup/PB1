@@ -24,7 +24,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?){ //I think we need a navigation input/reference
+fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, navigateBack: () -> Unit){
 
     // changes for login
     val loginFlow = authViewModel?.loginFlow?.collectAsState()
@@ -36,7 +36,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 
     Scaffold(
         topBar = {
-            ProbeTopBar(icon = TopBarIcons.Clear, onClick = {}) // TODO - implement onClick navigate back
+            ProbeTopBar(icon = TopBarIcons.Clear, onClick = navigateBack)
         },
         content = {
         Column(
@@ -98,29 +98,3 @@ fun textField(label: String, text: String, onValueChange: (String) -> Unit) {
             onValueChange = onValueChange)
     }
 }
-
-private fun signup(authViewModel: AuthViewModel?, email: String, password: String, context: Context) {
-    authViewModel?.signup(email,password)
-    if (!(email.equals("") && password.equals("")))
-        Toast.makeText(context,"Registration completed",Toast.LENGTH_LONG).show()
-}
-
-//// changes for register
-//signupFlow?.value?.let {
-//    when(it) {
-//        is Resource.Failure -> {
-//            Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
-//        }
-//        Resource.Loading -> {
-//        }
-//        is Resource.Success -> {
-//        }
-//    }
-//}
-
-//@Preview
-//@Composable
-//private fun LogInPreview() {
-//    LogIn(navHostController= navHostController?)
-//
-//}

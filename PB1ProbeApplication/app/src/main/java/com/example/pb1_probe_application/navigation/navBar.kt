@@ -121,7 +121,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         notificationNav(navController = navController)
         deltagerInfoNav(navController = navController,trialsViewModel = trialsViewModel)
 
-        // navigate to editprofile screen
         composable(route = Route.EditProfile.route) {
             EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
                 navController.popBackStack()
@@ -129,7 +128,21 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.LogInd.route) {
-            LogInScreen(navHostController = navController, authViewModel = authViewModel)
+            LogInScreen(navHostController = navController, authViewModel = authViewModel) {
+                navController.popBackStack()
+            }
+        }
+
+        composable(route = Route.NotLoggedIn.route) {
+            NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+                navController.popBackStack()
+            }
+        }
+
+        composable(route = Route.Register.route) {
+            RegisterScreen(navHostController = navController, authViewModel = authViewModel) {
+                navController.popBackStack()
+            }
         }
 
 //        composable(route = Route.Applied.route) {
