@@ -36,6 +36,10 @@ import com.example.pb1_probe_application.ui.theme.*
      NotificationOn, NotificationOff, Contact, None
  }
 
+enum class TopBarIcons {
+    Search, Clear, None
+}
+
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
@@ -43,7 +47,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
     Scaffold(
         topBar = {
-            ProbeTopBar()
+            ProbeTopBar(icon = TopBarIcons.Search, onClick = {}) //TODO - implement search onClick
         },
         content = {
             Column(modifier = Modifier
@@ -353,12 +357,12 @@ fun LoginButton(
  * @param modifier modifiers to set to this composable
  */
 @Composable
-fun ProbeTopBar(modifier: Modifier = Modifier) {
+fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .wrapContentWidth(CenterHorizontally)
+            .height(60.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(R.drawable.final_icon),
@@ -368,14 +372,24 @@ fun ProbeTopBar(modifier: Modifier = Modifier) {
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
         )
-        /*Icon(
-            imageVector = Icons.Filled.Search,
-            contentDescription = stringResource(R.string.soegForklaring),
-            modifier = modifier
-                .height(16.dp)
-                .wrapContentWidth((Alignment.End))
-                .padding(8.dp)
-        )*/
+        // TODO display icon in top right corner
+        if (icon != TopBarIcons.None) {
+//            IconButton(onClick = onClick) {
+//                Icon(
+//                    imageVector = when (icon) {
+//                        TopBarIcons.Clear -> Icons.Filled.Clear
+//                        else -> {Icons.Filled.Search}
+//                    },
+//                    //tint = MaterialTheme.colors.secondary,
+//                    contentDescription = when (icon) {
+//                        TopBarIcons.Clear -> "clear"
+//                        else -> "search"
+//                    },
+//                    modifier = modifier
+//                        .scale(1f)
+//                )
+//            }
+        }
     }
 
 }

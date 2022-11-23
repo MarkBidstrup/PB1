@@ -3,29 +3,23 @@ package com.example.pb1_probe_application.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.auth.AuthViewModel
 import com.example.pb1_probe_application.data.auth.Resource
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
-import com.example.pb1_probe_application.ui.theme.StrokeColor
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -42,28 +36,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 
     Scaffold(
         topBar = {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.final_icon),
-                    contentDescription = stringResource(R.string.logo),
-                    modifier = Modifier
-                        .padding(top = 8.dp),
-                )
-                IconButton(onClick = {} ) { // TODO - navigate back
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = "clear",
-                        modifier = Modifier
-                            .height(16.dp)
-                            .padding(8.dp)
-                    )
-                }
-            }
+            ProbeTopBar(icon = TopBarIcons.Clear, onClick = {}) // TODO - implement onClick navigate back
         },
         content = {
         Column(
