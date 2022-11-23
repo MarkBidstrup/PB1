@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
@@ -46,26 +47,39 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
         ) {
             Text(text = stringResource(R.string.logInd2), style = Typography.h2)
             Spacer(modifier = Modifier.height(20.dp))
-            textField(label = stringResource(R.string.email), text = email, onValueChange = {email = it})
+            textField(
+                label = stringResource(R.string.email),
+                text = email,
+                onValueChange = { email = it })
             Spacer(modifier = Modifier.height(20.dp))
-            textField(label = stringResource(R.string.password), text = password, onValueChange = {password = it})
+            textField(
+                label = stringResource(R.string.password),
+                text = password,
+                hiddenText = true,
+                onValueChange = { password = it })
 
             Spacer(modifier = Modifier.height(50.dp))
-            LoginButton(onClick = {  authViewModel?.login(email,password)}, text = R.string.logInd, filled = true)
-        }
-        // changes for login
-        loginFlow?.value?.let {
-            when(it) {
-                is Resource.Failure -> {
+            LoginButton(
+                onClick = { authViewModel?.login(email, password) },
+                text = R.string.logInd,
+                filled = true
+            )
+            Spacer(modifier = Modifier.height(80.dp))
+
+            // changes for login
+            loginFlow?.value?.let {
+                when (it) {
+                    is Resource.Failure -> {
 //                    val context = LocalContext.current
-                    Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
-                }
-                Resource.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier)
-                }
-                is Resource.Success -> {
-                    LaunchedEffect(Unit) {
-                        navHostController?.navigate("Home")
+                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                    }
+                    Resource.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is Resource.Success -> {
+                        LaunchedEffect(Unit) {
+                            navHostController?.navigate("Home")
+                        }
                     }
                 }
             }
@@ -75,26 +89,41 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 }
 
 @Composable
-fun textField(label: String, text: String, onValueChange: (String) -> Unit) {
+fun textField(label: String, text: String, hiddenText: Boolean = false, onValueChange: (String) -> Unit) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .border(1.dp, ButtonColorGreen, RoundedCornerShape(4.dp))
 
     ) {
-        TextField(
-            label = { Text(text = label) },
-            value = text,
-//                visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            shape = RoundedCornerShape(4.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = MaterialTheme.colors.onPrimary,
-                cursorColor = MaterialTheme.colors.onBackground,
-                focusedIndicatorColor = ButtonColorGreen,
-                unfocusedIndicatorColor = MaterialTheme.colors.onPrimary
-            ),
-            modifier = Modifier.padding(5.dp),
-            onValueChange = onValueChange)
+        if(hiddenText)
+            TextField(
+                label = { Text(text = label) },
+                value = text,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                shape = RoundedCornerShape(4.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.onPrimary,
+                    cursorColor = MaterialTheme.colors.onBackground,
+                    focusedIndicatorColor = ButtonColorGreen,
+                    unfocusedIndicatorColor = MaterialTheme.colors.onPrimary
+                ),
+                modifier = Modifier.padding(5.dp),
+                onValueChange = onValueChange)
+        else
+            TextField(
+                label = { Text(text = label) },
+                value = text,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                shape = RoundedCornerShape(4.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.onPrimary,
+                    cursorColor = MaterialTheme.colors.onBackground,
+                    focusedIndicatorColor = ButtonColorGreen,
+                    unfocusedIndicatorColor = MaterialTheme.colors.onPrimary
+                ),
+                modifier = Modifier.padding(5.dp),
+                onValueChange = onValueChange)
     }
 }

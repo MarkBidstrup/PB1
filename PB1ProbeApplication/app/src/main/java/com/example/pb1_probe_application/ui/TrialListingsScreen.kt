@@ -120,7 +120,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             navHostController?.navigate("logInd")
                         }, R.string.logInd, false)
                         LoginButton(onClick = {
-                            //TODO: implement onClick
+                            navHostController?.navigate("register")
                         }, R.string.registrer, true)
                     }
                 }

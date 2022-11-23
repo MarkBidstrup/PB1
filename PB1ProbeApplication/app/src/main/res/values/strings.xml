@@ -98,7 +98,11 @@
     <string name="trialParticipantOrResearcher">Er du Forsøgsperson eller Forsker?</string>
     <string name="trialParticipant">Forsøgsperson</string>
     <string name="researcher">Forsker</string>
-
+    <string name="registrationComplete">Brugerprofil oprettet</string>
+    <string name="userAlreadyExists">Profilen findes allerede</string>
+    <string name="passwordNotRepeated">Gentag den samme adgangskode</string>
+    <string name="noEmail">Indtast en email</string>
+    <string name="noPassword">Indtast en adgangskode</string>
 
 
     <!--Create Trial Strings-->
