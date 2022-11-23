@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">PB1-Probe-Application</string>
 
+    <string name="password">Adgangskode</string>
+
     <!--Patient profile Strings-->
     <string name="navn">Navn</string>
     <string name="efternavn">Efternavn</string>
@@ -88,6 +90,7 @@
 
     <!--Login Strings-->
     <string name="logInd">LOG IND</string>
+    <string name="logInd2">Log ind</string>
     <string name="registrer">REGISTRER</string>
 
     <!--Create Trial Strings-->

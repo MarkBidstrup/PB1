@@ -129,7 +129,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.LogInd.route) {
-            LogIn(navHostController = navController, authViewModel = authViewModel)
+            LogInScreen(navHostController = navController, authViewModel = authViewModel)
         }
 
 //        composable(route = Route.Applied.route) {

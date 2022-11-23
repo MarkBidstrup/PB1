@@ -24,7 +24,21 @@ import com.example.pb1_probe_application.ui.theme.Typography
 fun AppliedScreen(navHostController: NavHostController = rememberNavController()) {
     Scaffold(
         topBar = {
-                 ProbeTopBar()
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.final_icon),
+                    contentDescription = stringResource(R.string.logo),
+                    modifier = Modifier
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .padding(top = 8.dp)
+                        .fillMaxWidth(),
+                )
+            }
         },
         content = {
             Column(modifier = Modifier
