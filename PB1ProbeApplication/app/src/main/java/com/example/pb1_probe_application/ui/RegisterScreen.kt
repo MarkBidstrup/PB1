@@ -40,10 +40,9 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
         content = {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(60.dp))
             Text(text = stringResource(R.string.createProfile), style = Typography.h2)
             Spacer(modifier = Modifier.height(20.dp))
             Text(text = stringResource(R.string.trialParticipantOrResearcher), style = Typography.body1)
@@ -83,23 +82,10 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it})
 
             Spacer(modifier = Modifier.height(50.dp))
-            LoginButton(onClick = {
-                if (password != passwordRepeated)
-                    Toast.makeText(context,R.string.passwordNotRepeated,Toast.LENGTH_LONG).show()
-                else if(participantChecked || researcherChecked) {
-                    val role =
-                        if(participantChecked)
-                            Role.TRIAL_PARTICIPANT
-                        else
-                            Role.RESEARCHER
-                    signup(authViewModel, email, password, context, role)
-                }
-                else
-                    Toast.makeText(context,R.string.trialParticipantOrResearcher,Toast.LENGTH_LONG).show()
-            },
+            LoginButton(onClick = { signup(authViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
                 text = R.string.registrer, filled = true)
-            Spacer(modifier = Modifier.height(80.dp))
-        }
+            Spacer(modifier = Modifier.height(20.dp))
+
             // changes for register
             signupFlow?.value?.let {
                 when (it) {
@@ -110,6 +96,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                         CircularProgressIndicator()
                     }
                     is Resource.Success -> {
+                        Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
                         LaunchedEffect(Unit) {
                             navHostController?.navigate("Home")
                         }
@@ -117,19 +104,22 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                 }
             }
         }
+        }
     )
 }
 
-private fun signup(authViewModel: AuthViewModel?, email: String, password: String, context: Context, role: Role) {
-    if(email == "")
+private fun signup(authViewModel: AuthViewModel?, email: String, password: String, passwordRepeated: String, context: Context, participantChecked: Boolean, researcherChecked: Boolean) {
+    if(!participantChecked && !researcherChecked)
+        Toast.makeText(context,R.string.trialParticipantOrResearcher,Toast.LENGTH_LONG).show()
+    else if(email == "")
         Toast.makeText(context,R.string.noEmail,Toast.LENGTH_LONG).show()
     else if(password == "")
         Toast.makeText(context,R.string.noPassword,Toast.LENGTH_LONG).show()
+    else if (password != passwordRepeated)
+        Toast.makeText(context,R.string.passwordNotRepeated,Toast.LENGTH_LONG).show()
     else {
-        // TODO - check that user/email does not already exist! If it does, display a toast/message
         // TODO - make sure the role and email is saved with the profile data!
         authViewModel?.signup(email,password)
-        Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
     }
 }
 

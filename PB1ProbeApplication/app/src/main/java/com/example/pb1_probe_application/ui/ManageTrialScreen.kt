@@ -37,6 +37,7 @@ fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
         },
         content = {
             Column() {
+                // TODO - add navigation and navigate with arguments
                 Text(
                     text = stringResource(id = R.string.redigerStudie),
                     style = Typography.body1,

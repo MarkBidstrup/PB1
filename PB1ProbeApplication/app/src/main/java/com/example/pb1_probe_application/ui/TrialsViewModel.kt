@@ -81,14 +81,12 @@ class TrialsViewModel @Inject constructor(
             repository.addNew(trial)
         }
         _registeredParticipants[trial.trialID] = MutableStateFlow(ArrayList())
-        getViewModelMyTrialsResearchers()
     }
 
     fun updateTrial(trial: Trial) {
         viewModelScope.launch {
             repository.update(trial)
         }
-        getViewModelMyTrialsResearchers()
     }
 
     fun deleteTrial(trial: Trial) {
@@ -96,6 +94,5 @@ class TrialsViewModel @Inject constructor(
             repository.delete(trial.trialID)
         }
         _registeredParticipants.remove(trial.trialID)
-        getViewModelMyTrialsResearchers()
     }
 }
