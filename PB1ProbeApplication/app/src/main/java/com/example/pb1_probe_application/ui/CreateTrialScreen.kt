@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +14,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -22,38 +22,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Datasource
-import com.example.pb1_probe_application.model.CreateTrialField
+import com.example.pb1_probe_application.model.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
-@Composable
-fun CreateTrialScreen() {
-
-    val focusManager = LocalFocusManager.current
-
-    CreateTrialList(createTrialList = Datasource().loadCreateTrialList(), focusManager = focusManager)
-}
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
+
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
-
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.opretNytStudie), style = Typography.h1, ) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
-                    onClick = {
-                        //TODO: implement onClick
-
-                    }) {
+                    onClick = onClickNavBack) {
                     Icon(
-
                         Icons.Default.ArrowBack,
                         contentDescription = "back",
                     )
@@ -61,13 +50,19 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
             }
         },
         content = {
+            val trial = Trial()
+            if(email != null)
+                trial.researcherEmail = email
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
                 LazyColumn (
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    items(createTrialList) { CreateTrialField ->
-                        CreateTrialField(
+                    val createTrialList = loadCreateTrialList()
+                    items(createTrialList) {
+                        CreateTrialField ->
+                        var userInput by remember { mutableStateOf("") }
+                        TrialInputField(
                             createTrialField = CreateTrialField,
                             keyboardOptions = KeyboardOptions.Default.copy(
                                 keyboardType = KeyboardType.Text,
@@ -75,8 +70,31 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = { focusManager.clearFocus() }
-                            )
+                            ),
+                            input = userInput,
+                            onValueChange = {userInput = it}
                         )
+                        if(userInput != "") {
+                            when (CreateTrialField.trialAttribute) {
+                                trialAttributes.title -> trial.title = userInput
+                                trialAttributes.trialDuration -> trial.trialDuration = userInput
+                                trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
+                                trialAttributes.interventions -> trial.interventions = userInput
+                                trialAttributes.startDate -> trial.startDate = userInput
+                                trialAttributes.endDate -> trial.endDate = userInput
+                                trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
+                                trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
+                                trialAttributes.locations -> trial.locations = listOf(TrialLocation(userInput))
+                                trialAttributes.compensation -> trial.compensation = userInput=="Ja"
+                                trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
+                                trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
+                                trialAttributes.numParticipants -> trial.numParticipants = Integer.parseInt(userInput)
+                                trialAttributes.deltagerInformation -> trial.deltagerInformation = userInput
+                                trialAttributes.forsoegsBeskrivelse -> trial.forsoegsBeskrivelse = userInput
+                                trialAttributes.purpose -> trial.purpose = userInput
+                                else -> {trial.briefDescription = userInput}
+                            }
+                        }
                         if (!(createTrialList.lastIndexOf(element = CreateTrialField) == createTrialList.lastIndex)) {
                             Divider(
                                 modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
@@ -93,11 +111,14 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
                         .padding(bottom = 20.dp)
                         .align(Alignment.CenterHorizontally)
                 ) {
+                    LoginButton(onClick = onClickNavBack, R.string.annuller, false)
                     LoginButton(onClick = {
-                        //TODO: implement onClick
-                    }, R.string.annuller, false)
-                    LoginButton(onClick = {
-                        //TODO: implement onClick
+                        if(trial.title == "")
+                            Toast.makeText(context,"Indtast titel", Toast.LENGTH_LONG).show()
+                        else {
+                            trialsViewModel.createNewTrial(trial)
+                            onClickNavBack.invoke()
+                        }
                     }, R.string.bekræft, true)
                 }
             }
@@ -109,13 +130,13 @@ fun CreateTrialList(createTrialList: List<CreateTrialField>, focusManager: Focus
 
 
 @Composable
-fun CreateTrialField(
+fun TrialInputField(
     createTrialField: CreateTrialField,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
-    modifier: Modifier = Modifier) {
-
-    var input by remember { mutableStateOf("") }
+    modifier: Modifier = Modifier,
+    input: String,
+    onValueChange: (String) -> Unit) {
 
     Column {
         Text(
@@ -131,7 +152,7 @@ fun CreateTrialField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 17.dp, end = 17.dp),
-            onValueChange = { input = it },
+            onValueChange = onValueChange,
             textStyle = Typography.body1,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions

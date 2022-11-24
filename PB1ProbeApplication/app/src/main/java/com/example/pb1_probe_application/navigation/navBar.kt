@@ -153,6 +153,28 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
+        composable(route = Route.CreateTrial.route) {
+            val email: String?
+            if(authViewModel?.currentUser != null) {
+                email = authViewModel.currentUser!!.email
+            CreateTrialScreen(email, trialsViewModel, { navController.popBackStack() } ) {
+                navController.navigate(BottomBarItems.Trials.route)
+            }
+            }
+        }
+
+        composable(route = Route.EditTrial.route) {
+            EditTrialScreen(trialsViewModel, { navController.popBackStack() } ) {
+                navController.navigate(BottomBarItems.Trials.route)
+            }
+        }
+
+        composable(route = Route.ManageTrial.route) {
+            ManageTrialScreen({ navController.popBackStack() }) {
+                navController.navigate(Route.EditTrial.route)
+            }
+        }
+
 //        composable(route = Route.Applied.route) {
 //            AppliedScreen(navHostController = navController)
 //        }

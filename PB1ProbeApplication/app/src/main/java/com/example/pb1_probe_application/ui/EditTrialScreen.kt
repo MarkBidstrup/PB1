@@ -14,31 +14,23 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.model.CreateTrialField
+import com.example.pb1_probe_application.model.loadCreateTrialList
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
-@Composable
-fun EditTrialScreen() {
-
-    val focusManager = LocalFocusManager.current
-
-    EditTrialList(createTrialList = Datasource().loadCreateTrialList(), focusManager = focusManager)
-}
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusManager, modifier: Modifier = Modifier) {
+fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
+
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = {
@@ -49,11 +41,8 @@ fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusMa
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
-                    onClick = {
-
-                         }) {
+                    onClick = onClickNavBack) {
                     Icon(
-
                         Icons.Default.ArrowBack,
                         contentDescription = "back",
                     )
@@ -66,6 +55,7 @@ fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusMa
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
+                    val createTrialList = loadCreateTrialList()
                     items(createTrialList) { EditTrialField ->
                         EditTrialField(
                             createTrialField = EditTrialField,
@@ -94,9 +84,7 @@ fun EditTrialList(createTrialList: List<CreateTrialField>, focusManager: FocusMa
                         .padding(bottom = 20.dp)
                         .align(Alignment.CenterHorizontally)
                 ) {
-                    LoginButton(onClick = {
-                        //TODO: implement onClick
-                    }, R.string.annuller, false)
+                    LoginButton(onClick = navMyTrials, R.string.annuller, false)
                     LoginButton(onClick = {
                         //TODO: implement onClick
                     }, R.string.bekræft, true)

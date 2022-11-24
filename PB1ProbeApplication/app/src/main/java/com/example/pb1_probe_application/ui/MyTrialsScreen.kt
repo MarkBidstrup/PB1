@@ -40,7 +40,7 @@ enum class TabPage {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.RESEARCHER) {
     val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
     if (role == Role.TRIAL_PARTICIPANT) {
@@ -85,16 +85,17 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 .height(45.dp)
                                 .padding(bottom = 5.dp)
                                 .align(CenterHorizontally)
-                        )
+                        ) {
+                            navHostController.popBackStack()
+                        }
                     } else {
                         LazyColumn(
                             modifier = modifier.weight(1f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
-                                trialsViewModel.getViewModelRegisteredParticipants(it.trialID)
-                                val list = trialsViewModel.registeredParticipants.collectAsState().value
-                                ResearcherTrialPost(it, list.size)
+                                val list = trialsViewModel.getViewModelRegisteredParticipants(it.trialID).collectAsState().value
+                                ResearcherTrialPost(it, list.size) { navHostController.navigate("ManageTrial") }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
@@ -105,7 +106,9 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 .height(45.dp)
                                 .padding(bottom = 5.dp)
                                 .align(CenterHorizontally)
-                        )
+                        ) {
+                            navHostController.navigate("CreateTrial")
+                        }
                     }
                 } else { // trial participant
                     val pagerState = rememberPagerState(pageCount = TabPage.values().size)
@@ -200,10 +203,10 @@ private fun TrialParticipantTabs(selectedTabIndex: Int, onSelectedTab: (TabPage)
 }
 
 @Composable
-private fun PostNewTrialButton(modifier: Modifier) {
+private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) {
     Button(
         modifier = modifier,
-        onClick = { /*TODO*/  },
+        onClick = newTrialOnClick,
         shape = RoundedCornerShape(6.dp),
         elevation = ButtonDefaults.elevation(
             defaultElevation = 8.dp,
@@ -225,7 +228,7 @@ private fun PostNewTrialButton(modifier: Modifier) {
 }
 
 @Composable
-fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int) {
+fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTrialOnClick: () -> Unit) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -269,7 +272,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int) {
                         .align(Alignment.End)
                         .fillMaxWidth()
                         .height(35.dp),
-                    onClick = { /*TODO*/  },
+                    onClick = manageTrialOnClick,
                     shape = RoundedCornerShape(6.dp),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 10.dp,

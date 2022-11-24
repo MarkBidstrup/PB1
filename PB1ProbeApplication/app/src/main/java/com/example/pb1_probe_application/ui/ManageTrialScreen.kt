@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,7 +17,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ManageTrialScreen() {
+fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
 
     Scaffold(
 
@@ -26,9 +27,7 @@ fun ManageTrialScreen() {
                 title = { Text(stringResource(R.string.håndterStudie), style = Typography.h1) },
                 backgroundColor = MaterialTheme.colors.onPrimary)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = {
-                    //TODO onClick
-                }) {
+                IconButton(onClick = navBack) {
                     Icon(
                         Icons.Default.ArrowBack,
                         contentDescription = "back arrow"
@@ -42,6 +41,7 @@ fun ManageTrialScreen() {
                     text = stringResource(id = R.string.redigerStudie),
                     style = Typography.body1,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                        .clickable { onClickNavToEditTrial() }
                 )
                 Divider(
                     thickness = 1.dp,

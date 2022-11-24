@@ -28,8 +28,7 @@ class TrialsViewModel @Inject constructor(
     val myTrialsParticipants: StateFlow<List<Trial>> = _myTrialsParticipants.asStateFlow()
     private val _subscribedTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val subscribedTrials: StateFlow<List<Trial>> = _subscribedTrials.asStateFlow()
-    private val _registeredParticipants = MutableStateFlow<List<String>>(ArrayList())
-    val registeredParticipants: StateFlow<List<String>> = _registeredParticipants.asStateFlow()
+    private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
 
 
     fun getTrial(trialID: String)= viewModelScope.launch {
@@ -66,29 +65,37 @@ class TrialsViewModel @Inject constructor(
         repository.registerForTrial(trial.trialID)
     }
 
-    fun getViewModelRegisteredParticipants(trialID: String)= viewModelScope.launch {
-        val result = repository.getRegisteredParticipants(trialID)
-        _registeredParticipants.value = result
+    fun getViewModelRegisteredParticipants(trialID: String): StateFlow<List<String>> {
+        if(!_registeredParticipants.containsKey(trialID)) {
+            _registeredParticipants[trialID] = MutableStateFlow(ArrayList())
+        }
+        viewModelScope.launch {
+            val result = repository.getRegisteredParticipants(trialID)
+            _registeredParticipants[trialID]?.value = result
+        }
+        return _registeredParticipants[trialID]?.asStateFlow() ?: MutableStateFlow<List<String>>(ArrayList()).asStateFlow()
     }
 
     fun createNewTrial(trial: Trial) {
         viewModelScope.launch {
             repository.addNew(trial)
         }
-        getViewModelSubscribedTrials()
+        _registeredParticipants[trial.trialID] = MutableStateFlow(ArrayList())
+        getViewModelMyTrialsResearchers()
     }
 
     fun updateTrial(trial: Trial) {
         viewModelScope.launch {
             repository.update(trial)
         }
-        getViewModelSubscribedTrials()
+        getViewModelMyTrialsResearchers()
     }
 
     fun deleteTrial(trial: Trial) {
         viewModelScope.launch {
             repository.delete(trial.trialID)
         }
+        _registeredParticipants.remove(trial.trialID)
         getViewModelMyTrialsResearchers()
     }
 }

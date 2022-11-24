@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.data
 
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.model.CreateTrialField
 import com.example.pb1_probe_application.model.UserInfo
 
 class Datasource() {
@@ -31,26 +30,6 @@ class Datasource() {
     }
 
 
-    fun loadCreateTrialList(): List<CreateTrialField> {
-        return listOf<CreateTrialField>(
-            CreateTrialField(R.string.deltagerinformation,R.string.vedhæftFil),
-            CreateTrialField(R.string.titelPåStudie,R.string.indtastTitel),
-            CreateTrialField(R.string.antalDeltagere,R.string.indtastDeltagere),
-            CreateTrialField(R.string.inklKriterier,R.string.indtastInklKriterier),
-            CreateTrialField(R.string.ekslKriterier,R.string.indtastEkslKriterier),
-            CreateTrialField(R.string.honorar,R.string.indtastHonorar),
-            CreateTrialField(R.string.lokationer,R.string.indtastLokationer),
-            CreateTrialField(R.string.kørselsgodtgørelse,R.string.indtastKørselsgodtgørelse),
-            CreateTrialField(R.string.transport,R.string.tilbydesTransport),
-            CreateTrialField(R.string.tabtArbejdsfortjeneste,R.string.tilbydesTabtArbejdsfortjeneste),
-            CreateTrialField(R.string.projektetsVarighed,R.string.indtastVarighed),
-            CreateTrialField(R.string.antalBesøg,R.string.indtastAntalBesøg),
-            CreateTrialField(R.string.længdeAfHvertBesøg,R.string.indtastLængdeAfHvertBesøg),
-            CreateTrialField(R.string.forventetAfslutningsdato,R.string.indtastAfslutningsdato),
-            CreateTrialField(R.string.datoForSvar,R.string.indtastDatoForSvar),
-            CreateTrialField(R.string.diagnoseSymptomer,R.string.vælgDiagnoseSymptomer)
-            )
-    }
 
 //    fun loadDeltagerInfo(): String {
 //        return "Forsøgets titel: Har stoffet cafestol fra kaffe diabetesforebyggende egenskaber?\\n\\n" +
