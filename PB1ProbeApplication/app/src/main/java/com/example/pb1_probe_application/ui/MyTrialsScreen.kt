@@ -41,14 +41,19 @@ enum class TabPage {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+    val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
-    var subscribedTrials: List<Trial> by remember { mutableStateOf(ArrayList())}
     if (role == Role.TRIAL_PARTICIPANT) {
-        myTrials = trialsViewModel.getViewModelMyTrialsParticipants()
-        subscribedTrials = trialsViewModel.getViewModelSubscribedTrials().minus(myTrials.toSet())
+        trialsViewModel.getViewModelMyTrialsParticipants()
+        trialsViewModel.getViewModelSubscribedTrials()
+        myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
+        subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
     }
-    else
-        myTrials = trialsViewModel.getViewModelMyTrialsResearchers()
+    else {
+        trialsViewModel.getViewModelMyTrialsResearchers()
+        myTrials = trialsViewModel.myTrialsResearcher.collectAsState().value
+        subscribedTrials = ArrayList()
+    }
 
     Scaffold(
         topBar = {
@@ -87,7 +92,9 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
-                                ResearcherTrialPost(it, trialsViewModel.getViewModelSubscribedParticipants(it.trialID).size)
+                                trialsViewModel.getViewModelRegisteredParticipants(it.trialID)
+                                val list = trialsViewModel.registeredParticipants.collectAsState().value
+                                ResearcherTrialPost(it, list.size)
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
@@ -134,7 +141,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                     text = str, style = Typography.body1
                                 )
                             }
-                        } else {
+                        } else { // not empty list
                             LazyColumn(contentPadding = PaddingValues(start = 17.dp, end = 17.dp),
                                 modifier = Modifier.fillMaxSize()
                             ) {
@@ -144,8 +151,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             {} // TODO contact button
                                         }
                                         else
-                                            { {trialsViewModel.unsubscribeFromTrial(it)
-                                            subscribedTrials = trialsViewModel.getViewModelSubscribedTrials().minus(myTrials.toSet())} }
+                                            { {trialsViewModel.unsubscribeFromTrial(it) } }
                                     if(pagerState.currentPage == 0) // mytrials
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
                                     else // subscribedTrials

@@ -94,7 +94,7 @@ class TrialRepositoryImpl @Inject constructor(
             subscriptionDB().document(email + "_$trialId").delete().await()
     }
 
-    override suspend fun getSubscribedParticipants(trialId: String): List<String> {
+    override suspend fun getRegisteredParticipants(trialId: String): List<String> {
         val emailList: MutableList<String> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("trialID", trialId).get().await()
         snapshot.forEach { t -> t.getString("participantEmail")?.let { emailList.add(it) } }

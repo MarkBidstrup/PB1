@@ -24,6 +24,6 @@ interface TrialRepository {
     suspend fun subscribeToTrial(trialId: String)
     suspend fun unsubscribeFromTrial(trialId: String)
 
-    suspend fun getSubscribedParticipants(trialId: String): List<String>
+    suspend fun getRegisteredParticipants(trialId: String): List<String>
 
 }

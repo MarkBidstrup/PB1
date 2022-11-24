@@ -47,6 +47,14 @@ enum class TopBarIcons {
  @Composable
 fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
      val trials = trialsViewModel.trials.collectAsState(emptyList()).value
+     var myTrials: List<Trial> = ArrayList()
+     var subscribedTrials: List<Trial> = ArrayList()
+     if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
+         trialsViewModel.getViewModelSubscribedTrials()
+         subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
+         trialsViewModel.getViewModelMyTrialsParticipants()
+         myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
+     }
 
     Scaffold(
         topBar = {
@@ -76,22 +84,20 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-                    var myTrials: List<Trial> = ArrayList()
-                    if(loggedIn && role == Role.TRIAL_PARTICIPANT)
-                        myTrials = trialsViewModel.getViewModelMyTrialsParticipants()
+
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.None) }
                         var onClick: () -> Unit = {}
                         if(loggedIn && role == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
-                            if(trialsViewModel.getViewModelSubscribedTrials().contains(it)) {
+                            if(subscribedTrials.contains(it)) {
                                 icon = TrialPostIcons.NotificationOff
-                                onClick = { trialsViewModel.unsubscribeFromTrial(it)
-                                            icon = TrialPostIcons.NotificationOn }
+                                onClick = { icon = TrialPostIcons.NotificationOn
+                                            trialsViewModel.unsubscribeFromTrial(it) }
                             }
                             else {
                                 icon = TrialPostIcons.NotificationOn
-                                onClick = { trialsViewModel.subscribeToTrial(it)
-                                icon = TrialPostIcons.NotificationOff }
+                                onClick = { icon = TrialPostIcons.NotificationOff
+                                            trialsViewModel.subscribeToTrial(it)  }
                             }
                         }
                         val applyButtonEnabled: Boolean =
@@ -369,7 +375,8 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
         Image(
             painter = painterResource(R.drawable.final_icon),
             contentDescription = stringResource(R.string.logo),
-            modifier = modifier.align(Center)
+            modifier = modifier
+                .align(Center)
                 .wrapContentWidth(CenterHorizontally)
                 .padding(top = 10.dp),
         )

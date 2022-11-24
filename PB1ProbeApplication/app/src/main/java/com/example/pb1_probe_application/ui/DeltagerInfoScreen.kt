@@ -22,18 +22,20 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.navigation.Route
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel(), onClick: () -> Unit,onClickNav: () -> Unit) {
-    val trial = trialsViewModel.getTrial(trialID)
+fun DeltagerInfo(
+    trialID: String,
+    trialsViewModel: TrialsViewModel = viewModel(),
+    onClick: () -> Unit,
+    onClickNav: () -> Unit
+) {
+    trialsViewModel.getTrial(trialID)
+    val trial = trialsViewModel.trial.collectAsState().value
     val data = trial?.deltagerInformation
-    val navController = rememberNavController()
 
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button
@@ -43,10 +45,16 @@ fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel()
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.deltager_info), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = onClickNav
-                //TODO - go back
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = onClickNav
+                    //TODO - go back
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -56,44 +64,50 @@ fun DeltagerInfo(trialID: String, trialsViewModel: TrialsViewModel = viewModel()
             }
         },
         content = {
-            Column(modifier = Modifier
-                .padding(17.dp)
-                .padding(bottom = 20.dp)
-                .fillMaxSize()
-                .verticalScroll(scrollState) ){
+            Column(
+                modifier = Modifier
+                    .padding(17.dp)
+                    .padding(bottom = 20.dp)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+            ) {
                 if (data != null) {
                     Text(text = data, lineHeight = 24.sp)
                 }
-                Spacer(modifier = Modifier.height(20.dp))
-                Row (modifier = Modifier.padding(end = 20.dp)){
-                    Checkbox(
-                        checked = consentBoxChecked,
-                        onCheckedChange = { consentBoxChecked = it }
-                    )
-                    TextWithHyperlink()
+                if (trial != null) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row(modifier = Modifier.padding(end = 20.dp)) {
+                        Checkbox(
+                            checked = consentBoxChecked,
+                            onCheckedChange = { consentBoxChecked = it }
+                        )
+                        TextWithHyperlink()
+                    }
+                    Spacer(modifier = Modifier.height(40.dp))
                 }
-                Spacer(modifier = Modifier.height(40.dp))
             }
         },
         bottomBar = {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                TrialApplyButton(
-                    consentBoxChecked, // scrollState.value == scrollState.maxValue
-                    onClick = {
-                        if (trial != null) {
+            if (trial != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TrialApplyButton(
+                        consentBoxChecked, // scrollState.value == scrollState.maxValue
+                        onClick = {
                             trialsViewModel.registerForTrial(trial)
                             onClick.invoke()
 
-
-                        }
 //                        navController.navigate(Route.Applied.route)
-                })
+                        })
+                }
             }
         }
-        )
+    )
 }
 
 
@@ -132,8 +146,10 @@ fun TextWithHyperlink() {
     ClickableText(
         modifier = Modifier.fillMaxWidth(),
         text = annotatedLinkString,
-        style = TextStyle(color = MaterialTheme.colors.onBackground, fontSize = 15.sp,
-            lineHeight = 20.sp),
+        style = TextStyle(
+            color = MaterialTheme.colors.onBackground, fontSize = 15.sp,
+            lineHeight = 20.sp
+        ),
         onClick = {
             annotatedLinkString
                 .getStringAnnotations("URL", it, it)
