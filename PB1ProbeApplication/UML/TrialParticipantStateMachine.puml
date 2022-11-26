@@ -12,6 +12,6 @@ state browsingTrials : entry/ see available trials\ndo/ scroll, search, filter o
 
 state applyingToTrial : entry/ see 'deltager information'\ndo/ accept terms and press apply
 
-state appliedToTrial : /do subscribe or unsubsribe trial
+state appliedToTrial : /do subscribe or unsubscribe trial
 
 @enduml
