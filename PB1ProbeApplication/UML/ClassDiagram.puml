@@ -1,0 +1,73 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam classAttributeIconSize 0
+
+abstract class User {
+    Name
+    LastName
+    Email
+    UserType
+
+    +login()
+    +logout()
+    +editProfile()
+}
+
+class TrialParticipant {
+    Gender
+    Age
+    Weight
+    Height
+    Diagnoses
+    PhoneNumber
+
+    +applyToTrial()
+    +manageTrialSubscription()
+}
+
+class Researcher {
+    ResearchInstitution
+
+    +createTrial()
+    +manageTrial()
+    -editTrial()
+    -deleteTrial()
+}
+
+class Trial {
+    Name
+    Purpose
+    ShortDescription
+    NumbOfParticipants
+    Location
+    DeadlineForApplication
+    InclCriteria
+    ExclCriteria
+    Compensation
+    Duration
+    StartDate
+    EndDate
+    ListOfDiagnoses
+    Intervention
+    Forsøgsbeskrivelse
+    DeltagerInformation
+
+    +expand()
+}
+
+class TrialListing {
+    ListOfTrials
+
+    display()
+    search()
+    filter()
+}
+
+User <|-- TrialParticipant
+Researcher -|> User
+Researcher "1 " --> "0..*  " Trial
+TrialParticipant "1" -> "1" TrialListing
+TrialListing "1  " --* "  0..* " Trial
+
+@enduml
