@@ -6,7 +6,7 @@ browsingTrials --> applyingToTrial : apply button pressed [trial expanded]
 applyingToTrial --> appliedToTrial : apply button pressed [terms accepted]
 applyingToTrial -> browsingTrials : back arrow pressed
 appliedToTrial ----> browsingTrials : navigate to trial listing
-appliedToTrial -> [*] : log out
+browsingTrials -> [*] : log out
 
 state browsingTrials : entry/ see available trials\ndo/ scroll, search, filter or expand trial
 
