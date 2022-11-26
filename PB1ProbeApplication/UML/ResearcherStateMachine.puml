@@ -1,0 +1,18 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] -> Idle
+Idle ---> CreatingTrial : Create trial [UserType == Researcher]
+CreatingTrial -> Idle : Done
+Idle ---> ManagingTrial : ManageTrial [Trial != null]
+ManagingTrial -> Idle : Done
+Idle -> [*] : log out
+
+state Idle
+
+state CreatingTrial : entry/ enter trial information \nexit/ confirm trial information
+
+state ManagingTrial : do/ edit trial\nexit/ confirm changes
+
+
+@enduml
