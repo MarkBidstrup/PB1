@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] -> browsingTrials
+browsingTrials --> applyingToTrial : apply button pressed [trial expanded]
+applyingToTrial --> appliedToTrial : apply button pressed [terms accepted]
+applyingToTrial -> browsingTrials : back arrow pressed
+appliedToTrial ----> browsingTrials : navigate to trial listing
+appliedToTrial -> [*] : log out
+
+state browsingTrials : entry/ see available trials\ndo/ scroll, search, filter or expand trial
+
+state applyingToTrial : entry/ see 'deltager information'\ndo/ accept terms and press apply
+
+state appliedToTrial : /do subscribe or unsubsribe trial
+
+@enduml
