@@ -40,7 +40,7 @@ enum class TabPage {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.RESEARCHER) {
+fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
     val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
     if (role == Role.TRIAL_PARTICIPANT) {
@@ -95,6 +95,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                         ) {
                             items(myTrials) {
                                 val list = trialsViewModel.getViewModelRegisteredParticipants(it.trialID).collectAsState().value
+                                // TODO - navigate with arguments
                                 ResearcherTrialPost(it, list.size) { navHostController.navigate("ManageTrial") }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))

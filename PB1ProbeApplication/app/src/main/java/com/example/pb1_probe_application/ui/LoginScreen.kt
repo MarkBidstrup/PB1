@@ -42,9 +42,9 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
         content = {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(100.dp))
             Text(text = stringResource(R.string.logInd2), style = Typography.h2)
             Spacer(modifier = Modifier.height(20.dp))
             textField(

@@ -114,10 +114,10 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
                     LoginButton(onClick = onClickNavBack, R.string.annuller, false)
                     LoginButton(onClick = {
                         if(trial.title == "")
-                            Toast.makeText(context,"Indtast titel", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, R.string.indtastTitel, Toast.LENGTH_LONG).show()
                         else {
                             trialsViewModel.createNewTrial(trial)
-                            onClickNavBack.invoke()
+                            navMyTrials()
                         }
                     }, R.string.bekræft, true)
                 }
