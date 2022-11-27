@@ -2,7 +2,7 @@
 'https://plantuml.com/state-diagram
 
 [*] -> Idle
-Idle ---> CreatingTrial : Create trial [UserType == Researcher]
+Idle ---> CreatingTrial : Create trial
 CreatingTrial -> Idle : Done
 Idle ---> ManagingTrial : ManageTrial [Trial != null]
 ManagingTrial -> Idle : Done
