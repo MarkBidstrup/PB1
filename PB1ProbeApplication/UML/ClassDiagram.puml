@@ -30,9 +30,8 @@ class Researcher {
     ResearchInstitution
 
     +createTrial()
-    +manageTrial()
-    -editTrial()
-    -deleteTrial()
+    +editTrial()
+    +deleteTrial()
 }
 
 class Trial {
