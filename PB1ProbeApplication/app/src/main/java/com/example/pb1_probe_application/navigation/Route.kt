@@ -8,7 +8,7 @@ sealed class Route(val route: String) {
     object LogInd: Route("logInd")
     object Applied : Route("Applied")
     object Filter : Route("Filter")
-    object DeltagerInfo : Route("DeltagerInfo/{trialID}")
+    object DeltagerInfo : Route("DeltagerInfo")
     object NotLoggedIn : Route("NotLoggedIn")
     object Register : Route("Register")
     object CreateTrial : Route("CreateTrial")
@@ -16,8 +16,5 @@ sealed class Route(val route: String) {
     object ManageTrial : Route("ManageTrial")
 
 
-//    {
-//        fun createRoute(trialID: String) = "DeltagerInfo/$trialID"
-//    }
 
 }

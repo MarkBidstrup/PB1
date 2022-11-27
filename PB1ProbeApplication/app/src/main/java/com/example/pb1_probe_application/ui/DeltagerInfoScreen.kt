@@ -23,19 +23,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.model.Trial
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DeltagerInfo(
-    trialID: String,
+    trial: Trial,
     trialsViewModel: TrialsViewModel = viewModel(),
-    onClick: () -> Unit,
-    onClickNav: () -> Unit
+    onClickNav: () -> Unit,
+    onClick: () -> Unit
 ) {
-    trialsViewModel.getTrial(trialID)
-    val trial = trialsViewModel.trial.collectAsState().value
-    val data = trial?.deltagerInformation
+    val data = trial.deltagerInformation
 
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button
@@ -54,7 +53,6 @@ fun DeltagerInfo(
             ) {
                 IconButton(
                     onClick = onClickNav
-                    //TODO - go back
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -71,40 +69,32 @@ fun DeltagerInfo(
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                if (data != null) {
-                    Text(text = data, lineHeight = 24.sp)
+                Text(text = data, lineHeight = 24.sp)
+                Spacer(modifier = Modifier.height(20.dp))
+                Row(modifier = Modifier.padding(end = 20.dp)) {
+                    Checkbox(
+                        checked = consentBoxChecked,
+                        onCheckedChange = { consentBoxChecked = it }
+                    )
+                    TextWithHyperlink()
                 }
-                if (trial != null) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Row(modifier = Modifier.padding(end = 20.dp)) {
-                        Checkbox(
-                            checked = consentBoxChecked,
-                            onCheckedChange = { consentBoxChecked = it }
-                        )
-                        TextWithHyperlink()
-                    }
-                    Spacer(modifier = Modifier.height(40.dp))
-                }
+                Spacer(modifier = Modifier.height(40.dp))
             }
         },
         bottomBar = {
-            if (trial != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    TrialApplyButton(
-                        consentBoxChecked, // scrollState.value == scrollState.maxValue
-                        onClick = {
-                            trialsViewModel.registerForTrial(trial)
-                            onClick.invoke()
-
-//                        navController.navigate(Route.Applied.route)
-                        })
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                TrialApplyButton(
+                    consentBoxChecked, // scrollState.value == scrollState.maxValue
+                    onClick = {
+                        trialsViewModel.registerForTrial(trial)
+                        onClick()
+                    })
             }
         }
     )

@@ -1,6 +1,5 @@
 package com.example.pb1_probe_application.navigation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -127,7 +126,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
         navigationAppHost(navController = navController, authViewModel)
         notificationNav(navController = navController)
-        deltagerInfoNav(navController = navController,trialsViewModel = trialsViewModel)
 
         composable(route = Route.EditProfile.route) {
             EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
@@ -175,25 +173,21 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
-//        composable(route = Route.Applied.route) {
-//            AppliedScreen(navHostController = navController)
-//        }
-//
-//        composable(route = Route.DeltagerInfo.route) {
-//            // TODO - remove hardcoded trialID - navigate with arguments!
-//            navBackStackEntry ->
-//            val trialID = navBackStackEntry.arguments?.getString("trialID")
-//            if(trialID == null) {
-//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-//            } else {
-//                DeltagerInfo(trialID = trialID, trialsViewModel) {
-//                    navController.navigate(Route.Applied.route)
-//            }
-//
-//            }
-//        }
+        composable(route = Route.Applied.route) {
+            AppliedScreen(navHostController = navController)
+        }
+
+        composable(route = Route.DeltagerInfo.route) {
+
+            if(trialsViewModel.currentNavTrial != null) {
+                DeltagerInfo(trialsViewModel.currentNavTrial!!, trialsViewModel, { navController.popBackStack() }) {
+                    navController.navigate(Route.Applied.route)
+                }
+            }
+        }
     }
 }
+
 fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
@@ -227,27 +221,27 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
 
 
 
-fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
-    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
-
-        composable(Route.DeltagerInfo.route) {
-            navBackStackEntry ->
-            val trialID = navBackStackEntry.arguments?.getString("trialID")
-            if(trialID == null) {
-                val ctx = LocalContext.current
-                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-            } else {
-                DeltagerInfo(trialID = trialID, trialsViewModel ,
-                    onClick = {
-                        navController.navigate(Route.Applied.route)
-                },onClickNav = {
-                    navController.navigate("Home")
-                })
-            }
-        }
-
-        composable(route = Route.Applied.route) {
-            AppliedScreen(navHostController = navController)
-        }
-        }
-    }
+//fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
+//    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
+//
+//        composable(Route.DeltagerInfo.route) {
+//            navBackStackEntry ->
+//            val trialID = navBackStackEntry.arguments?.getString("trialID")
+//            if(trialID == null) {
+//                val ctx = LocalContext.current
+//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
+//            } else {
+//                DeltagerInfo(trialID = trialID, trialsViewModel ,
+//                    onClick = {
+//                        navController.navigate(Route.Applied.route)
+//                },onClickNav = {
+//                    navController.navigate("Home")
+//                })
+//            }
+//        }
+//
+//        composable(route = Route.Applied.route) {
+//            AppliedScreen(navHostController = navController)
+//        }
+//        }
+//    }

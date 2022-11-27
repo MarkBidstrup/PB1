@@ -107,8 +107,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                                 role == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
-                            { {  navHostController?.navigate("DeltagerInfo/{trialID}") } }
-                                    // TODO navigate with trialID argument
+                            { {
+                                trialsViewModel.setCurrentNavTrialID(it)
+                                navHostController?.navigate("DeltagerInfo") } }
                             else { {
                                 navHostController?.navigate("NotLoggedIn")
                             }}
