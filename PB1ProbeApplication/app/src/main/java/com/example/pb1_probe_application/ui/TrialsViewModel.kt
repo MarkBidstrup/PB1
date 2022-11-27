@@ -29,6 +29,8 @@ class TrialsViewModel @Inject constructor(
     private val _subscribedTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val subscribedTrials: StateFlow<List<Trial>> = _subscribedTrials.asStateFlow()
     private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
+    var currentNavTrial: Trial? = null // for navigation
+        private set
 
 
     fun getTrial(trialID: String)= viewModelScope.launch {
@@ -94,5 +96,9 @@ class TrialsViewModel @Inject constructor(
             repository.delete(trial.trialID)
         }
         _registeredParticipants.remove(trial.trialID)
+    }
+
+    fun setCurrentNavTrialID(trial: Trial) {
+        currentNavTrial = trial
     }
 }

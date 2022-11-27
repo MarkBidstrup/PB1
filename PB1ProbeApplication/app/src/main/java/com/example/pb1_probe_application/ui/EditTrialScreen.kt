@@ -54,9 +54,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
         },
         content = {
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
-                val trialID = "36eeZknBx05rHTjQ82gK" // TODO - remove - temp solution - nav with arguments
-                trialsViewModel.getTrial(trialID)
-                val trial = trialsViewModel.trial.collectAsState().value
+                val trial = trialsViewModel.currentNavTrial
                 var edited by remember { mutableStateOf(false) }
                 if (trial != null) {
                     LazyColumn (

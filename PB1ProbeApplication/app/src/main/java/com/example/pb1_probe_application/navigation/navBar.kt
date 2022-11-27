@@ -170,7 +170,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.ManageTrial.route) {
-            ManageTrialScreen({ navController.popBackStack() }) {
+            ManageTrialScreen(trialsViewModel, { navController.popBackStack() }) {
                 navController.navigate(Route.EditTrial.route)
             }
         }

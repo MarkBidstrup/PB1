@@ -17,7 +17,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
+fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
 
     Scaffold(
 
@@ -37,7 +37,6 @@ fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
         },
         content = {
             Column() {
-                // TODO - add navigation and navigate with arguments
                 Text(
                     text = stringResource(id = R.string.redigerStudie),
                     style = Typography.body1,
@@ -53,6 +52,7 @@ fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
                     text = stringResource(R.string.seDeltagerliste),
                     style = Typography.body1,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    // TODO add deltagerliste view
                 )
                 Divider(
                     thickness = 1.dp,
@@ -64,6 +64,12 @@ fun ManageTrialScreen(navBack: () -> Unit, onClickNavToEditTrial: () -> Unit) {
                     style = Typography.body1,
                     color = TextColorRed,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                        .clickable {  // TODO - make user confirm deletion before deleting trial
+                            trialsViewModel.currentNavTrial?.let {
+                                it1 -> trialsViewModel.deleteTrial(it1)
+                            }
+                            onClickNavToEditTrial()
+                        }
                 )
             }
         }

@@ -95,8 +95,9 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                         ) {
                             items(myTrials) {
                                 val list = trialsViewModel.getViewModelRegisteredParticipants(it.trialID).collectAsState().value
-                                // TODO - navigate with arguments
-                                ResearcherTrialPost(it, list.size) { navHostController.navigate("ManageTrial") }
+                                ResearcherTrialPost(it, list.size) {
+                                    trialsViewModel.setCurrentNavTrialID(it)
+                                    navHostController.navigate("ManageTrial") }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
