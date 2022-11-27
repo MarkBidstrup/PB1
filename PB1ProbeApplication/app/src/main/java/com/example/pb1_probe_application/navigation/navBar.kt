@@ -93,42 +93,57 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
     )
     {
 
-
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
-            TrialListingsScreen(trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
+            // temp solution - TODO update if/else
+            val role = if (loggedIn && authViewModel?.currentUser?.email == "forsker@test.com")
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            TrialListingsScreen(role = role, trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
+
         composable(route = Route.Filter.route) {
-            FilterScreen(onClickNav = {
-                navController.navigate("Home")
-            })
+            FilterScreen(onClickNav = { navController.navigate("Home") })
         }
 
         composable(route = BottomBarItems.Trials.route) {
             val loggedIn = authViewModel?.currentUser != null
-            if(loggedIn)
-                MyTrials(trialsViewModel = trialsViewModel, navHostController = navController)
+            if(loggedIn) {
+                // temp solution - TODO update if/else
+                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                    Role.RESEARCHER
+                else
+                    Role.TRIAL_PARTICIPANT
+                MyTrials(trialsViewModel = trialsViewModel, role = role, navHostController = navController)
+            }
             else
                 NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
-                    navController.popBackStack()
-                }
+                    navController.popBackStack() }
         }
 
         composable(route = BottomBarItems.Profile.route) {
             val loggedIn = authViewModel?.currentUser != null
-            if(loggedIn)
-                ProfileScreen(role = Role.TRIAL_PARTICIPANT, navHostController = navController)
+            if(loggedIn) {
+                // temp solution - TODO update if/else
+                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                    Role.RESEARCHER
+                else
+                    Role.TRIAL_PARTICIPANT
+                ProfileScreen(role = role, navHostController = navController)
+            }
             else
                 NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
-                    navController.popBackStack()
-                }
+                    navController.popBackStack() }
         }
 
-        navigationAppHost(navController = navController, authViewModel)
-        notificationNav(navController = navController)
-
         composable(route = Route.EditProfile.route) {
-            EditProfileScreen(role = Role.TRIAL_PARTICIPANT) {
+            // temp solution - TODO update if/else
+            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            EditProfileScreen(role = role) {
                 navController.popBackStack()
             }
         }
@@ -156,8 +171,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             if(authViewModel?.currentUser != null) {
                 email = authViewModel.currentUser!!.email
             CreateTrialScreen(email, trialsViewModel, { navController.popBackStack() } ) {
-                navController.navigate(BottomBarItems.Trials.route)
-            }
+                navController.navigate(BottomBarItems.Trials.route) }
             }
         }
 
@@ -173,10 +187,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
-        composable(route = Route.Applied.route) {
-            AppliedScreen(navHostController = navController)
-        }
-
         composable(route = Route.DeltagerInfo.route) {
 
             if(trialsViewModel.currentNavTrial != null) {
@@ -185,6 +195,14 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 }
             }
         }
+
+        composable(route = Route.Applied.route) {
+            AppliedScreen(navHostController = navController)
+        }
+
+        navigationAppHost(navController = navController, authViewModel)
+        notificationNav(navController = navController)
+
     }
 }
 
