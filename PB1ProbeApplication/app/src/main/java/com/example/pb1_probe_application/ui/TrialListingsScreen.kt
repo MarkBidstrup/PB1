@@ -277,9 +277,12 @@ fun TrialInfo(
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
-            var locations = stringResource(R.string.lokation) +" "+ trial.locations[0].hospitalName
-            for (i in 2 .. trial.locations.size)
-                locations += ", " + trial.locations[i-1].hospitalName
+            var locations = stringResource(R.string.lokation) +" "
+            if (trial.locations.isNotEmpty()) {
+                locations += trial.locations[0].hospitalName
+                for (i in 2 .. trial.locations.size)
+                    locations += ", " + trial.locations[i-1].hospitalName
+            }
             Text(
                 text = locations,
                 style = MaterialTheme.typography.body2,
@@ -295,9 +298,12 @@ fun TrialInfo(
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
             )
-            var diagnoses = stringResource(R.string.sygdom) +" "+ trial.diagnoses[0]
-            for (i in 2 .. trial.diagnoses.size)
-                diagnoses += ", " + trial.diagnoses[i-1]
+            var diagnoses = stringResource(R.string.sygdom) +" "
+            if(trial.diagnoses.isNotEmpty()) {
+                diagnoses += trial.diagnoses[0]
+                for (i in 2 .. trial.diagnoses.size)
+                    diagnoses += ", " + trial.diagnoses[i-1]
+            }
             Text(
                 text = diagnoses,
                 style = MaterialTheme.typography.body2,
