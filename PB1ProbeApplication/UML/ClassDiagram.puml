@@ -67,6 +67,6 @@ User <|-- TrialParticipant
 Researcher -|> User
 Researcher "1 " --> "0..*  " Trial
 TrialParticipant "1" -> "1" TrialListing
-TrialListing "1  " --* "  0..* " Trial
+TrialListing "1  " *-- "  0..* " Trial
 
 @enduml
