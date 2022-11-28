@@ -8,9 +8,9 @@ applyingToTrial -> browsingTrials : back arrow pressed
 appliedToTrial ----> browsingTrials : navigate to trial listing
 browsingTrials -> [*] : log out
 
-state browsingTrials : entry/ see available trials\ndo/ scroll, search, filter or expand trial
+state browsingTrials : entry/ see available trials\ndo/ scroll or expand trial
 
-state applyingToTrial : entry/ see 'deltager information'\ndo/ accept terms and press apply
+state applyingToTrial : entry/ see 'deltager information'
 
 state appliedToTrial : /do subscribe or unsubscribe trial
 
