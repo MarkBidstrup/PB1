@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package dataClasses {
+
+    note "The data classes only provide structure\nand therefore has no methods" as note1
+
+    enum Role {
+        RESEARCHER
+        TRIAL_PARTICIPANT
+    }
+    class Trial {
+            trialID: String
+            researcherEmail: String
+            title: String
+            purpose: String
+            briefDescription: String
+            numParticipants: Int
+            registrationDeadline: String
+            inclusionCriteria: String
+            exclusionCriteria: String
+            transportComp: Boolean
+            compensation: Boolean
+            lostSalaryComp: Boolean
+            trialDuration: String
+            startDate: String
+            endDate: String
+            forsoegsBeskrivelse: String
+            deltagerInformation: String
+            locations: List<TrialLocation>
+            interventions: String
+            diagnoses: List<String>
+    }
+    class TrialLocation {
+            hospitalName: String
+            address: String
+            postCode: String
+            city: String
+    }
+
+    class dbRegistrations {
+        participantEmail: String
+        trialID: String
+    }
+
+    abstract class UserData {
+        userType: Role
+        name: String
+        lastName: String
+        email: String
+        phone: String
+    }
+
+    class UserTrialParticipant {
+        gender: String
+        age: Int
+        weight: Double
+        diagnosis: String
+    }
+
+    class UserResearcher {
+        department: String
+        job: String
+    }
+
+}
+
+'dataClass package
+UserTrialParticipant -|> UserData
+UserResearcher --|> UserData
+UserData .> Role
+Trial *- TrialLocation
+
+@enduml
