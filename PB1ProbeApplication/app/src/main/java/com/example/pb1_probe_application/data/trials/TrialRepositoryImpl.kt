@@ -1,8 +1,8 @@
 package com.example.pb1_probe_application.data.trials
 
 import com.example.pb1_probe_application.data.auth.AuthRepository
-import com.example.pb1_probe_application.model.Trial
-import com.example.pb1_probe_application.model.dbRegistrations
+import com.example.pb1_probe_application.dataClasses.Trial
+import com.example.pb1_probe_application.dataClasses.dbRegistrations
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.snapshots

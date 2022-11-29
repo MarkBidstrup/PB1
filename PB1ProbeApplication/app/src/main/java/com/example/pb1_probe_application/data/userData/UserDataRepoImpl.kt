@@ -1,15 +1,11 @@
 package com.example.pb1_probe_application.data.userData
 
 import com.example.pb1_probe_application.data.auth.utils.await
-import com.example.pb1_probe_application.model.UserData
-import com.example.pb1_probe_application.model.UserPatient
-import com.example.pb1_probe_application.model.UserResearcher
+import com.example.pb1_probe_application.dataClasses.UserData
+import com.example.pb1_probe_application.dataClasses.UserPatient
+import com.example.pb1_probe_application.dataClasses.UserResearcher
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.snapshots
-import com.google.firebase.firestore.ktx.toObjects
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserDataRepoImpl @Inject constructor(

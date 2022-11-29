@@ -1,9 +1,9 @@
-package com.example.pb1_probe_application.ui
+package com.example.pb1_probe_application.application
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pb1_probe_application.data.trials.TrialRepository
-import com.example.pb1_probe_application.model.Trial
+import com.example.pb1_probe_application.dataClasses.Trial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,7 +63,7 @@ class TrialsViewModel @Inject constructor(
         getViewModelSubscribedTrials()
     }
 
-    fun registerForTrial(trial: Trial)  = viewModelScope.launch {
+    fun applyToTrial(trial: Trial)  = viewModelScope.launch {
         repository.registerForTrial(trial.trialID)
     }
 

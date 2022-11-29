@@ -22,7 +22,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.model.*
+import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 

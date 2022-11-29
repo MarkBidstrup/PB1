@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.model
+package com.example.pb1_probe_application.dataClasses
 
 import androidx.annotation.StringRes
 

@@ -1,6 +1,6 @@
 package com.example.pb1_probe_application.data.trials
 
-import com.example.pb1_probe_application.model.Trial
+import com.example.pb1_probe_application.dataClasses.Trial
 import kotlinx.coroutines.flow.Flow
 
 interface TrialRepository {

@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.data.auth.DependencyInjection
+package com.example.pb1_probe_application.DependencyInjection
 
 import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.data.auth.AuthRepositoryImpl

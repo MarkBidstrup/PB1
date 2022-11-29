@@ -30,8 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
-import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.Trial
+import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.dataClasses.Role
+import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
 

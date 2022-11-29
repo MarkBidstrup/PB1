@@ -13,9 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.data.auth.Resource
-import com.example.pb1_probe_application.model.Role
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

@@ -12,9 +12,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.TrialsViewModel
 
-import com.example.pb1_probe_application.model.Role
+import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen

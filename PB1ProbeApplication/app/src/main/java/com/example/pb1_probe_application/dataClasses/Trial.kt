@@ -1,4 +1,4 @@
-package com.example.pb1_probe_application.model
+package com.example.pb1_probe_application.dataClasses
 
 import com.example.pb1_probe_application.R
 import com.google.firebase.firestore.DocumentId

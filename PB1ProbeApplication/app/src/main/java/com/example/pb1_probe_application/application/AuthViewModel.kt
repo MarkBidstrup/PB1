@@ -1,7 +1,9 @@
-package com.example.pb1_probe_application.data.auth
+package com.example.pb1_probe_application.application
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pb1_probe_application.data.auth.AuthRepository
+import com.example.pb1_probe_application.data.auth.Resource
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

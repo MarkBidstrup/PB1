@@ -21,10 +21,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.model.CreateTrialField
-import com.example.pb1_probe_application.model.TrialLocation
-import com.example.pb1_probe_application.model.loadCreateTrialList
-import com.example.pb1_probe_application.model.trialAttributes
+import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.dataClasses.CreateTrialField
+import com.example.pb1_probe_application.dataClasses.TrialLocation
+import com.example.pb1_probe_application.dataClasses.loadCreateTrialList
+import com.example.pb1_probe_application.dataClasses.trialAttributes
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 

@@ -1,6 +1,4 @@
-package com.example.pb1_probe_application.model
-
-import com.google.firebase.firestore.DocumentId
+package com.example.pb1_probe_application.dataClasses
 
 sealed class UserData(
     val userType: Role,

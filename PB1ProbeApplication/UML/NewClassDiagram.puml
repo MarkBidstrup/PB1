@@ -1,0 +1,190 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+package data {
+
+    package auth {
+
+        interface AuthRepository <<interface>> {
+            currentUser: FirebaseUser
+            login(): Resource<FirebaseUser>
+            signup(): Resource<FirebaseUser>
+        }
+
+        class AuthRepositoryImpl {
+            firebaseAuth: FirebaseAuth
+            logout()
+        }
+
+    }
+
+    package trials {
+        interface TrialRepository <<interface>> {
+            trials: Flow<List<Trial>>
+
+            addNew(trial: Trial)
+            update(trial: Trial)
+            delete(trialId: String)
+            registerForTrial(trialId: String)
+            subscribeToTrial(trialId: String)
+            unsubscribeFromTrial(trialId: String)
+        }
+
+        class TrialRepositoryImpl {
+            firestore: FirebaseFirestore
+            auth: AuthRepository
+        }
+
+    }
+
+    package userData {
+        interface UserDataRepository <<interface>> {
+            getData(userID: String): UserData
+            addNew(userID: String, data: UserData)
+            update(userID: String, data: UserData)
+            delete(userID: String)
+        }
+
+        class UserDataRepoImpl {
+            firestore: FirebaseFirestore
+        }
+
+    }
+}
+
+package dataClasses {
+
+    note "The data classes only provide structure\nand therefore has no methods" as note1
+
+    enum Role {
+        RESEARCHER
+        TRIAL_PARTICIPANT
+    }
+    class Trial {
+            trialID: String
+            researcherEmail: String
+            title: String
+            purpose: String
+            briefDescription: String
+            numParticipants: Int
+            registrationDeadline: String
+            inclusionCriteria: String
+            exclusionCriteria: String
+            transportComp: Boolean
+            compensation: Boolean
+            lostSalaryComp: Boolean
+            trialDuration: String
+            startDate: String
+            endDate: String
+            forsoegsBeskrivelse: String
+            deltagerInformation: String
+            locations: List<TrialLocation>
+            interventions: String
+            diagnoses: List<String>
+    }
+    class TrialLocation {
+            hospitalName: String
+            address: String
+            postCode: String
+            city: String
+    }
+
+    class dbRegistrations {
+        participantEmail: String
+        trialID: String
+    }
+
+    abstract class UserData {
+        userType: Role
+        name: String
+        lastName: String
+        email: String
+        phone: String
+    }
+
+    class UserTrialParticipant {
+        gender: String
+        age: Int
+        weight: Double
+        diagnosis: String
+    }
+
+    class UserResearcher {
+        department: String
+        job: String
+    }
+
+}
+
+package application {
+    class TrialsViewModel {
+        repository: TrialRepository
+        myTrialsResearcher: StateFlow<List<Trial>>
+        myTrialsParticipants: StateFlow<List<Trial>>
+        subscribedTrials: StateFlow<List<Trial>>
+
+        subscribeToTrial()
+        unsubscribeFromTrial()
+        applyToTrial()
+        createNewTrial()
+        deleteTrial()
+    }
+
+    class AuthViewModel {
+        repository: AuthRepository
+        loginFlow: StateFlow<Resource<FirebaseUser>>
+        signupFlow: StateFlow<Resource<FirebaseUser>>
+        currentUser: FirebaseUser
+        login()
+        signup()
+        logout()
+    }
+
+    class UserViewModel {
+        repository: UserDataRepository
+        userInfo: StateFlow<UserData>
+        createUser()
+        editInfo()
+        deleteUser()
+
+    }
+}
+
+package ui {
+    note "This package contains all of the application screens\nwhich we are not displaying in this diagram." as note
+}
+
+package com.example.pb1_probe_application {
+    object MainActivity {
+        onCreate()
+    }
+
+    package DependencyInjection {
+        class Appmodule {
+            provideFirebaseAuth(): FirebaseAuth
+            provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository
+            provideFirestore(): FirebaseFirestore
+            provideTrialsRepository(impl: TrialRepositoryImpl): TrialRepository
+        }
+    }
+}
+
+'data package
+AuthRepositoryImpl ..|> AuthRepository
+TrialRepositoryImpl ..|> TrialRepository
+UserDataRepoImpl ..|> UserDataRepository
+
+'dataClass package
+UserTrialParticipant -|> UserData
+UserResearcher --|> UserData
+UserData .> Role
+Trial *- TrialLocation
+
+'packages
+com.example.pb1_probe_application ..> application
+application --d-> data
+ui ---d> application
+
+
+@enduml

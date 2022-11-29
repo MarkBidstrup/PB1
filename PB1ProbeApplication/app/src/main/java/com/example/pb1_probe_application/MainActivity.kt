@@ -10,11 +10,11 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.navigation.MainHome
 
 
-import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 

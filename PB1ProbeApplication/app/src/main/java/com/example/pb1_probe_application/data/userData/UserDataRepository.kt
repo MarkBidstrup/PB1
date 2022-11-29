@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.data.userData
 
-import com.example.pb1_probe_application.model.UserData
-import kotlinx.coroutines.flow.Flow
+import com.example.pb1_probe_application.dataClasses.UserData
 
 interface UserDataRepository {
     //val userData: Flow<List<UserPatient>>

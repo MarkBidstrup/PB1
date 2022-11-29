@@ -14,17 +14,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.application.AuthViewModel
 
 
-import com.example.pb1_probe_application.model.Role
+import com.example.pb1_probe_application.dataClasses.Role
 
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
+fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
     val currentUser: Role = role
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
         SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
@@ -33,7 +33,7 @@ fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, auth
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
+fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
     var checkedPlaceholder: Boolean = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
@@ -131,7 +131,7 @@ fun SettingsPatientScreen( onClick: () -> Unit, onClickNav :() -> Unit, authView
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?,logOutNav :() -> Unit) {
+fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(

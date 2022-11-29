@@ -23,10 +23,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
-import com.example.pb1_probe_application.data.userData.UserDataRepository
-import com.example.pb1_probe_application.model.Role
-import com.example.pb1_probe_application.model.UserInfo
-import com.example.pb1_probe_application.model.UserPatient
+import com.example.pb1_probe_application.dataClasses.Role
+import com.example.pb1_probe_application.dataClasses.UserInfo
+import com.example.pb1_probe_application.dataClasses.UserPatient
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography

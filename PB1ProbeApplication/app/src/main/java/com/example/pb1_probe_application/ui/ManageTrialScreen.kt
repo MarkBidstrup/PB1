@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 

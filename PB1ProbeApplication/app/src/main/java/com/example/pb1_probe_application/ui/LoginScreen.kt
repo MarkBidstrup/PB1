@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -18,7 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.data.auth.AuthViewModel
+import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.data.auth.Resource
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
