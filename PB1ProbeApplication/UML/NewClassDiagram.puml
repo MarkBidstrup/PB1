@@ -116,6 +116,7 @@ application ---d-> data
 ui ---d> application
 ui -----> DataClasses
 application -> dataClasses
+data -> dataClasses
 
 'data package
 AuthRepository ..|> AuthRepositoryImpl
