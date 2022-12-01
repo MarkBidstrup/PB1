@@ -106,15 +106,22 @@ package com.example.pb1_probe_application {
     }
 }
 
+package dataClasses {
+    () DataClasses
+}
+
 'packages
 com.example.pb1_probe_application ....> application
-application -d-> data
+application ---d-> data
 ui ---d> application
+ui -----> DataClasses
+application -> dataClasses
 
 'data package
-AuthRepositoryImpl ..|> AuthRepository
-TrialRepositoryImpl ..|> TrialRepository
-UserDataRepoImpl ..|> UserDataRepository
+AuthRepository ..|> AuthRepositoryImpl
+TrialRepository ..|> TrialRepositoryImpl
+UserDataRepository ..|> UserDataRepoImpl
+
 
 
 
