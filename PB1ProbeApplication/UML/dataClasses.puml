@@ -68,7 +68,7 @@ package dataClasses {
 'dataClass package
 UserTrialParticipant -|> UserData
 UserResearcher --|> UserData
-UserData .> Role
+UserData -> Role
 Trial *- TrialLocation
 
 @enduml

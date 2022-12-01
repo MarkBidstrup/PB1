@@ -111,7 +111,7 @@ package dataClasses {
 }
 
 'packages
-com.example.pb1_probe_application ....> application
+com.example.pb1_probe_application ----> application
 application ---d-> data
 ui ---d> application
 ui -----> DataClasses
