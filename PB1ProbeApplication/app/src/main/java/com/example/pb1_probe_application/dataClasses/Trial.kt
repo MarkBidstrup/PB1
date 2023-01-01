@@ -6,7 +6,7 @@ import com.google.firebase.firestore.DocumentId
 
 data class Trial (
     @DocumentId val trialID: String = "",
-    var researcherEmail: String = "",
+    var researcherID: String = "",
     var title: String = "",
     var purpose: String = "",
     var briefDescription: String = "",
@@ -35,7 +35,7 @@ data class TrialLocation (
 )
 
 data class dbRegistrations(
-    val participantEmail: String = "",
+    val participantID: String = "",
     val trialID: String = "")
 
 

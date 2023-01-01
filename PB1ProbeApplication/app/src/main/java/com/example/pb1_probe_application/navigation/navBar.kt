@@ -168,10 +168,10 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.CreateTrial.route) {
-            val email: String?
+            val id: String?
             if(authViewModel?.currentUser != null) {
-                email = authViewModel.currentUser!!.email
-            CreateTrialScreen(email, trialsViewModel, { navController.popBackStack() } ) {
+                id = authViewModel.currentUser!!.uid
+            CreateTrialScreen(id, trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route) }
             }
         }

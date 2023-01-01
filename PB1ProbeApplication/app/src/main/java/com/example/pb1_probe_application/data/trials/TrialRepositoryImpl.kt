@@ -51,53 +51,55 @@ class TrialRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyTrialsParticipant(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = registrationDB().whereEqualTo("participantEmail", email).get().await()
+        val snapshot = registrationDB().whereEqualTo("participantID", id).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
         return list
     }
 
     override suspend fun getMyTrialsResearcher(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = trialDB().whereEqualTo("researcherEmail", email).get().await()
+        val snapshot = trialDB().whereEqualTo("researcherID", id).get().await()
         snapshot.forEach { t -> list.add(t.toObject()) }
         return list
     }
 
     override suspend fun getSubscribedTrials(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = subscriptionDB().whereEqualTo("participantEmail", email).get().await()
+        val snapshot = subscriptionDB().whereEqualTo("participantID", id).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
         return list
     }
 
     override suspend fun registerForTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            registrationDB().document(email + "_$trialId")
-            .set(dbRegistrations(email, trialId)).await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            registrationDB().document(id + "_$trialId")
+            .set(dbRegistrations(id, trialId)).await()
     }
 
     override suspend fun subscribeToTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            subscriptionDB().document(email + "_$trialId")
-            .set(dbRegistrations(email, trialId)).await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            subscriptionDB().document(id + "_$trialId")
+            .set(dbRegistrations(id, trialId)).await()
     }
 
     override suspend fun unsubscribeFromTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            subscriptionDB().document(email + "_$trialId").delete().await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            subscriptionDB().document(id + "_$trialId").delete().await()
     }
 
     override suspend fun getRegisteredParticipants(trialId: String): List<String> {
+        val uidList: MutableList<String> = ArrayList()
         val emailList: MutableList<String> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("trialID", trialId).get().await()
-        snapshot.forEach { t -> t.getString("participantEmail")?.let { emailList.add(it) } }
+        snapshot.forEach { t -> t.getString("participantID")?.let { uidList.add(it) } }
+        // TODO - get the email of each trial participant from user profile database
         return emailList
     }
 

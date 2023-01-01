@@ -65,11 +65,12 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
                     style = Typography.body1,
                     color = TextColorRed,
                     modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
-                        .clickable {  // TODO - make user confirm deletion before deleting trial
+                        .clickable {
+                            // TODO - make user confirm deletion before deleting trial, e.g. pop-up box
                             trialsViewModel.currentNavTrial?.let {
                                 it1 -> trialsViewModel.deleteTrial(it1)
                             }
-                            onClickNavToEditTrial()
+                            navBack()
                         }
                 )
             }

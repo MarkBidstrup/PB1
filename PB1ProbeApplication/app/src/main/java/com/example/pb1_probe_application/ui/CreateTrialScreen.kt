@@ -29,7 +29,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
+fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -52,8 +52,8 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
         },
         content = {
             val trial = Trial()
-            if(email != null)
-                trial.researcherEmail = email
+            if(id != null)
+                trial.researcherID = id
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
                 LazyColumn (
                     modifier = Modifier
