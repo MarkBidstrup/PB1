@@ -160,8 +160,10 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             { {trialsViewModel.unsubscribeFromTrial(it) } }
                                     if(pagerState.currentPage == 0) // mytrials
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
-                                    else // subscribedTrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true, iconOnClick = onClick, applyOnClick = {navHostController.navigate("DeltagerInfo")})
+                                    else { // subscribedTrials
+                                        val canApply = !myTrials.contains(it)
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick, applyOnClick = { navHostController.navigate("DeltagerInfo") })
+                                    }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
