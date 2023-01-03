@@ -125,6 +125,8 @@
     <string name="indtastLokationer">Indtast lokation(er)</string>
     <string name="interventioner">Intervention(er)</string>
     <string name="indtastInterventioner">Indtast Intervention(er)</string>
+    <string name="besoeg">Antal besøg</string>
+    <string name="indtastBesoeg">Indtast antal besøg</string>
     <string name="transport">Transport</string>
     <string name="tilbydesTransport">Tilbydes transport?</string>
     <string name="tabtArbejdsfortjeneste">Tabt arbejdsfortjeneste</string>

@@ -79,6 +79,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 trialAttributes.exclusionCriteria -> input = trial.exclusionCriteria
                                 trialAttributes.inclusionCriteria -> input = trial.inclusionCriteria
                                 trialAttributes.numParticipants -> input = trial.numParticipants.toString()
+                                trialAttributes.numVisits -> input = trial.numVisits.toString()
                                 trialAttributes.deltagerInformation -> input = trial.deltagerInformation
                                 trialAttributes.forsoegsBeskrivelse -> input = trial.forsoegsBeskrivelse
                                 trialAttributes.purpose -> input = trial.purpose
@@ -113,6 +114,10 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                     trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                     trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
                                     trialAttributes.numParticipants -> trial.numParticipants =
+                                        if(userInput.toIntOrNull() != null)
+                                            Integer.parseInt(userInput)
+                                        else 0
+                                    trialAttributes.numVisits -> trial.numVisits =
                                         if(userInput.toIntOrNull() != null)
                                             Integer.parseInt(userInput)
                                         else 0
