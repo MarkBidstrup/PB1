@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserInfo
 import com.example.pb1_probe_application.dataClasses.UserPatient
@@ -116,7 +117,7 @@ fun FurtherInformationField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDown()
+            DropDown(DropDownType.KOEN)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
@@ -153,12 +154,12 @@ fun FurtherInformationField(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDown() {
+fun DropDown(dropDownType: DropDownType) {
 
-    val listItems = arrayOf("Mand","Kvinde")
+    val listItems = Datasource().loadDropDownList(dropDownType)
 
     var selectedItem by remember {
-        mutableStateOf(listItems[0])
+        mutableStateOf("")
     }
 
     var expanded by remember {
@@ -201,7 +202,7 @@ fun DropDown() {
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                listItems.forEach { selectedOption ->
+                listItems?.forEach { selectedOption ->
                     // menu item
                     DropdownMenuItem(onClick = {
                         selectedItem = selectedOption

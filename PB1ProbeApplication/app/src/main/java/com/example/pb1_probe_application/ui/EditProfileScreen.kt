@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserInfo
 import com.example.pb1_probe_application.dataClasses.UserPatient
@@ -139,7 +140,7 @@ fun EditUserInfoField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDown()
+            DropDown(dropDownType = DropDownType.KOEN)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
