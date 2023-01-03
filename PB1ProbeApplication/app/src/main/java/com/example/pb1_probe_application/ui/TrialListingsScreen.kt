@@ -75,7 +75,6 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     )
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
-                        //TODO: implement onClick
                         navHostController?.navigate("Filter")
                     })
                 }

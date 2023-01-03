@@ -1,5 +1,6 @@
 package com.example.pb1_probe_application.data.trials
 
+import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.dataClasses.dbRegistrations
@@ -23,22 +24,6 @@ class TrialRepositoryImpl @Inject constructor(
 
     override suspend fun getTrial(trialId: String): Trial? {
         return trialDB().document(trialId).get().await().toObject<Trial>()
-    }
-
-    override suspend fun getFilteredTrials(
-        searchText: String?,
-        location: List<String>?,
-        compensation: Boolean,
-        transportComp: Boolean,
-        lostSalaryComp: Boolean,
-        trialDuration: String?,
-        numVisits: Int?
-    ): List<Trial>{
-        TODO("Not yet implemented")
-//        val list: MutableList<Trial> = ArrayList()
-//        val snapshot = trialDB().get().await()
-//        snapshot.forEach { t -> list.add(t.toObject()) }
-//        return list
     }
 
     override suspend fun addNew(trial: Trial) {
@@ -107,6 +92,132 @@ class TrialRepositoryImpl @Inject constructor(
         return emailList
     }
 
+    override suspend fun getFilteredTrials(
+        searchText: String?,
+        location: List<String>?,
+        compensation: Boolean,
+        transportComp: Boolean,
+        lostSalaryComp: Boolean,
+        trialDuration: Int?,
+        numVisits: Int?
+    ): List<Trial>{
+        var list: MutableList<Trial> = ArrayList()
+
+        if(searchText != null && searchText != "") { // if this is a search query
+            // conducts prefix search of the title, purpose, and brief description fields
+            val snapshot = trialDB()
+                .whereGreaterThanOrEqualTo("title", searchText)
+                .whereLessThanOrEqualTo("title", "\uf8ff")
+                .get().await()
+            snapshot.forEach { t -> list.add(t.toObject()) }
+            val snapshot1 = trialDB()
+                .whereGreaterThanOrEqualTo("purpose", searchText)
+                .whereLessThanOrEqualTo("purpose", "\uf8ff")
+                .get().await()
+            snapshot1.forEach { t -> list.add(t.toObject()) }
+            val snapshot2 = trialDB()
+                .whereGreaterThanOrEqualTo("briefDescription", searchText)
+                .whereLessThanOrEqualTo("briefDescription", "\uf8ff")
+                .get().await()
+            snapshot2.forEach { t -> list.add(t.toObject()) }
+            val set = list.toSet() //remove duplicates
+            list = set.toMutableList()
+
+        } else { // if this is a filter query
+            var locationsList: MutableList<Trial>? = null
+
+            // get the list of trials filtered by location
+            if(location != null && location.isNotEmpty()) {
+                locationsList = ArrayList()
+                for (s in location) {
+                    val snapshot = trialDB()
+                        .whereArrayContains("kommuner", s)
+                        .get().await()
+                    snapshot.forEach { t -> locationsList.add(t.toObject()) }
+                }
+            }
+
+            // get the list of trial filtered by various forms of compensation (using logical AND)
+            // if any of the 3 compensation filters were applied
+            var compList: MutableList<Trial> = ArrayList()
+            var tempList: MutableList<Trial> = ArrayList()
+            if (compensation || lostSalaryComp || transportComp) {
+                if(compensation) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("compensation", "true")
+                        .get().await()
+                    snapshot.forEach { t -> compList.add(t.toObject()) }
+                }
+                if(transportComp) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("transportComp", "true")
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                    compList = if (compensation) {
+                        // if both conditions were checked, we need the intersection
+                        (compList intersect tempList.toSet()).toMutableList()
+                    } else // only transportComp box was checked
+                        tempList
+                }
+                if(lostSalaryComp) {
+                    tempList = ArrayList()
+                    val snapshot = trialDB()
+                        .whereEqualTo("lostSalaryComp", "true")
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                    compList = if (compensation || transportComp ) {
+                        // if any of the other 2 conditions were checked, we need the intersection of the 2 lists
+                        (compList intersect tempList.toSet()).toMutableList()
+                    } else // only the lostSalaryComp box was checked
+                        tempList
+                }
+                tempList = ArrayList()
+            }
+
+            if(trialDuration != null && trialDuration > 0) {
+                val month = if(trialDuration == 1)
+                    " måned"
+                else
+                    " måneder"
+                for(i in 1 .. 6) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("trialDuration", "" + trialDuration + month)
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                }
+            }
+            if(numVisits != null && numVisits > 0) {
+                val tempList2: MutableList<Trial> = ArrayList()
+                for(i in 1 .. 10) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("numVisits", "" + trialDuration + R.string.visit)
+                        .get().await()
+                    snapshot.forEach { t -> tempList2.add(t.toObject()) }
+                }
+                tempList = if(trialDuration != null && trialDuration > 0)
+                    (tempList intersect tempList2.toSet()).toMutableList()
+                else
+                    tempList2
+            }
+
+            if (locationsList != null) {
+                list = locationsList
+            }
+            if (compensation || lostSalaryComp || transportComp) {
+                list = if (locationsList == null) {
+                    compList
+                } else
+                    (list intersect compList.toSet()).toMutableList()
+            }
+            if((trialDuration != null && trialDuration > 0) || (numVisits != null && numVisits > 0)) {
+                list = if(locationsList == null && !(compensation || lostSalaryComp || transportComp))
+                    tempList
+                else
+                    (list intersect tempList.toSet()).toMutableList()
+            }
+        }
+        return list
+    }
 
     private fun trialDB(): CollectionReference =
         firestore.collection(TRIAL_COLLECTION)

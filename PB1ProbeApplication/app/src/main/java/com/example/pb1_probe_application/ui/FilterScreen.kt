@@ -15,11 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
@@ -36,8 +33,6 @@ fun FilterScreen(onClickNav: () -> Unit) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
                     onClick = onClickNav
-                    /*
-                    TODO */
                 ) {
                     Icon(
                         Icons.Default.ArrowBack,
