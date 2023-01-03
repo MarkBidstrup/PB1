@@ -27,9 +27,13 @@ class TrialRepositoryImpl @Inject constructor(
 
     override suspend fun getFilteredTrials(
         searchText: String?,
-        location: String?,
-        compensationOffered: Boolean?
-    ): List<Trial> {
+        location: List<String>?,
+        compensation: Boolean,
+        transportComp: Boolean,
+        lostSalaryComp: Boolean,
+        trialDuration: String?,
+        numVisits: Int?
+    ): List<Trial>{
         TODO("Not yet implemented")
 //        val list: MutableList<Trial> = ArrayList()
 //        val snapshot = trialDB().get().await()

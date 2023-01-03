@@ -6,8 +6,15 @@ import kotlinx.coroutines.flow.Flow
 interface TrialRepository {
     val trials: Flow<List<Trial>>
 
-    // TODO - change parameters depending on filtering implementation
-    suspend fun getFilteredTrials(searchText: String?, location: String?, compensationOffered: Boolean?): List<Trial>
+    suspend fun getFilteredTrials(
+        searchText: String?,
+        location: List<String>?,
+        compensation: Boolean,
+        transportComp: Boolean,
+        lostSalaryComp: Boolean,
+        trialDuration: String?,
+        numVisits: Int?
+    ): List<Trial>
 
     suspend fun getTrial(trialId: String): Trial?
 

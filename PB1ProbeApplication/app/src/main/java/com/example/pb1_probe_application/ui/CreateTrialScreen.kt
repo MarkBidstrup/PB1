@@ -79,6 +79,7 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
                             when (CreateTrialField.trialAttribute) {
                                 trialAttributes.title -> trial.title = userInput
                                 trialAttributes.trialDuration -> trial.trialDuration = userInput
+                                trialAttributes.numVisits -> trial.numVisits = Integer.parseInt(userInput)
                                 trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
                                 trialAttributes.interventions -> trial.interventions = userInput
                                 trialAttributes.startDate -> trial.startDate = userInput

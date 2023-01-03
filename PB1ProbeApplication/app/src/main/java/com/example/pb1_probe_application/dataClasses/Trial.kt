@@ -18,6 +18,7 @@ data class Trial (
     var compensation: Boolean = false,
     var lostSalaryComp: Boolean = false,
     var trialDuration: String = "",
+    var numVisits: Int = 0,
     var startDate: String = "",
     var endDate: String = "",
     var forsoegsBeskrivelse: String = "",
@@ -31,7 +32,8 @@ data class TrialLocation (
     var hospitalName: String = "",
     var address: String = "",
     var postCode: String = "",
-    var city: String = ""
+    var city: String = "",
+    var kommune: String = ""
 )
 
 data class dbRegistrations(
@@ -41,7 +43,7 @@ data class dbRegistrations(
 
 enum class trialAttributes {
     title, purpose, briefDescription, numParticipants, registrationDeadline, inclusionCriteria,
-    exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, startDate, endDate,
+    exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, numVisits, startDate, endDate,
     forsoegsBeskrivelse, deltagerInformation, locations, interventions, diagnoses
 }
 
@@ -55,6 +57,7 @@ fun loadCreateTrialList(): List<CreateTrialField> {
         CreateTrialField(trialAttributes.briefDescription, R.string.kortBeskr, R.string.indtastKortBeskriv),
         CreateTrialField(trialAttributes.locations, R.string.lokationer, R.string.indtastLokationer),
         CreateTrialField(trialAttributes.trialDuration, R.string.projektetsVarighed, R.string.indtastVarighed),
+        CreateTrialField(trialAttributes.numVisits, R.string.besoeg, R.string.indtastBesoeg),
         CreateTrialField(trialAttributes.endDate, R.string.forventetAfslutningsdato, R.string.indtastAfslutningsdato),
         CreateTrialField(trialAttributes.startDate, R.string.forventetstartdato, R.string.indtastforventetstartdato),
         CreateTrialField(trialAttributes.interventions, R.string.interventioner, R.string.indtastInterventioner),
