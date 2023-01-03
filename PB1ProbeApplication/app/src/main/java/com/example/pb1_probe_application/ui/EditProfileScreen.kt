@@ -120,7 +120,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             }
         },
     )
-
 }
 @Composable
 fun EditUserInfoField(
@@ -139,23 +138,39 @@ fun EditUserInfoField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = inputField,
-            singleLine = true,
-            label = { Text(text = stringResource(label)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+        if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
+            DropDown()
+        } else if (
+            LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.telefon)
+        ) {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
+
     }
 }
-
-//@Preview
-//@Composable
-//private fun ProfileUserScreenPreview() {
-//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-//}

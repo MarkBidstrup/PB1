@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
                       MainHome(authViewModel, trialsViewModel)
 //                    NotificationsScreen()
 //                    ManageTrialScreen()
+
                 }
             }
         }

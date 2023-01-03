@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -74,11 +75,11 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             }
 
             Spacer(modifier = Modifier.height(40.dp))
-            textField(label = stringResource(R.string.email), text = email, onValueChange = {email = it})
+            textField(label = stringResource(R.string.email), text = email, onValueChange = {email = it}, focusManager = LocalFocusManager.current)
             Spacer(modifier = Modifier.height(15.dp))
-            textField(label = stringResource(R.string.password), text = password, hiddenText = true, onValueChange = {password = it})
+            textField(label = stringResource(R.string.password), text = password, hiddenText = true, onValueChange = {password = it}, focusManager = LocalFocusManager.current)
             Spacer(modifier = Modifier.height(15.dp))
-            textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it})
+            textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it}, focusManager = LocalFocusManager.current)
 
             Spacer(modifier = Modifier.height(50.dp))
             LoginButton(onClick = { signup(authViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
