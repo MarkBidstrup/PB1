@@ -1,6 +1,5 @@
 package com.example.pb1_probe_application.data.trials
 
-import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.dataClasses.dbRegistrations
@@ -144,13 +143,13 @@ class TrialRepositoryImpl @Inject constructor(
             if (compensation || lostSalaryComp || transportComp) {
                 if(compensation) {
                     val snapshot = trialDB()
-                        .whereEqualTo("compensation", "true")
+                        .whereEqualTo("compensation", true)
                         .get().await()
                     snapshot.forEach { t -> compList.add(t.toObject()) }
                 }
                 if(transportComp) {
                     val snapshot = trialDB()
-                        .whereEqualTo("transportComp", "true")
+                        .whereEqualTo("transportComp", true)
                         .get().await()
                     snapshot.forEach { t -> tempList.add(t.toObject()) }
                     compList = if (compensation) {
@@ -162,7 +161,7 @@ class TrialRepositoryImpl @Inject constructor(
                 if(lostSalaryComp) {
                     tempList = ArrayList()
                     val snapshot = trialDB()
-                        .whereEqualTo("lostSalaryComp", "true")
+                        .whereEqualTo("lostSalaryComp", true)
                         .get().await()
                     snapshot.forEach { t -> tempList.add(t.toObject()) }
                     compList = if (compensation || transportComp ) {
@@ -175,22 +174,22 @@ class TrialRepositoryImpl @Inject constructor(
             }
 
             if(trialDuration != null && trialDuration > 0) {
-                val month = if(trialDuration == 1)
-                    " måned"
-                else
-                    " måneder"
-                for(i in 1 .. 6) {
+                for(i in 1 .. trialDuration) {
+                    val month = if(i == 1)
+                        " måned"
+                    else
+                        " måneder"
                     val snapshot = trialDB()
-                        .whereEqualTo("trialDuration", "" + trialDuration + month)
+                        .whereEqualTo("trialDuration", "" + i + month)
                         .get().await()
                     snapshot.forEach { t -> tempList.add(t.toObject()) }
                 }
             }
             if(numVisits != null && numVisits > 0) {
                 val tempList2: MutableList<Trial> = ArrayList()
-                for(i in 1 .. 10) {
+                for(i in 1 .. numVisits) {
                     val snapshot = trialDB()
-                        .whereEqualTo("numVisits", "" + trialDuration + R.string.visit)
+                        .whereEqualTo("numVisits", i)
                         .get().await()
                     snapshot.forEach { t -> tempList2.add(t.toObject()) }
                 }
@@ -216,6 +215,8 @@ class TrialRepositoryImpl @Inject constructor(
                     (list intersect tempList.toSet()).toMutableList()
             }
         }
+        val set = list.toSet() //remove duplicates
+        list = set.toMutableList()
         return list
     }
 

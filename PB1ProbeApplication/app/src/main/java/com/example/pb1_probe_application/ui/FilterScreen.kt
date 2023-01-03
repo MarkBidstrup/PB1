@@ -2,7 +2,9 @@ package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,15 +19,23 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun FilterScreen(onClickNav: () -> Unit) {
+fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
+    var locations by remember { mutableStateOf(ArrayList<String>()) }
+    var reward by remember { mutableStateOf(false) }
+    var transport by remember { mutableStateOf(false) }
+    var work by remember { mutableStateOf(false) }
+    var maxDuration by remember { mutableStateOf<Int?>(null) }
+    var maxVisits by remember { mutableStateOf<Int?>(null) }
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
-
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.filtrerStudier), style = Typography.h1) },
@@ -42,7 +52,9 @@ fun FilterScreen(onClickNav: () -> Unit) {
             }
         },
         content = {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier
+                .padding(16.dp)
+                .verticalScroll(scrollState)) {
                 Spacer(modifier = Modifier.height(10.dp))
                 DistanceComp()
                 Divider(
@@ -50,13 +62,19 @@ fun FilterScreen(onClickNav: () -> Unit) {
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
-                CompensationComp()
+                CompensationComp(reward = reward, work = work, transport = transport, transportClick = {transport = !transport}, rewardClick = {reward = !reward}, workClick = {work = !work})
                 Divider(
                     modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
-                DurationComp()
+                DurationComp { maxDuration = it}
+                Divider(
+                    modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
+                    thickness = 1.dp,
+                    color = Color.LightGray
+                )
+                VisitsComp{maxVisits = it}
                 Divider(
                     modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
@@ -68,7 +86,19 @@ fun FilterScreen(onClickNav: () -> Unit) {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    LoginButton(onClick = { /* TODO */ }, R.string.filtrerKnap, true)
+                    LoginButton(onClick = {
+                        trialsViewModel.getFilteredTrials(
+                            compensation = reward,
+                            lostSalaryComp = work,
+                            transportComp = transport,
+                            location = locations,
+                            searchText = null,
+                            trialDuration = maxDuration,
+                            numVisits = maxVisits
+                        )
+                        if(reward || work || transport || locations.isNotEmpty() || maxVisits != null || maxDuration != null)
+                            trialsViewModel.showFilterResult = true
+                        onClickNav() }, R.string.filtrerKnap, true)
                 }
             }
         },
@@ -79,7 +109,7 @@ fun FilterScreen(onClickNav: () -> Unit) {
 }
 
 @Composable
-fun DistanceComp() {
+fun DistanceComp() { // TODO - update using exposed drop down returning a list of locations
     var text by remember { mutableStateOf(TextFieldValue("")) }
     Column {
         Text(
@@ -114,11 +144,7 @@ fun DistanceComp() {
 }
 
 @Composable
-fun CompensationComp() {
-    var reward by remember { mutableStateOf(false) }
-    var transport by remember { mutableStateOf(false) }
-    var work by remember { mutableStateOf(false) }
-
+fun CompensationComp(reward: Boolean, transport: Boolean, work: Boolean, rewardClick: (Boolean) -> Unit, transportClick: (Boolean) -> Unit, workClick: (Boolean) -> Unit ) {
     Column(modifier = Modifier.padding(top = 10.dp)) {
         Text(
             text = stringResource(R.string.kompensation),
@@ -129,25 +155,25 @@ fun CompensationComp() {
             CheckOption(
                 text = stringResource(R.string.honorar),
                 checked = reward,
-                onClick = { reward = !reward }
+                onClick = rewardClick
             )
             Spacer(modifier = Modifier.weight(1f))
             CheckOption(
                 text = stringResource(R.string.koersel),
                 checked = transport,
-                onClick = { transport = !transport }
+                onClick = transportClick
             )
         }
         CheckOption(
             text = stringResource(R.string.arbejdsgodtgoersel),
             checked = work,
-            onClick = { work = !work }
+            onClick = workClick
         )
     }
 }
 
 @Composable
-fun DurationComp() {
+fun DurationComp(updateSelection: (Int?) -> Unit) {
     var time1 by remember { mutableStateOf(false) }
     var time2 by remember { mutableStateOf(false) }
     var time3 by remember { mutableStateOf(false) }
@@ -171,7 +197,10 @@ fun DurationComp() {
                     if (time1) {
                         time2 = false
                         time3 = false
+                        updateSelection(1)
                     }
+                    else
+                        updateSelection(null)
                 }
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -183,7 +212,10 @@ fun DurationComp() {
                     if (time2) {
                         time1 = false
                         time3 = false
+                        updateSelection(3)
                     }
+                    else
+                        updateSelection(null)
                 }
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -195,7 +227,95 @@ fun DurationComp() {
                     if (time3) {
                         time1 = false
                         time2 = false
+                        updateSelection(6)
                     }
+                    else
+                        updateSelection(null)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun VisitsComp(updateSelection: (Int?) -> Unit) {
+    var box1 by remember { mutableStateOf(false) }
+    var box2 by remember { mutableStateOf(false) }
+    var box3 by remember { mutableStateOf(false) }
+    var box4 by remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier.padding(top = 10.dp)) {
+        Text(
+            text = stringResource(R.string.antalBesoeg_Filter),
+            style = MaterialTheme.typography.body1,
+            color = TextColorGreen
+        )
+        Text(
+            text = stringResource(R.string.maksantalBesoeg),
+            style = MaterialTheme.typography.body1,
+        )
+        Row {
+            CheckOption(
+                text = "1",
+                checked = box1,
+                onClick = {
+                    box1 = !box1
+                    if (box1) {
+                        box2 = false
+                        box3 = false
+                        box4 = false
+                        updateSelection(1)
+                    }
+                    else
+                        updateSelection(null)
+                }
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            CheckOption(
+                text = "3",
+                checked = box2,
+                onClick = {
+                    box2 = !box2
+                    if (box2) {
+                        box1 = false
+                        box3 = false
+                        box4 = false
+                        updateSelection(3)
+                    }
+                    else
+                        updateSelection(null)
+                }
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            CheckOption(
+                text = "6",
+                checked = box3,
+                onClick = {
+                    box3 = !box3
+                    if (box3) {
+                        box1 = false
+                        box2 = false
+                        box4 = false
+                        updateSelection(6)
+                    }
+                    else
+                        updateSelection(null)
+                }
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            CheckOption(
+                text = "10",
+                checked = box4,
+                onClick = {
+                    box4 = !box4
+                    if (box4) {
+                        box1 = false
+                        box2 = false
+                        box3 = false
+                        updateSelection(10)
+                    }
+                    else
+                        updateSelection(null)
                 }
             )
         }
