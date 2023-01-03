@@ -2,18 +2,16 @@ package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
@@ -25,11 +23,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserInfo
 import com.example.pb1_probe_application.dataClasses.UserPatient
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
-import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.firebase.auth.FirebaseAuth
 
@@ -62,7 +60,7 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
         content = {
             LazyColumn {
                 items(userInfoList) { UserInfo ->
-                    EditUserInfoField(
+                    FurtherInformationField(
                         userInfo = UserInfo,
                         label = R.string.placeholder, // TODO: make this variable
                         inputField = input,
@@ -118,18 +116,103 @@ fun FurtherInformationField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = inputField,
-            singleLine = true,
-            label = { Text(text = stringResource(label)) },
+        if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
+            DropDown(DropDownType.KOEN)
+        } else if (
+            LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.telefon)
+        ) {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DropDown(dropDownType: DropDownType) {
+
+    val listItems = Datasource().loadDropDownList(dropDownType)
+
+    var selectedItem by remember {
+        mutableStateOf("")
+    }
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+    Card(
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier
+            .padding(start = 17.dp, end = 17.dp)
+            .border(0.5.dp, Color.DarkGray, RoundedCornerShape(4.dp))
+
+    ) {
+        ExposedDropdownMenuBox(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+                .fillMaxWidth(),
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            },
+        ) {
+
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = selectedItem,
+                onValueChange = {},
+                readOnly = true,
+                label = {  },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.Unspecified)
+            )
+
+            ExposedDropdownMenu(
+                modifier = Modifier.fillMaxWidth(),
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                listItems?.forEach { selectedOption ->
+                    // menu item
+                    DropdownMenuItem(onClick = {
+                        selectedItem = selectedOption
+                        expanded = false
+                    }) {
+                        Text(text = selectedOption)
+                    }
+                }
+            }
+        }
     }
 }
 

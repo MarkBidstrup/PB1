@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.data
 
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.UserInfo
 
 class Datasource() {
@@ -289,4 +290,19 @@ class Datasource() {
 //                "sundhedsvidenskabeligt forskningsprojekt”. Hvis du vil vide mere om forsøget, er du meget " +
 //                "velkommen til at kontakte os."
 //    }
+    fun loadDropDownList(dropDownType: DropDownType): List<String>? {
+        if (dropDownType == DropDownType.KOEN) {
+            return listOf(
+                "Mand",
+                "Kvinde"
+            )
+        }
+        if (dropDownType == DropDownType.JA_NEJ) {
+            return listOf(
+                "Ja",
+                "Nej"
+            )
+        }
+        return null
+    }
 }

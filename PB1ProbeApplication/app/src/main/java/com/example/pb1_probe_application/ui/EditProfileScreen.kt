@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.data.Datasource
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserInfo
 import com.example.pb1_probe_application.dataClasses.UserPatient
@@ -120,7 +121,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             }
         },
     )
-
 }
 @Composable
 fun EditUserInfoField(
@@ -139,23 +139,39 @@ fun EditUserInfoField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = inputField,
-            singleLine = true,
-            label = { Text(text = stringResource(label)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+        if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
+            DropDown(dropDownType = DropDownType.KOEN)
+        } else if (
+            LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
+            || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.telefon)
+        ) {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else {
+            OutlinedTextField(
+                value = inputField,
+                singleLine = true,
+                label = { Text(text = stringResource(label)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
+
     }
 }
-
-//@Preview
-//@Composable
-//private fun ProfileUserScreenPreview() {
-//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-//}

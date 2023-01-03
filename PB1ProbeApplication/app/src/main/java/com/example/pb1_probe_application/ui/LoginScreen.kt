@@ -5,13 +5,17 @@ import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -49,13 +53,17 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
             textField(
                 label = stringResource(R.string.email),
                 text = email,
-                onValueChange = { email = it })
+                onValueChange = { email = it },
+                focusManager = LocalFocusManager.current
+            )
             Spacer(modifier = Modifier.height(20.dp))
             textField(
                 label = stringResource(R.string.password),
                 text = password,
                 hiddenText = true,
-                onValueChange = { password = it })
+                onValueChange = { password = it },
+                focusManager = LocalFocusManager.current
+            )
 
             Spacer(modifier = Modifier.height(50.dp))
             LoginButton(
@@ -88,7 +96,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 }
 
 @Composable
-fun textField(label: String, text: String, hiddenText: Boolean = false, onValueChange: (String) -> Unit) {
+fun textField(label: String, text: String, hiddenText: Boolean = false, onValueChange: (String) -> Unit, focusManager: FocusManager) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -100,7 +108,12 @@ fun textField(label: String, text: String, hiddenText: Boolean = false, onValueC
                 label = { Text(text = label) },
                 value = text,
                 visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
                 shape = RoundedCornerShape(4.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.onPrimary,
@@ -114,7 +127,10 @@ fun textField(label: String, text: String, hiddenText: Boolean = false, onValueC
             TextField(
                 label = { Text(text = label) },
                 value = text,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus() }
+                ),
                 shape = RoundedCornerShape(4.dp),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = MaterialTheme.colors.onPrimary,
