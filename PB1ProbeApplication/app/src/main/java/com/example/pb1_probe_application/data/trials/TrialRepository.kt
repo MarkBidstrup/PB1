@@ -8,7 +8,7 @@ interface TrialRepository {
 
     suspend fun getFilteredTrials(
         searchText: String?,
-        location: List<String>?,
+        location: String?,
         compensation: Boolean,
         transportComp: Boolean,
         lostSalaryComp: Boolean,
