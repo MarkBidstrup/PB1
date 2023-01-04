@@ -50,7 +50,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
      var trials = trialsViewModel.trials.collectAsState(emptyList()).value
      var myTrials: List<Trial> = ArrayList()
      var subscribedTrials: List<Trial> = ArrayList()
-     var searchBoxShown by remember { mutableStateOf(false) }
+     var searchBoxExpanded by remember { mutableStateOf(false) }
      var displaySearchResults by remember { mutableStateOf(false) }
 
 
@@ -63,9 +63,18 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
     Scaffold(
         topBar = {
-            ProbeTopBar(icon = TopBarIcons.Search, onClick = {
-                trialsViewModel.showFilterResult = false // TODO this line should come AFTER user has clicked search
-            }) //TODO - implement search onClick
+            if(!searchBoxExpanded)
+                ProbeTopBar(icon = TopBarIcons.Search, onClick = {
+                    searchBoxExpanded = true
+                })
+            else {
+//                SearchTopBar(searchOnClick = {
+//                    trialsViewModel.getFilteredTrials("placeholder")
+//                    trialsViewModel.showFilterResult = false
+//                    displaySearchResults = true
+//                })
+
+            }
         },
         content = {
             Column(modifier = Modifier
@@ -89,7 +98,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                                     text = stringResource(R.string.filtreredeStudierSingular, trials.size), style = Typography.h2
                                 )
                             Spacer(Modifier.weight(2f))
-                            UnFilterButton(onClick = {
+                            UnSearchFilterButton(displaySearchResults, onClick = {
                                 trialsViewModel.showFilterResult = false
                                 navHostController.navigate("Home")
                             })
@@ -305,12 +314,7 @@ fun TrialInfo(
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
-            var locations = stringResource(R.string.lokation) +" "
-            if (trial.locations.isNotEmpty()) {
-                locations += trial.locations[0].hospitalName
-                for (i in 2 .. trial.locations.size)
-                    locations += ", " + trial.locations[i-1].hospitalName
-            }
+            var locations = stringResource(R.string.lokation) +" " + trial.locations
             Text(
                 text = locations,
                 style = MaterialTheme.typography.body2,
@@ -437,6 +441,43 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
 }
 
 @Composable
+fun SearchTopBar(searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+    ) {
+        Image(
+            painter = painterResource(R.drawable.final_icon),
+            contentDescription = stringResource(R.string.logo),
+            modifier = modifier
+                .align(Center)
+                .wrapContentWidth(CenterHorizontally)
+                .padding(top = 10.dp),
+        )
+//        if (icon != TopBarIcons.None) {
+//            IconButton(onClick = searchOnClick, modifier = modifier
+//                .padding(end = 10.dp)
+//                .align(Alignment.BottomEnd)) {
+//                Icon(
+//                    imageVector = when (icon) {
+//                        TopBarIcons.Clear -> Icons.Filled.Clear
+//                        else -> {Icons.Filled.Search}
+//                    },
+//                    contentDescription = when (icon) {
+//                        TopBarIcons.Clear -> "clear"
+//                        else -> "search"
+//                    },
+//                    modifier = modifier
+//                        .scale(1.2f)
+//                )
+//            }
+//        }
+    }
+
+}
+
+@Composable
 fun FilterButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -460,7 +501,8 @@ fun FilterButton(
 }
 
 @Composable
-fun UnFilterButton(
+fun UnSearchFilterButton(
+    search: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -469,16 +511,24 @@ fun UnFilterButton(
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
         elevation = ButtonDefaults.elevation(0.dp)
     ) {
+        val iconUsed = if (search)
+            Icons.Filled.SearchOff
+        else
+            Icons.Filled.FilterAltOff
+        val text = if (search)
+            R.string.unsearch
+        else
+            R.string.unfiltrer
         Icon(
-            imageVector = Icons.Filled.FilterAltOff,
+            imageVector = iconUsed,
             contentDescription = stringResource(R.string.unfiltrer_forklaring),
             modifier = modifier
                 .height(16.dp)
                 .padding(end = 2.dp)
         )
         Text(
-            text = stringResource(R.string.unfiltrer),
-            style = MaterialTheme.typography.body2,)
+            text = stringResource(text),
+            style = MaterialTheme.typography.body2)
     }
 }
 
