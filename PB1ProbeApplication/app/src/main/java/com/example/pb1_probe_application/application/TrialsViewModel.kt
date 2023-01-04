@@ -41,7 +41,7 @@ class TrialsViewModel @Inject constructor(
         _trial.value = result
     }
 
-    fun getFilteredTrials(searchText: String?, location: List<String>?, compensation: Boolean, transportComp: Boolean, lostSalaryComp: Boolean, trialDuration: Int?, numVisits: Int?)= viewModelScope.launch {
+    fun getFilteredTrials(searchText: String?, location: List<String>? = null, compensation: Boolean = false, transportComp: Boolean = false, lostSalaryComp: Boolean = false, trialDuration: Int? = null, numVisits: Int? = null)= viewModelScope.launch {
         val result = repository.getFilteredTrials(searchText, location, compensation, transportComp, lostSalaryComp, trialDuration, numVisits)
         _filteredTrials.value = result
     }
@@ -104,6 +104,12 @@ class TrialsViewModel @Inject constructor(
             repository.delete(trial.trialID)
         }
         _registeredParticipants.remove(trial.trialID)
+    }
+
+    fun deleteCurrentUserFromAllTrialDBEntries() {
+        viewModelScope.launch {
+            repository.deleteUserFromAllTrialsDBs()
+        }
     }
 
     fun setCurrentNavTrialID(trial: Trial) {

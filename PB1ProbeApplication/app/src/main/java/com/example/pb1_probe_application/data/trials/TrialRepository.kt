@@ -33,4 +33,7 @@ interface TrialRepository {
 
     suspend fun getRegisteredParticipants(trialId: String): List<String>
 
+    suspend fun deleteUserFromAllTrialsDBs()
+
+
 }

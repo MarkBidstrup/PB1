@@ -71,6 +71,7 @@
     <!--Search Strings-->
     <string name="filtrer">Filtrer</string>
     <string name="unfiltrer">Fjern filtre</string>
+    <string name="unsearch">Fjern søgefilter</string>
     <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>
     <string name="unfiltrer_forklaring">Fjern filtre</string>
     <string name="soegForklaring">Søg efter et studie</string>

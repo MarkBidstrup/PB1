@@ -220,6 +220,19 @@ class TrialRepositoryImpl @Inject constructor(
         return list
     }
 
+    override suspend fun deleteUserFromAllTrialsDBs() {
+        val id = auth.currentUser?.uid
+        if(id != null) {
+            val snapshot1 = registrationDB().whereEqualTo("participantID", id).get().await()
+            snapshot1.forEach { t -> t.reference.delete().await()}
+            val snapshot2 = subscriptionDB().whereEqualTo("participantID", id).get().await()
+            snapshot2.forEach { t -> t.reference.delete().await()}
+            val snapshot3 = trialDB().whereEqualTo("researcherID", id).get().await()
+            snapshot3.forEach { t -> t.reference.delete().await()}
+        }
+
+    }
+
     private fun trialDB(): CollectionReference =
         firestore.collection(TRIAL_COLLECTION)
 
