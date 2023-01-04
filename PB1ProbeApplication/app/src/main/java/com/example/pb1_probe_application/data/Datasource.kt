@@ -26,8 +26,9 @@ class Datasource() {
         return listOf<UserInfo>(
             UserInfo(R.string.navn,userInfoAttributes.firstName,""),
             UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
-            UserInfo(R.string.forskningsenhed,userInfoAttributes.institute,""),
             UserInfo(R.string.email,userInfoAttributes.email,""),
+            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
+            UserInfo(R.string.forskningsenhed,userInfoAttributes.institute,""),
         )
     }
 

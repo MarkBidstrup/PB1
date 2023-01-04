@@ -32,7 +32,6 @@ import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
-import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
@@ -51,8 +50,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
-    var input by remember { mutableStateOf("") }
-
+    //if (data is UserPatient)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,6 +65,14 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                 IconButton(
                     onClick = {
                         data.name = userInfoList.get(0).uiData
+
+                        /*f (data is UserPatient) {
+                            data.
+                        }
+                        if (data is UserResearcher) {
+                            data.
+                        }*/
+
                         userViewModel.saveUserData(uid,data)
                     }
                 ) {
@@ -90,11 +96,35 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
         content = {
             LazyColumn {
                 itemsIndexed(userInfoList) { i, UserInfo ->
+                    var input by remember { mutableStateOf("") }
+                    if (data is UserPatient) {
+                        when (UserInfo.profileInfo) {
+                            userInfoAttributes.firstName -> input = data.name
+                            userInfoAttributes.lastName -> input = data.lastName
+                            userInfoAttributes.email -> input = data.email
+                            userInfoAttributes.tlf -> input = data.phone
+                            userInfoAttributes.age -> input = data.age
+                            userInfoAttributes.gender -> input = data.gender
+                            userInfoAttributes.weight -> input = data.weight
+                            userInfoAttributes.diagnosis -> input = data.diagnosis
+                            else -> {input = ""}
+                        }
+                    }
+                    if (data is UserResearcher) {
+                        when (UserInfo.profileInfo) {
+                            userInfoAttributes.firstName -> input = data.name
+                            userInfoAttributes.lastName -> input = data.lastName
+                            userInfoAttributes.email -> input = data.email
+                            userInfoAttributes.tlf -> input = data.phone
+                            userInfoAttributes.institute -> input = data.department
+                            else -> {input = ""}
+                        }
+                    }
                     EditUserInfoField(
                         userInfo = UserInfo,
                         label = UserInfo.StringResourceHeaderId,
-                        inputField = UserInfo.uiData,
-                        onChange = { UserInfo.uiData = it },
+                        inputField = UserInfo.uiData, //TODO Check if this works
+                        onChange = { UserInfo.uiData = it }, //If not, try using input (.data from above)
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
