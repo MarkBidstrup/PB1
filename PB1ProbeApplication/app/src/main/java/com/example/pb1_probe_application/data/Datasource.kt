@@ -1,35 +1,139 @@
 package com.example.pb1_probe_application.data
 
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.UserInfo
+import com.example.pb1_probe_application.dataClasses.userInfoAttributes
 
 class Datasource() {
 
     // TODO: fix state variables
     fun loadProfilePatientInfo(): List<UserInfo> {
         return listOf<UserInfo>(
-            UserInfo(R.string.navn,""),
-            UserInfo(R.string.efternavn,""),
-            UserInfo(R.string.koen,""),
-            UserInfo(R.string.alder,""),
-            UserInfo(R.string.vaegt,""),
-            UserInfo(R.string.diagnose,""),
-            UserInfo(R.string.email,""),
-            UserInfo(R.string.telefon,""),
+            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
+            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
+            UserInfo(R.string.koen,userInfoAttributes.gender,""),
+            UserInfo(R.string.alder,userInfoAttributes.age,""),
+            UserInfo(R.string.vaegt,userInfoAttributes.weight,""),
+            UserInfo(R.string.diagnose,userInfoAttributes.diagnosis,""),
+            UserInfo(R.string.email,userInfoAttributes.email,""),
+            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
         )
     }
 
     // TODO: fix state variables
     fun loadProfileResearcherInfo(): List<UserInfo> {
         return listOf<UserInfo>(
-            UserInfo(R.string.navn,""),
-            UserInfo(R.string.efternavn,""),
-            UserInfo(R.string.forskningsenhed,""),
-            UserInfo(R.string.email,""),
+            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
+            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
+            UserInfo(R.string.email,userInfoAttributes.email,""),
+            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
+            UserInfo(R.string.forskningsenhed,userInfoAttributes.institute,""),
         )
     }
 
-
+    fun loadKommuner(): List<String> {
+        return listOf(
+            "Brønderslev" ,
+            "Frederikshavn" ,
+            "Hjørring" ,
+            "Jammerbugt" ,
+            "Læsø" ,
+            "Mariagerfjord" ,
+            "Morsø" ,
+            "Rebild" ,
+            "Thisted" ,
+            "Vesthimmerlands" ,
+            "Aalborg",
+            "Favrskov" ,
+            "Hedensted" ,
+            "Herning" ,
+            "Holstebro" ,
+            "Horsens" ,
+            "Ikast-Brande" ,
+            "Lemvig" ,
+            "Norddjurs" ,
+            "Odder" ,
+            "Randers" ,
+            "Ringkøbing-Skjern" ,
+            "Samsø" ,
+            "Silkeborg" ,
+            "Skanderborg" ,
+            "Skive" ,
+            "Struer" ,
+            "Syddjurs" ,
+            "Viborg" ,
+            "Århus",
+            "Assens" ,
+            "Billund" ,
+            "Esbjerg" ,
+            "Fanø" ,
+            "Fredericia" ,
+            "Faaborg-Midtfyn" ,
+            "Haderslev" ,
+            "Kerteminde" ,
+            "Kolding" ,
+            "Langeland" ,
+            "Middelfart" ,
+            "Nordfyns" ,
+            "Nyborg" ,
+            "Odense" ,
+            "Svendborg" ,
+            "Sønderborg" ,
+            "Tønder" ,
+            "Varde" ,
+            "Vejen" ,
+            "Vejle" ,
+            "Ærø" ,
+            "Aabenraa",
+            "Faxe" ,
+            "Greve" ,
+            "Guldborgsund" ,
+            "Holbæk" ,
+            "Kalundborg" ,
+            "Køge" ,
+            "Lejre" ,
+            "Lolland" ,
+            "Næstved" ,
+            "Odsherred" ,
+            "Ringsted" ,
+            "Roskilde" ,
+            "Slagelse" ,
+            "Solrød" ,
+            "Sorø" ,
+            "Stevns" ,
+            "Vordingborg",
+            "Albertslund" ,
+            "Allerød" ,
+            "Ballerup" ,
+            "Bornholms" ,
+            "Brøndby" ,
+            "Dragør" ,
+            "Egedal" ,
+            "Fredensborg" ,
+            "Frederiksberg" ,
+            "Frederikssund" ,
+            "Furesø" ,
+            "Gentofte" ,
+            "Gladsaxe" ,
+            "Glostrup" ,
+            "Gribskov" ,
+            "Halsnæs" ,
+            "Helsingør" ,
+            "Herlev" ,
+            "Hillerød" ,
+            "Hvidovre" ,
+            "Høje-Taastrup" ,
+            "Hørsholm" ,
+            "Ishøj" ,
+            "København" ,
+            "Lyngby-Taarbæk" ,
+            "Rudersdal" ,
+            "Rødovre" ,
+            "Tårnby" ,
+            "Vallensbæk"
+        )
+    }
 
 //    fun loadDeltagerInfo(): String {
 //        return "Forsøgets titel: Har stoffet cafestol fra kaffe diabetesforebyggende egenskaber?\\n\\n" +
@@ -188,4 +292,22 @@ class Datasource() {
 //                "sundhedsvidenskabeligt forskningsprojekt”. Hvis du vil vide mere om forsøget, er du meget " +
 //                "velkommen til at kontakte os."
 //    }
+    fun loadDropDownList(dropDownType: DropDownType): List<String>? {
+        if (dropDownType == DropDownType.KOEN) {
+            return listOf(
+                "Mand",
+                "Kvinde"
+            )
+        }
+        if (dropDownType == DropDownType.JA_NEJ) {
+            return listOf(
+                "Ja",
+                "Nej"
+            )
+        }
+        if (dropDownType == DropDownType.KOMMUNE) {
+            return loadKommuner()
+        }
+        return null
+    }
 }

@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.ui.*
@@ -22,10 +23,10 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
 
 @Composable
-fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
+fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
     authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
-    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
+    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 }
 
 @Composable
@@ -87,7 +88,7 @@ fun RowScope.addItem(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
+fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
     val ctx = LocalContext.current
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
@@ -105,7 +106,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.Filter.route) {
-            FilterScreen(onClickNav = { navController.navigate("Home") })
+            FilterScreen(trialsViewModel = trialsViewModel, onClickNav = { navController.navigate("Home") })
         }
 
         composable(route = BottomBarItems.Trials.route) {
@@ -144,9 +145,14 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            EditProfileScreen(role = role) {
-                navController.popBackStack()
-            }
+            EditProfileScreen(
+                role = role,
+                onClick = { navController.popBackStack() },
+                logOutNav = { navController.navigate(BottomBarItems.Home.route) },
+                trialsViewModel = trialsViewModel,
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
+            )
         }
 
         composable(route = Route.LogInd.route) {
@@ -166,12 +172,24 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 navController.popBackStack()
             }
         }
+        composable(route = Route.FurtherInformation.route) {
+            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            //TODO
+            FurtherInformationScreen(role, onClick =
+            {
+            }
+            )
+        }
+
 
         composable(route = Route.CreateTrial.route) {
-            val email: String?
+            val id: String?
             if(authViewModel?.currentUser != null) {
-                email = authViewModel.currentUser!!.email
-            CreateTrialScreen(email, trialsViewModel, { navController.popBackStack() } ) {
+                id = authViewModel.currentUser!!.uid
+            CreateTrialScreen(id, trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route) }
             }
         }
@@ -201,13 +219,13 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             AppliedScreen(navHostController = navController)
         }
 
-        navigationAppHost(navController = navController, authViewModel)
+        navigationAppHost(navController = navController, authViewModel, trialsViewModel)
         notificationNav(navController = navController)
 
     }
 }
 
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
             notificationNav(navController= navController)
@@ -219,6 +237,7 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
                     navController.navigate(Route.Notification.route)
                 },
                 logOutNav = {
+                    trialsViewModel.showFilterResult = false // erases filters if there are any filters in place
                     navController.navigate(BottomBarItems.Home.route)
                 }
             )
@@ -238,29 +257,3 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
 
 
 
-
-
-//fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
-//    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
-//
-//        composable(Route.DeltagerInfo.route) {
-//            navBackStackEntry ->
-//            val trialID = navBackStackEntry.arguments?.getString("trialID")
-//            if(trialID == null) {
-//                val ctx = LocalContext.current
-//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-//            } else {
-//                DeltagerInfo(trialID = trialID, trialsViewModel ,
-//                    onClick = {
-//                        navController.navigate(Route.Applied.route)
-//                },onClickNav = {
-//                    navController.navigate("Home")
-//                })
-//            }
-//        }
-//
-//        composable(route = Route.Applied.route) {
-//            AppliedScreen(navHostController = navController)
-//        }
-//        }
-//    }

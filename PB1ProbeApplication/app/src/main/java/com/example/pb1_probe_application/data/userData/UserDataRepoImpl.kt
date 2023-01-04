@@ -28,8 +28,8 @@ class UserDataRepoImpl @Inject constructor(
             userData.email = data.result.get("email") as String
             userData.phone = data.result.get("phone") as String
             userData.gender = data.result.get("gender") as String
-            userData.age = data.result.get("age") as Int
-            userData.weight = data.result.get("weight") as Double
+            userData.age = data.result.get("age") as String
+            userData.weight = data.result.get("weight") as String
             userData.diagnosis = data.result.get("diagnosis") as String
             } else {
             userData = UserResearcher()
@@ -40,7 +40,6 @@ class UserDataRepoImpl @Inject constructor(
             userData.department = data.result.get("department") as String
             userData.job = data.result.get("job") as String
             }
-
         return userData
     }
 
@@ -55,7 +54,6 @@ class UserDataRepoImpl @Inject constructor(
     override suspend fun delete(userID: String) {
         userDataDB().document(userID).delete()
     }
-
 
     private fun userDataDB(): CollectionReference =
         firestore.collection("userInformation")

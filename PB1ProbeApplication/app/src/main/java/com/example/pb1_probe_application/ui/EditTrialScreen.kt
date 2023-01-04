@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,10 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.TrialsViewModel
-import com.example.pb1_probe_application.dataClasses.CreateTrialField
-import com.example.pb1_probe_application.dataClasses.TrialLocation
-import com.example.pb1_probe_application.dataClasses.loadCreateTrialList
-import com.example.pb1_probe_application.dataClasses.trialAttributes
+import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
@@ -68,17 +66,19 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                             when (EditTrialField.trialAttribute) {
                                 trialAttributes.title -> input = trial.title
                                 trialAttributes.trialDuration -> input = trial.trialDuration
-                                trialAttributes.diagnoses -> input = trial.diagnoses.toString()
+                                trialAttributes.diagnoses -> input = trial.diagnoses.toString().drop(1).dropLast(1)
                                 trialAttributes.interventions -> input = trial.interventions
                                 trialAttributes.startDate -> input = trial.startDate
                                 trialAttributes.endDate -> input = trial.endDate
                                 trialAttributes.lostSalaryComp -> input = trial.lostSalaryComp.toString()
                                 trialAttributes.transportComp -> input = trial.transportComp.toString()
-                                trialAttributes.locations -> input = trial.locations.toString()
+                                trialAttributes.locations -> input = trial.locations
+                                trialAttributes.kommuner -> input = trial.kommuner
                                 trialAttributes.compensation -> input = trial.compensation.toString()
                                 trialAttributes.exclusionCriteria -> input = trial.exclusionCriteria
                                 trialAttributes.inclusionCriteria -> input = trial.inclusionCriteria
                                 trialAttributes.numParticipants -> input = trial.numParticipants.toString()
+                                trialAttributes.numVisits -> input = trial.numVisits.toString()
                                 trialAttributes.deltagerInformation -> input = trial.deltagerInformation
                                 trialAttributes.forsoegsBeskrivelse -> input = trial.forsoegsBeskrivelse
                                 trialAttributes.purpose -> input = trial.purpose
@@ -102,17 +102,22 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 when (EditTrialField.trialAttribute) {
                                     trialAttributes.title -> trial.title = userInput
                                     trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                    trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
+                                    trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                     trialAttributes.interventions -> trial.interventions = userInput
                                     trialAttributes.startDate -> trial.startDate = userInput
                                     trialAttributes.endDate -> trial.endDate = userInput
                                     trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
                                     trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
-                                    trialAttributes.locations -> trial.locations = listOf(TrialLocation(userInput))
+                                    trialAttributes.locations -> trial.locations = userInput
+                                    trialAttributes.kommuner -> trial.kommuner = userInput
                                     trialAttributes.compensation -> trial.compensation = userInput=="Ja"
                                     trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                     trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
                                     trialAttributes.numParticipants -> trial.numParticipants =
+                                        if(userInput.toIntOrNull() != null)
+                                            Integer.parseInt(userInput)
+                                        else 0
+                                    trialAttributes.numVisits -> trial.numVisits =
                                         if(userInput.toIntOrNull() != null)
                                             Integer.parseInt(userInput)
                                         else 0
@@ -153,10 +158,13 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
             }
         },
     )
-
 }
 
+fun makeList(userInput: String): List<String> {
+    val list: List<String> = userInput.split(",").map { it.trim() }
 
+    return list
+}
 
 @Composable
 fun EditTrialField(
@@ -174,17 +182,45 @@ fun EditTrialField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = input,
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onValueChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+
+        if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
+        ) {
+            DropDown(DropDownType.JA_NEJ)
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
+        ) {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
+        ) {
+            DropDownFilter(dropDownType = DropDownType.KOMMUNE)
+        } else {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
+
     }
 }
 

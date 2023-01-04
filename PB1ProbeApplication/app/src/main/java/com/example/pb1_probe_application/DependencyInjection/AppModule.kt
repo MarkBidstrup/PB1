@@ -4,6 +4,8 @@ import com.example.pb1_probe_application.data.auth.AuthRepository
 import com.example.pb1_probe_application.data.auth.AuthRepositoryImpl
 import com.example.pb1_probe_application.data.trials.TrialRepository
 import com.example.pb1_probe_application.data.trials.TrialRepositoryImpl
+import com.example.pb1_probe_application.data.userData.UserDataRepoImpl
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -29,4 +31,7 @@ class AppModule {
 
     @Provides
     fun provideTrialsRepository(impl: TrialRepositoryImpl): TrialRepository = impl
+
+    @Provides
+    fun provideUserRepository(impl: UserDataRepoImpl): UserDataRepository = impl
 }

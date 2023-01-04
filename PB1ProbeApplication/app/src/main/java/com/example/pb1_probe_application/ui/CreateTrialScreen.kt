@@ -29,7 +29,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
+fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
@@ -52,8 +52,8 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
         },
         content = {
             val trial = Trial()
-            if(email != null)
-                trial.researcherEmail = email
+            if(id != null)
+                trial.researcherID = id
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
                 LazyColumn (
                     modifier = Modifier
@@ -79,13 +79,15 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
                             when (CreateTrialField.trialAttribute) {
                                 trialAttributes.title -> trial.title = userInput
                                 trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
+                                trialAttributes.numVisits -> trial.numVisits = Integer.parseInt(userInput)
+                                trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                 trialAttributes.interventions -> trial.interventions = userInput
                                 trialAttributes.startDate -> trial.startDate = userInput
                                 trialAttributes.endDate -> trial.endDate = userInput
                                 trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
                                 trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
-                                trialAttributes.locations -> trial.locations = listOf(TrialLocation(userInput))
+                                trialAttributes.locations -> trial.locations = userInput
+                                trialAttributes.kommuner -> trial.kommuner = userInput
                                 trialAttributes.compensation -> trial.compensation = userInput=="Ja"
                                 trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                 trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
@@ -146,18 +148,44 @@ fun TrialInputField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = input,
-            singleLine = true,
-            label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onValueChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+        if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
+        ) {
+            DropDown(DropDownType.JA_NEJ)
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
+        ) {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
+        ) {
+            DropDownFilter(dropDownType = DropDownType.KOMMUNE)
+        } else {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
     }
 }
 
@@ -166,3 +194,25 @@ fun TrialInputField(
 private fun ProfileUserScreenPreview() {
 //    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
 }
+
+//Column {
+//    Text(
+//        text = LocalContext.current.getString(createTrialField.StringResourceHeading),
+//        modifier = Modifier.padding(start = 17.dp),
+//        style = MaterialTheme.typography.body1,
+//        color = TextColorGreen
+//    )
+//    OutlinedTextField(
+//        value = input,
+//        singleLine = true,
+//        label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 17.dp, end = 17.dp),
+//        onValueChange = onValueChange,
+//        textStyle = Typography.body1,
+//        keyboardOptions = keyboardOptions,
+//        keyboardActions = keyboardActions
+//    )
+//}
+

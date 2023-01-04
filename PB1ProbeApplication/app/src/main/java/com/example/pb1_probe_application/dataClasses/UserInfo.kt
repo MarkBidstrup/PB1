@@ -4,5 +4,10 @@ import androidx.annotation.StringRes
 
 data class UserInfo(
     @StringRes val StringResourceHeaderId: Int,
-    val profileInfoState: String
+    val profileInfo: userInfoAttributes,
+    var uiData: String
 )
+
+enum class userInfoAttributes {
+    firstName, lastName, gender, age, weight, diagnosis, email, tlf, institute
+}
