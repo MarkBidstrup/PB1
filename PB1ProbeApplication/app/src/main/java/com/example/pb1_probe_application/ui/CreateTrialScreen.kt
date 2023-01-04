@@ -147,18 +147,40 @@ fun TrialInputField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = input,
-            singleLine = true,
-            label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onValueChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+        if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
+        ) {
+            DropDown(DropDownType.JA_NEJ)
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
+        ) {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
     }
 }
 
@@ -167,3 +189,25 @@ fun TrialInputField(
 private fun ProfileUserScreenPreview() {
 //    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
 }
+
+//Column {
+//    Text(
+//        text = LocalContext.current.getString(createTrialField.StringResourceHeading),
+//        modifier = Modifier.padding(start = 17.dp),
+//        style = MaterialTheme.typography.body1,
+//        color = TextColorGreen
+//    )
+//    OutlinedTextField(
+//        value = input,
+//        singleLine = true,
+//        label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 17.dp, end = 17.dp),
+//        onValueChange = onValueChange,
+//        textStyle = Typography.body1,
+//        keyboardOptions = keyboardOptions,
+//        keyboardActions = keyboardActions
+//    )
+//}
+
