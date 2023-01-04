@@ -16,11 +16,11 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(
     private val repository: UserDataRepository,
-    var currentUserID: String
+
 ) : ViewModel() {
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
-
+    lateinit var currentUserID: String
 
     fun saveUserData(userID: String, data: UserData) = viewModelScope.launch {
         repository.update(userID, data)
