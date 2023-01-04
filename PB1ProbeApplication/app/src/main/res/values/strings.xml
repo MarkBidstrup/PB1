@@ -129,8 +129,9 @@
     <string name="honorar">Honorar</string>
     <string name="indtastHonorar">Indtast honorar</string>
     <string name="lokationer">Lokation</string>
-    <string name="kommune">Kommune (brugt til filtrering)</string>
+    <string name="kommune">Kommune (bruges til filtrering)</string>
     <string name="indtastLokationer">Indtast lokation</string>
+    <string name="indtastKommune">Indtast kommune</string>
     <string name="interventioner">Intervention(er)</string>
     <string name="indtastInterventioner">Indtast Intervention(er)</string>
     <string name="besoeg">Antal besøg</string>

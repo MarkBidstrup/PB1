@@ -2,6 +2,7 @@ package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +23,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
@@ -33,17 +36,17 @@ import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun EditProfileScreen(role: Role,onClick: () -> Unit) {
+fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?) {
 
     if (role == Role.TRIAL_PARTICIPANT)
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel)
     if (role == Role.RESEARCHER)
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit) {
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, logOutNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?) {
     var input by remember { mutableStateOf("") }
 
     Scaffold(
@@ -113,7 +116,13 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             text = stringResource(R.string.sletProfil),
                             style = Typography.body1,
                             color = TextColorRed,
-                            modifier = Modifier.padding(start = 17.dp, end = 17.dp)
+                            modifier = Modifier
+                                .padding(start = 17.dp, end = 17.dp)
+                                .clickable {
+                                    authViewModel?.delete()
+                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
+                                    logOutNav()
+                                }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                     }

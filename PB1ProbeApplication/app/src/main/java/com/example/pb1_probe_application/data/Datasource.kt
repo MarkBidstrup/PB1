@@ -303,6 +303,9 @@ class Datasource() {
                 "Nej"
             )
         }
+        if (dropDownType == DropDownType.KOMMUNE) {
+            return loadKommuner()
+        }
         return null
     }
 }

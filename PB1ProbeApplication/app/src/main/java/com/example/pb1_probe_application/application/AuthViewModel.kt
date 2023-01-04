@@ -47,4 +47,10 @@ class AuthViewModel @Inject constructor(
         _loginFlow.value = null
         _signupFlow.value = null
     }
+
+    fun delete() {
+        repository.delete()
+        _loginFlow.value = null
+        _signupFlow.value = null
+    }
 }

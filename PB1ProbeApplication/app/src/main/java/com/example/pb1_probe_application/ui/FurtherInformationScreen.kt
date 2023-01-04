@@ -222,76 +222,76 @@ Commented function is a drop down where you can filter options by typing with ke
 
  */
 
-//@OptIn(ExperimentalMaterialApi::class)
-//@Composable
-//fun DropDownFilter(dropDownType: DropDownType) {
-//
-//    var listItems = Datasource().loadDropDownList(dropDownType)
-//
-//    var selectedItem by remember {
-//        mutableStateOf("")
-//    }
-//
-//    var expanded by remember {
-//        mutableStateOf(false)
-//    }
-//
-//    Card(
-//        shape = RoundedCornerShape(4.dp),
-//        modifier = Modifier
-//            .padding(start = 17.dp, end = 17.dp)
-//            .border(0.5.dp, Color.DarkGray, RoundedCornerShape(4.dp))
-//
-//    ) {
-//        ExposedDropdownMenuBox(
-//            modifier = Modifier
-//                .fillMaxWidth(),
-//            expanded = expanded,
-//            onExpandedChange = {
-//                expanded = !expanded
-//            },
-//        ) {
-//
-//            TextField(
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                value = selectedItem,
-//                onValueChange = { selectedItem = it },
-//                label = {  },
-//                trailingIcon = {
-//                    ExposedDropdownMenuDefaults.TrailingIcon(
-//                        expanded = expanded
-//                    )
-//                },
-//                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.Unspecified)
-//            )
-//
-//            val filteringOptions =
-//                listItems?.filter { it.contains(selectedItem, ignoreCase = true) }
-//
-//            if (filteringOptions != null) {
-//                if (filteringOptions.isNotEmpty()) {
-//
-//                    ExposedDropdownMenu(
-//                        expanded = expanded,
-//                        onDismissRequest = { expanded = false }
-//                    ) {
-//                        filteringOptions.forEach { selectionOption ->
-//                            DropdownMenuItem(
-//                                onClick = {
-//                                    selectedItem = selectionOption
-//                                    expanded = false
-//                                }
-//                            ) {
-//                                Text(text = selectionOption)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DropDownFilter(dropDownType: DropDownType) {
+
+    var listItems = Datasource().loadDropDownList(dropDownType)
+
+    var selectedItem by remember {
+        mutableStateOf("")
+    }
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
+    Card(
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier
+            .padding(start = 17.dp, end = 17.dp)
+            .border(0.5.dp, Color.DarkGray, RoundedCornerShape(4.dp))
+
+    ) {
+        ExposedDropdownMenuBox(
+            modifier = Modifier
+                .fillMaxWidth(),
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            },
+        ) {
+
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = selectedItem,
+                onValueChange = { selectedItem = it },
+                label = {  },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.Unspecified)
+            )
+
+            val filteringOptions =
+                listItems?.filter { it.contains(selectedItem, ignoreCase = true) }
+
+            if (filteringOptions != null) {
+                if (filteringOptions.isNotEmpty()) {
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        filteringOptions.forEach { selectionOption ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedItem = selectionOption
+                                    expanded = false
+                                }
+                            ) {
+                                Text(text = selectionOption)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 fun OpretProfilonClick(){
     val data = UserPatient()

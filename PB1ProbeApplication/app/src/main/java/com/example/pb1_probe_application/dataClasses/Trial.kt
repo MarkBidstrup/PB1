@@ -49,6 +49,7 @@ fun loadCreateTrialList(): List<CreateTrialField> {
         CreateTrialField(trialAttributes.registrationDeadline, R.string.frist, R.string.indtastFrist),
         CreateTrialField(trialAttributes.briefDescription, R.string.kortBeskr, R.string.indtastKortBeskriv),
         CreateTrialField(trialAttributes.locations, R.string.lokationer, R.string.indtastLokationer),
+        CreateTrialField(trialAttributes.kommuner, R.string.kommune, R.string.indtastKommune),
         CreateTrialField(trialAttributes.trialDuration, R.string.projektetsVarighed, R.string.indtastVarighed),
         CreateTrialField(trialAttributes.numVisits, R.string.besoeg, R.string.indtastBesoeg),
         CreateTrialField(trialAttributes.endDate, R.string.forventetAfslutningsdato, R.string.indtastAfslutningsdato),

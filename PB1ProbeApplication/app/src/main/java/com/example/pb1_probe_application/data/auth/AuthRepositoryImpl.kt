@@ -36,4 +36,17 @@ class AuthRepositoryImpl @Inject constructor(
     override fun logout() {
         firebaseAuth.signOut()
     }
+
+    override fun delete() {
+        val user = firebaseAuth.currentUser;
+
+        if (user != null) {
+            try {
+                user.delete()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Resource.Failure(e)
+            }
+        }
+    }
 }

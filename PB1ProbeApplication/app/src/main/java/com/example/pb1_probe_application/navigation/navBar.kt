@@ -144,9 +144,13 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            EditProfileScreen(role = role) {
-                navController.popBackStack()
-            }
+            EditProfileScreen(
+                role = role,
+                onClick = { navController.popBackStack() },
+                logOutNav = { navController.navigate(BottomBarItems.Home.route) },
+                trialsViewModel = trialsViewModel,
+                authViewModel = authViewModel
+            )
         }
 
         composable(route = Route.LogInd.route) {

@@ -158,7 +158,6 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
             }
         },
     )
-
 }
 
 fun makeList(userInput: String): List<String> {
@@ -204,6 +203,10 @@ fun EditTrialField(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 keyboardActions = keyboardActions
             )
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
+        ) {
+            DropDownFilter(dropDownType = DropDownType.KOMMUNE)
         } else {
             OutlinedTextField(
                 value = input,
