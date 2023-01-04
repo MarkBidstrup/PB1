@@ -172,6 +172,18 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 navController.popBackStack()
             }
         }
+        composable(route = Route.FurtherInformation.route) {
+            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            //TODO
+            FurtherInformationScreen(role, onClick =
+            {
+            }
+            )
+        }
+
 
         composable(route = Route.CreateTrial.route) {
             val id: String?
@@ -245,29 +257,3 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
 
 
 
-
-
-//fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
-//    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
-//
-//        composable(Route.DeltagerInfo.route) {
-//            navBackStackEntry ->
-//            val trialID = navBackStackEntry.arguments?.getString("trialID")
-//            if(trialID == null) {
-//                val ctx = LocalContext.current
-//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-//            } else {
-//                DeltagerInfo(trialID = trialID, trialsViewModel ,
-//                    onClick = {
-//                        navController.navigate(Route.Applied.route)
-//                },onClickNav = {
-//                    navController.navigate("Home")
-//                })
-//            }
-//        }
-//
-//        composable(route = Route.Applied.route) {
-//            AppliedScreen(navHostController = navController)
-//        }
-//        }
-//    }
