@@ -98,7 +98,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                     is Resource.Success -> {
                         Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
                         LaunchedEffect(Unit) {
-                            navHostController?.navigate("FurtherInformation") //TODO lav navigation til "FurtherInformationScreen"
+                            navHostController?.navigate("FurtherInformation")
                         }
                     }
                 }
