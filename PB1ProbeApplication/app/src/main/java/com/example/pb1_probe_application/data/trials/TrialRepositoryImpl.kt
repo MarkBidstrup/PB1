@@ -93,7 +93,7 @@ class TrialRepositoryImpl @Inject constructor(
 
     override suspend fun getFilteredTrials(
         searchText: String?,
-        location: List<String>?,
+        location: String?,
         compensation: Boolean,
         transportComp: Boolean,
         lostSalaryComp: Boolean,
@@ -126,14 +126,12 @@ class TrialRepositoryImpl @Inject constructor(
             var locationsList: MutableList<Trial>? = null
 
             // get the list of trials filtered by location
-            if(location != null && location.isNotEmpty()) {
+            if(location != null) {
                 locationsList = ArrayList()
-                for (s in location) {
-                    val snapshot = trialDB()
-                        .whereArrayContains("kommuner", s)
-                        .get().await()
-                    snapshot.forEach { t -> locationsList.add(t.toObject()) }
-                }
+                val snapshot = trialDB()
+                    .whereEqualTo("kommuner", location)
+                    .get().await()
+                snapshot.forEach { t -> locationsList.add(t.toObject()) }
             }
 
             // get the list of trial filtered by various forms of compensation (using logical AND)

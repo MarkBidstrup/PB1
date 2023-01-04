@@ -87,7 +87,7 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
                                 trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
                                 trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
                                 trialAttributes.locations -> trial.locations = userInput
-                                trialAttributes.kommuner -> trial.locations = userInput
+                                trialAttributes.kommuner -> trial.kommuner = userInput
                                 trialAttributes.compensation -> trial.compensation = userInput=="Ja"
                                 trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                 trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput

@@ -26,7 +26,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
-    var locations by remember { mutableStateOf(ArrayList<String>()) }
+    var locations by remember { mutableStateOf(String()) }
     var reward by remember { mutableStateOf(false) }
     var transport by remember { mutableStateOf(false) }
     var work by remember { mutableStateOf(false) }
@@ -109,7 +109,7 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
 }
 
 @Composable
-fun DistanceComp() { // TODO - update using exposed drop down returning a list of locations
+fun DistanceComp() { // TODO - update using exposed drop down returning a location
     var text by remember { mutableStateOf(TextFieldValue("")) }
     Column {
         Text(
