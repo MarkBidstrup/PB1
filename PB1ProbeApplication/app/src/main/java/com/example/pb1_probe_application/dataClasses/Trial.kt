@@ -37,7 +37,7 @@ data class dbRegistrations(
 enum class trialAttributes {
     title, purpose, briefDescription, numParticipants, registrationDeadline, inclusionCriteria,
     exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, numVisits, startDate, endDate,
-    forsoegsBeskrivelse, deltagerInformation, locations, interventions, diagnoses
+    forsoegsBeskrivelse, deltagerInformation, locations, kommuner, interventions, diagnoses
 }
 
 fun loadCreateTrialList(): List<CreateTrialField> {
