@@ -23,19 +23,11 @@ data class Trial (
     var endDate: String = "",
     var forsoegsBeskrivelse: String = "",
     var deltagerInformation: String = "",
-    var locations: List<TrialLocation> = ArrayList(),
+    var locations: String = "",
     var interventions: String = "",
     var diagnoses: List<String> = ArrayList(),
-    var kommuner: List<String> = ArrayList() // used for database location search
+    var kommuner: String = "" // used for database location search
     )
-
-data class TrialLocation (
-    var hospitalName: String = "",
-    var address: String = "",
-    var postCode: String = "",
-    var city: String = "",
-    var kommune: String = ""
-)
 
 data class dbRegistrations(
     val participantID: String = "",
