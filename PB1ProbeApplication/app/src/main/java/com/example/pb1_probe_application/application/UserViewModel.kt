@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserData
+import com.example.pb1_probe_application.dataClasses.UserPatient
+import com.example.pb1_probe_application.dataClasses.UserResearcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,6 +26,16 @@ class UserViewModel @Inject constructor(
 
     fun saveUserData(userID: String, data: UserData) = viewModelScope.launch {
         repository.update(userID, data)
+    }
+
+    fun createUser(userID: String, email: String, role: Role) = viewModelScope.launch  {
+        val user: UserData = if (role == Role.RESEARCHER) {
+            UserResearcher()
+        } else {
+            UserPatient()
+        }
+        user.email = email
+        repository.addNew(userID, user)
     }
 
     fun getViewModelUserData() = viewModelScope.launch {
