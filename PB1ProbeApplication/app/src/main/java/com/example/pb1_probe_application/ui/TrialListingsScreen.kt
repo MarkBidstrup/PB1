@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
@@ -22,9 +25,12 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,7 +42,7 @@ import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
 
- enum class TrialPostIcons {
+enum class TrialPostIcons {
      NotificationOn, NotificationOff, Contact, None
  }
 
@@ -68,33 +74,42 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     searchBoxExpanded = true
                 })
             else {
-//                SearchTopBar(searchOnClick = {
-//                    trialsViewModel.getFilteredTrials("placeholder")
-//                    trialsViewModel.showFilterResult = false
-//                    displaySearchResults = true
-//                })
+                var searchWord by remember { mutableStateOf("") }
+                SearchTopBar(searchWord,
+                    {searchWord = it},
+                    searchOnClick = {
+                        searchBoxExpanded = false
+                        if(searchWord != null && searchWord != "") {
+                            trialsViewModel.getFilteredTrials(searchWord)
+                            trialsViewModel.showFilterResult = false
+                            displaySearchResults = true
+                        } },
+                    cancelOnClick = {searchBoxExpanded = false}
+                )
 
             }
         },
         content = {
             Column(modifier = Modifier
                 .padding(all = 8.dp)
-                .padding(bottom = 46.dp)) {
+                .padding(bottom = 46.dp)
+            ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (navHostController != null) {
                         if(trialsViewModel.showFilterResult || displaySearchResults) {
                             trials = trialsViewModel.filteredTrials.collectAsState().value
                             if (trials.size != 1)
                                 Text(
-                                    modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                    modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
                                     text = stringResource(R.string.filtreredeStudier, trials.size), style = Typography.h2
                                 )
                             else
                                 Text(
-                                    modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                    modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
                                     text = stringResource(R.string.filtreredeStudierSingular, trials.size), style = Typography.h2
                                 )
                             Spacer(Modifier.weight(2f))
@@ -104,7 +119,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             })
                         } else {
                             Text(
-                                modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
                                 text = stringResource(R.string.nyesteStudier), style = Typography.h2
                             )
                         }
@@ -441,38 +456,52 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
 }
 
 @Composable
-fun SearchTopBar(searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
+fun SearchTopBar(input: String, onValueChange: (String) -> Unit, searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
         Modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(70.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(R.drawable.final_icon),
-            contentDescription = stringResource(R.string.logo),
-            modifier = modifier
-                .align(Center)
-                .wrapContentWidth(CenterHorizontally)
-                .padding(top = 10.dp),
-        )
-//        if (icon != TopBarIcons.None) {
-//            IconButton(onClick = searchOnClick, modifier = modifier
-//                .padding(end = 10.dp)
-//                .align(Alignment.BottomEnd)) {
-//                Icon(
-//                    imageVector = when (icon) {
-//                        TopBarIcons.Clear -> Icons.Filled.Clear
-//                        else -> {Icons.Filled.Search}
-//                    },
-//                    contentDescription = when (icon) {
-//                        TopBarIcons.Clear -> "clear"
-//                        else -> "search"
-//                    },
-//                    modifier = modifier
-//                        .scale(1.2f)
-//                )
-//            }
-//        }
+        val focusManager = LocalFocusManager.current
+        Box(modifier = Modifier.padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
+            .weight(1f)
+            .border(0.5.dp, Color.DarkGray, MaterialTheme.shapes.small)
+        ) {
+            BasicTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier.padding(start = 10.dp, top = 4.dp, end = 3.dp)
+                    .fillMaxSize(),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { focusManager.clearFocus()
+                        searchOnClick()
+                    }
+                )
+            )
+        }
+        IconButton(onClick = cancelOnClick, modifier = modifier
+            .padding(end = 2.dp)) {
+            Icon(
+                imageVector = Icons.Filled.Clear,
+                contentDescription = "search",
+                modifier = modifier.scale(1.2f)
+            )
+        }
+        IconButton(onClick = searchOnClick, modifier = modifier
+            .padding(end = 10.dp)) {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "search",
+                modifier = modifier.scale(1.2f)
+            )
+        }
     }
 
 }
@@ -493,6 +522,7 @@ fun FilterButton(
             modifier = modifier
                 .height(16.dp)
                 .padding(end = 2.dp)
+                .scale(1.5f)
         )
         Text(
             text = stringResource(R.string.filtrer),
@@ -525,6 +555,7 @@ fun UnSearchFilterButton(
             modifier = modifier
                 .height(16.dp)
                 .padding(end = 2.dp)
+                .scale(1.5f)
         )
         Text(
             text = stringResource(text),

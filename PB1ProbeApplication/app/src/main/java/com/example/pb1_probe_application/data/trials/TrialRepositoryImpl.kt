@@ -103,20 +103,22 @@ class TrialRepositoryImpl @Inject constructor(
         var list: MutableList<Trial> = ArrayList()
 
         if(searchText != null && searchText != "") { // if this is a search query
-            // conducts prefix search of the title, purpose, and brief description fields
+            // conducts case-sensitive prefix search of the title, purpose, and brief description
+            // source: https://stackoverflow.com/questions/46568142/google-firestore-query-on-substring-of-a-property-value-text-search
+            // answer by GabLeRoux on March 29, 2022
             val snapshot = trialDB()
                 .whereGreaterThanOrEqualTo("title", searchText)
-                .whereLessThanOrEqualTo("title", "\uf8ff")
+                .whereLessThanOrEqualTo("title", searchText + "\uf8ff")
                 .get().await()
             snapshot.forEach { t -> list.add(t.toObject()) }
             val snapshot1 = trialDB()
                 .whereGreaterThanOrEqualTo("purpose", searchText)
-                .whereLessThanOrEqualTo("purpose", "\uf8ff")
+                .whereLessThanOrEqualTo("purpose", searchText + "\uf8ff")
                 .get().await()
             snapshot1.forEach { t -> list.add(t.toObject()) }
             val snapshot2 = trialDB()
                 .whereGreaterThanOrEqualTo("briefDescription", searchText)
-                .whereLessThanOrEqualTo("briefDescription", "\uf8ff")
+                .whereLessThanOrEqualTo("briefDescription", searchText + "\uf8ff")
                 .get().await()
             snapshot2.forEach { t -> list.add(t.toObject()) }
             val set = list.toSet() //remove duplicates
