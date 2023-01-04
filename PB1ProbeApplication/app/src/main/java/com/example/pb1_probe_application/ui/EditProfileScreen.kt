@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.Role
@@ -36,17 +37,17 @@ import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?) {
+fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
 
     if (role == Role.TRIAL_PARTICIPANT)
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
     if (role == Role.RESEARCHER)
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, logOutNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?) {
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, logOutNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
     var input by remember { mutableStateOf("") }
 
     Scaffold(
@@ -121,6 +122,12 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                                 .clickable {
                                     authViewModel?.delete()
                                     trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
+                                    if (authViewModel != null) {
+                                        authViewModel.currentUser?.let { it1 ->
+                                            userViewModel.deleteUser(
+                                                it1.uid)
+                                        }
+                                    }
                                     logOutNav()
                                 }
                         )

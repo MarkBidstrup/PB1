@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.ui.*
@@ -22,10 +23,10 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
 
 @Composable
-fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
+fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
     authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
-    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
+    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 }
 
 @Composable
@@ -87,7 +88,7 @@ fun RowScope.addItem(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
+fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
     val ctx = LocalContext.current
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
@@ -149,7 +150,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 onClick = { navController.popBackStack() },
                 logOutNav = { navController.navigate(BottomBarItems.Home.route) },
                 trialsViewModel = trialsViewModel,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
             )
         }
 
