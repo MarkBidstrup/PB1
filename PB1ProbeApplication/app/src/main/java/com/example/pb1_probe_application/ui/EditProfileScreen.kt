@@ -122,12 +122,8 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                                 .clickable {
                                     authViewModel?.delete()
                                     trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
-                                    if (authViewModel != null) {
-                                        authViewModel.currentUser?.let { it1 ->
-                                            userViewModel.deleteUser(
-                                                it1.uid)
-                                        }
-                                    }
+                                    if (authViewModel != null)
+                                        userViewModel.deleteUser(authViewModel.currentUser!!.uid)
                                     logOutNav()
                                 }
                         )
