@@ -25,7 +25,8 @@ data class Trial (
     var deltagerInformation: String = "",
     var locations: List<TrialLocation> = ArrayList(),
     var interventions: String = "",
-    var diagnoses: List<String> = ArrayList()
+    var diagnoses: List<String> = ArrayList(),
+    var kommuner: List<String> = ArrayList() // used for database location search
     )
 
 data class TrialLocation (

@@ -52,6 +52,8 @@
     <!--Trial listing Strings-->
     <string name="logo">Probes logo</string>
     <string name="nyesteStudier">Nyeste studier</string>
+    <string name="filtreredeStudier">%d fundne studier</string>
+    <string name="filtreredeStudierSingular">%d studie fundet</string>
     <string name="mereInfo">Læs mere...</string>
     <string name="ansoeg">Ansøg</string>
     <string name="formaal">Formål: </string>
@@ -68,18 +70,22 @@
 
     <!--Search Strings-->
     <string name="filtrer">Filtrer</string>
+    <string name="unfiltrer">Fjern filtre</string>
     <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>
+    <string name="unfiltrer_forklaring">Fjern filtre</string>
     <string name="soegForklaring">Søg efter et studie</string>
     <string name="filtrerStudier">Filtrer studier</string>
     <string name="afstand">Afstand</string>
     <string name="postnr">Indtast postnummer</string>
     <string name="postnrPlaceholder">e.g. 4200</string>
-    <string name="maksAfstand">Marks afstand til forsøgssted</string>
+    <string name="maksAfstand">Maks afstand til forsøgssted</string>
     <string name="kompensation">Kompensation tilbudt</string>
     <string name="koersel">Kørselsgodsgørelse</string>
     <string name="arbejdsgodtgoersel">Tabt arbejdsfortjeneste</string>
     <string name="varighed_Filter">Varighed</string>
     <string name="maksVarighed">Maks længde på forsøg</string>
+    <string name="antalBesoeg_Filter">Antal besøg/ interventioner</string>
+    <string name="maksantalBesoeg">Maks antal besøg</string>
     <string name="maaned1">1 måned</string>
     <string name="maaned3">3 måneder</string>
     <string name="maaned6">6 måneder</string>
@@ -154,6 +160,7 @@
     <string name="seDeltagerliste">Se deltagerliste</string>
     <string name="sletStudie">Slet studie</string>
     <string name="IndtastYderligereOplysninger">Indtast yderligere oplysninger</string>
+    <string name="visit">besøg</string>
 
 
 </resources>

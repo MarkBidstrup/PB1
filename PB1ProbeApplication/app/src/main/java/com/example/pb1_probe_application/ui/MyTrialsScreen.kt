@@ -162,7 +162,9 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick, applyOnClick = { navHostController.navigate("DeltagerInfo") })
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick, applyOnClick = {
+                                            trialsViewModel.setCurrentNavTrialID(it)
+                                            navHostController.navigate("DeltagerInfo") })
                                     }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))

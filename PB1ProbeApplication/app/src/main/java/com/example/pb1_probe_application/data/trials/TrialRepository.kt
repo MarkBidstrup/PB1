@@ -12,7 +12,7 @@ interface TrialRepository {
         compensation: Boolean,
         transportComp: Boolean,
         lostSalaryComp: Boolean,
-        trialDuration: String?,
+        trialDuration: Int?,
         numVisits: Int?
     ): List<Trial>
 

@@ -47,9 +47,13 @@ enum class TopBarIcons {
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
 fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
-     val trials = trialsViewModel.trials.collectAsState(emptyList()).value
+     var trials = trialsViewModel.trials.collectAsState(emptyList()).value
      var myTrials: List<Trial> = ArrayList()
      var subscribedTrials: List<Trial> = ArrayList()
+     var searchBoxShown by remember { mutableStateOf(false) }
+     var displaySearchResults by remember { mutableStateOf(false) }
+
+
      if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
          trialsViewModel.getViewModelSubscribedTrials()
          subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
@@ -59,7 +63,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
     Scaffold(
         topBar = {
-            ProbeTopBar(icon = TopBarIcons.Search, onClick = {}) //TODO - implement search onClick
+            ProbeTopBar(icon = TopBarIcons.Search, onClick = {
+                trialsViewModel.showFilterResult = false // TODO this line should come AFTER user has clicked search
+            }) //TODO - implement search onClick
         },
         content = {
             Column(modifier = Modifier
@@ -69,13 +75,33 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Text(
-                        modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
-                        text = stringResource(R.string.nyesteStudier), style = Typography.h2
-                    )
+                    if (navHostController != null) {
+                        if(trialsViewModel.showFilterResult || displaySearchResults) {
+                            trials = trialsViewModel.filteredTrials.collectAsState().value
+                            if (trials.size != 1)
+                                Text(
+                                    modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                    text = stringResource(R.string.filtreredeStudier, trials.size), style = Typography.h2
+                                )
+                            else
+                                Text(
+                                    modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                    text = stringResource(R.string.filtreredeStudierSingular, trials.size), style = Typography.h2
+                                )
+                            Spacer(Modifier.weight(2f))
+                            UnFilterButton(onClick = {
+                                trialsViewModel.showFilterResult = false
+                                navHostController.navigate("Home")
+                            })
+                        } else {
+                            Text(
+                                modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
+                                text = stringResource(R.string.nyesteStudier), style = Typography.h2
+                            )
+                        }
+                    }
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
-                        //TODO: implement onClick
                         navHostController?.navigate("Filter")
                     })
                 }
@@ -429,6 +455,29 @@ fun FilterButton(
         )
         Text(
             text = stringResource(R.string.filtrer),
+            style = MaterialTheme.typography.body2,)
+    }
+}
+
+@Composable
+fun UnFilterButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
+        elevation = ButtonDefaults.elevation(0.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Filled.FilterAltOff,
+            contentDescription = stringResource(R.string.unfiltrer_forklaring),
+            modifier = modifier
+                .height(16.dp)
+                .padding(end = 2.dp)
+        )
+        Text(
+            text = stringResource(R.string.unfiltrer),
             style = MaterialTheme.typography.body2,)
     }
 }

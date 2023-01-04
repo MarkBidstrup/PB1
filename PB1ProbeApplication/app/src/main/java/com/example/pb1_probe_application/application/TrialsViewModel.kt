@@ -28,14 +28,22 @@ class TrialsViewModel @Inject constructor(
     val myTrialsParticipants: StateFlow<List<Trial>> = _myTrialsParticipants.asStateFlow()
     private val _subscribedTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val subscribedTrials: StateFlow<List<Trial>> = _subscribedTrials.asStateFlow()
+    private val _filteredTrials = MutableStateFlow<List<Trial>>(ArrayList())
+    val filteredTrials: StateFlow<List<Trial>> = _filteredTrials.asStateFlow()
     private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
     var currentNavTrial: Trial? = null // for navigation
         private set
+    var showFilterResult: Boolean = false // for navigation
 
 
     fun getTrial(trialID: String)= viewModelScope.launch {
         val result = repository.getTrial(trialID)
         _trial.value = result
+    }
+
+    fun getFilteredTrials(searchText: String?, location: List<String>?, compensation: Boolean, transportComp: Boolean, lostSalaryComp: Boolean, trialDuration: Int?, numVisits: Int?)= viewModelScope.launch {
+        val result = repository.getFilteredTrials(searchText, location, compensation, transportComp, lostSalaryComp, trialDuration, numVisits)
+        _filteredTrials.value = result
     }
 
     fun getViewModelMyTrialsParticipants() = viewModelScope.launch {

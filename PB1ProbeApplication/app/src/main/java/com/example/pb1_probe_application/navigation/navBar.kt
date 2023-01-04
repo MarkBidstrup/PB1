@@ -105,7 +105,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.Filter.route) {
-            FilterScreen(onClickNav = { navController.navigate("Home") })
+            FilterScreen(trialsViewModel = trialsViewModel, onClickNav = { navController.navigate("Home") })
         }
 
         composable(route = BottomBarItems.Trials.route) {
@@ -201,13 +201,13 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             AppliedScreen(navHostController = navController)
         }
 
-        navigationAppHost(navController = navController, authViewModel)
+        navigationAppHost(navController = navController, authViewModel, trialsViewModel)
         notificationNav(navController = navController)
 
     }
 }
 
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
             notificationNav(navController= navController)
@@ -219,6 +219,7 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
                     navController.navigate(Route.Notification.route)
                 },
                 logOutNav = {
+                    trialsViewModel.showFilterResult = false // erases filters if there are any filters in place
                     navController.navigate(BottomBarItems.Home.route)
                 }
             )
