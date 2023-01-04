@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.location.Location
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -65,13 +66,14 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                             when (EditTrialField.trialAttribute) {
                                 trialAttributes.title -> input = trial.title
                                 trialAttributes.trialDuration -> input = trial.trialDuration
-                                trialAttributes.diagnoses -> input = trial.diagnoses.toString()
+                                trialAttributes.diagnoses -> input = trial.diagnoses.toString().drop(1).dropLast(1)
                                 trialAttributes.interventions -> input = trial.interventions
                                 trialAttributes.startDate -> input = trial.startDate
                                 trialAttributes.endDate -> input = trial.endDate
                                 trialAttributes.lostSalaryComp -> input = trial.lostSalaryComp.toString()
                                 trialAttributes.transportComp -> input = trial.transportComp.toString()
-                                trialAttributes.locations -> input = trial.locations.toString()
+                                trialAttributes.locations -> input = trial.locations
+                                trialAttributes.kommuner -> input = trial.kommuner
                                 trialAttributes.compensation -> input = trial.compensation.toString()
                                 trialAttributes.exclusionCriteria -> input = trial.exclusionCriteria
                                 trialAttributes.inclusionCriteria -> input = trial.inclusionCriteria
@@ -100,13 +102,14 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 when (EditTrialField.trialAttribute) {
                                     trialAttributes.title -> trial.title = userInput
                                     trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                    trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
+                                    trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                     trialAttributes.interventions -> trial.interventions = userInput
                                     trialAttributes.startDate -> trial.startDate = userInput
                                     trialAttributes.endDate -> trial.endDate = userInput
                                     trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
                                     trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
-                                    trialAttributes.locations -> trial.locations = listOf(TrialLocation(userInput))
+                                    trialAttributes.locations -> trial.locations = userInput
+                                    trialAttributes.kommuner -> trial.kommuner = userInput
                                     trialAttributes.compensation -> trial.compensation = userInput=="Ja"
                                     trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                     trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
@@ -158,7 +161,11 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
 
 }
 
+fun makeList(userInput: String): List<String> {
+    val list: List<String> = userInput.split(",").map { it.trim() }
 
+    return list
+}
 
 @Composable
 fun EditTrialField(
