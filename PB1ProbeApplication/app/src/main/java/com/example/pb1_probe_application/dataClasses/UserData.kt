@@ -9,7 +9,6 @@ sealed class UserData(
 )
 
 data class UserPatient (
-    //@DocumentId var userID: String,
     var gender: String = "",
     var age: Int = 0,
     var weight: Double = 0.0,
@@ -17,7 +16,6 @@ data class UserPatient (
 ): UserData(Role.TRIAL_PARTICIPANT)
 
 data class UserResearcher (
-    //@DocumentId var userID: String,
     var department: String = "",
     var job: String = "",
 ): UserData(Role.RESEARCHER)

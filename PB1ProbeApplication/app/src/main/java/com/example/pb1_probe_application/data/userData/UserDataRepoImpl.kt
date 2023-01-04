@@ -40,7 +40,6 @@ class UserDataRepoImpl @Inject constructor(
             userData.department = data.result.get("department") as String
             userData.job = data.result.get("job") as String
             }
-
         return userData
     }
 
@@ -55,7 +54,6 @@ class UserDataRepoImpl @Inject constructor(
     override suspend fun delete(userID: String) {
         userDataDB().document(userID).delete()
     }
-
 
     private fun userDataDB(): CollectionReference =
         firestore.collection("userInformation")
