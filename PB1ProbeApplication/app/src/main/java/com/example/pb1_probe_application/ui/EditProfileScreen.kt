@@ -86,7 +86,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                 items(userInfoList) { UserInfo ->
                     EditUserInfoField(
                         userInfo = UserInfo,
-                        label = R.string.placeholder, // TODO: make this variable
+                        label = UserInfo.StringResourceHeaderId, // TODO: make this variable
                         inputField = input,
                         onChange = { input = it },
                         keyboardOptions = KeyboardOptions.Default.copy(
