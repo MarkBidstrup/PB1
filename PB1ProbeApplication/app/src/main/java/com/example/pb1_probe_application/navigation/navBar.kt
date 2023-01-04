@@ -172,6 +172,18 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 navController.popBackStack()
             }
         }
+        composable(route = Route.FurtherInformation.route) {
+            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            //TODO
+            FurtherInformationScreen(role, onClick =
+            {
+            }
+            )
+        }
+
 
         composable(route = Route.CreateTrial.route) {
             val id: String?
