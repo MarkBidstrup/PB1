@@ -41,14 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -98,7 +96,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     {searchWord = it},
                     searchOnClick = {
                         searchBoxExpanded = false
-                        if(searchWord != null && searchWord != "") {
+                        if(searchWord != "") {
                             trialsViewModel.getFilteredTrials(searchWord)
                             trialsViewModel.showFilterResult = false
                             displaySearchResults = true
@@ -363,7 +361,7 @@ fun TrialInfo(
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
-            var locations = stringResource(R.string.lokation) +" " + trial.locations
+            val locations = stringResource(R.string.lokation) +" " + trial.locations
             Text(
                 text = locations,
                 style = MaterialTheme.typography.body2,
