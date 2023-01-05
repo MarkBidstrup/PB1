@@ -41,8 +41,8 @@ class TrialsViewModel @Inject constructor(
         _trial.value = result
     }
 
-    fun getFilteredTrials(searchText: String?, location: String? = null, compensation: Boolean = false, transportComp: Boolean = false, lostSalaryComp: Boolean = false, trialDuration: Int? = null, numVisits: Int? = null)= viewModelScope.launch {
-        val result = repository.getFilteredTrials(searchText, location, compensation, transportComp, lostSalaryComp, trialDuration, numVisits)
+    fun getFilteredTrials(searchText: String?, location: String? = null, diagnoses: String? = null, compensation: Boolean = false, transportComp: Boolean = false, lostSalaryComp: Boolean = false, trialDuration: Int? = null, numVisits: Int? = null)= viewModelScope.launch {
+        val result = repository.getFilteredTrials(searchText, location, diagnoses, compensation, transportComp, lostSalaryComp, trialDuration, numVisits)
         _filteredTrials.value = result
     }
 

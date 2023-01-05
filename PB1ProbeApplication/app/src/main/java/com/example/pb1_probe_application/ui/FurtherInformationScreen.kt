@@ -161,7 +161,7 @@ fun DropDownState(dropDownType: DropDownType, onValueChange: (String) -> Unit, s
     if (dropDownType == DropDownType.KOEN || dropDownType == DropDownType.JA_NEJ) {
         listItems?.let { DropDown(it, onValueChange = onValueChange, startValue) }
     }
-    if (dropDownType == DropDownType.KOMMUNE)
+    if (dropDownType == DropDownType.KOMMUNE || dropDownType == DropDownType.DIAGNOSER )
         listItems?.let {
             if (keyboardActions != null) {
                 DropDownFilter(it, onValueChange = onValueChange, startValue, keyboardActions)

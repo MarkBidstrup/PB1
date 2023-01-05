@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.data
 
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.dataClasses.Diagnoses
 import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.UserInfo
 import com.example.pb1_probe_application.dataClasses.userInfoAttributes
@@ -307,6 +308,14 @@ class Datasource() {
         }
         if (dropDownType == DropDownType.KOMMUNE) {
             return loadKommuner()
+        }
+
+        if (dropDownType == DropDownType.DIAGNOSER) {
+            val list = ArrayList<String>()
+            enumValues<Diagnoses>().forEach {
+                list.add(it.diagnosis)
+            }
+            return list
         }
         return null
     }
