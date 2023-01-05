@@ -17,6 +17,7 @@ import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 
 import com.example.pb1_probe_application.dataClasses.Role
+import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
@@ -214,6 +215,14 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 }
             }
         }
+        //TODO fix the navigation Fathi
+        composable(route = Route.ReadMoreTrialPost.route) {
+            ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!) {
+                navController.popBackStack()
+            }
+        }
+
+
 
         composable(route = Route.Applied.route) {
             AppliedScreen(navHostController = navController)
@@ -254,6 +263,3 @@ fun NavGraphBuilder.notificationNav(navController: NavHostController) {
         }
     }
 }
-
-
-

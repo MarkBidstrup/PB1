@@ -28,8 +28,8 @@ class UserDataRepoImpl @Inject constructor(
             userData.email = data.result.get("email") as String
             userData.phone = data.result.get("phone") as String
             userData.gender = data.result.get("gender") as String
-            userData.age = data.result.get("age") as Int
-            userData.weight = data.result.get("weight") as Double
+            userData.age = data.result.get("age") as String
+            userData.weight = data.result.get("weight") as String
             userData.diagnosis = data.result.get("diagnosis") as String
             } else {
             userData = UserResearcher()

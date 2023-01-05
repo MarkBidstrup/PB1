@@ -23,6 +23,7 @@ class UserViewModel @Inject constructor(
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
     lateinit var currentUserID: String
+    lateinit var currentUserData: UserData
 
     fun saveUserData(userID: String, data: UserData) = viewModelScope.launch {
         repository.update(userID, data)
@@ -51,7 +52,9 @@ class UserViewModel @Inject constructor(
         return result
     }
 
-    fun setCurrentUser(userID: String) {
+    fun setCurrentUser(userID: String) = viewModelScope.launch {
         currentUserID = userID
+        currentUserData = repository.getData(userID)
+        _userDataFlow.value = repository.getData(currentUserID)
     }
 }

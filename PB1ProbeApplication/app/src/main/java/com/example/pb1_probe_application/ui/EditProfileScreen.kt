@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -27,14 +28,12 @@ import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.Datasource
-import com.example.pb1_probe_application.dataClasses.DropDownType
-import com.example.pb1_probe_application.dataClasses.Role
-import com.example.pb1_probe_application.dataClasses.UserInfo
-import com.example.pb1_probe_application.dataClasses.UserPatient
+import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
-import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
@@ -48,8 +47,10 @@ fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, tr
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, logOutNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
-    var input by remember { mutableStateOf("") }
-
+    val uid = authViewModel!!.currentUser!!.uid
+    userViewModel.setCurrentUser(uid)
+    val data = remember { userViewModel.currentUserData }
+    //if (data is UserPatient)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -63,9 +64,16 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             ) {
                 IconButton(
                     onClick = {
-                        val data = UserPatient()
-                        val s: String = FirebaseAuth.getInstance().currentUser!!.uid
-                        //TODO connect to database
+                        data.name = userInfoList.get(0).uiData
+
+                        /*f (data is UserPatient) {
+                            data.
+                        }
+                        if (data is UserResearcher) {
+                            data.
+                        }*/
+
+                        userViewModel.saveUserData(uid,data)
                     }
                 ) {
                     Icon(
@@ -87,12 +95,36 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                 },
         content = {
             LazyColumn {
-                items(userInfoList) { UserInfo ->
+                itemsIndexed(userInfoList) { i, UserInfo ->
+                    var input by remember { mutableStateOf("") }
+                    if (data is UserPatient) {
+                        when (UserInfo.profileInfo) {
+                            userInfoAttributes.firstName -> input = data.name
+                            userInfoAttributes.lastName -> input = data.lastName
+                            userInfoAttributes.email -> input = data.email
+                            userInfoAttributes.tlf -> input = data.phone
+                            userInfoAttributes.age -> input = data.age
+                            userInfoAttributes.gender -> input = data.gender
+                            userInfoAttributes.weight -> input = data.weight
+                            userInfoAttributes.diagnosis -> input = data.diagnosis
+                            else -> {input = ""}
+                        }
+                    }
+                    if (data is UserResearcher) {
+                        when (UserInfo.profileInfo) {
+                            userInfoAttributes.firstName -> input = data.name
+                            userInfoAttributes.lastName -> input = data.lastName
+                            userInfoAttributes.email -> input = data.email
+                            userInfoAttributes.tlf -> input = data.phone
+                            userInfoAttributes.institute -> input = data.department
+                            else -> {input = ""}
+                        }
+                    }
                     EditUserInfoField(
                         userInfo = UserInfo,
-                        label = UserInfo.StringResourceHeaderId, // TODO: make this variable
-                        inputField = input,
-                        onChange = { input = it },
+                        label = UserInfo.StringResourceHeaderId,
+                        inputField = UserInfo.uiData, //TODO Check if this works
+                        onChange = { UserInfo.uiData = it }, //If not, try using input (.data from above)
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
@@ -120,11 +152,10 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             modifier = Modifier
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
-//                                    authViewModel?.delete()
-//                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
-//                                    if (authViewModel != null)
-//                                        userViewModel.deleteUser(authViewModel.currentUser!!.uid)
-//                                    logOutNav()
+                                    authViewModel.delete()
+                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
+                                    userViewModel.deleteUser(uid)
+                                    logOutNav()
                                 }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
