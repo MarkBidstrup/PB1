@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +25,10 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +45,9 @@ import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class TrialPostIcons {
      NotificationOn, NotificationOff, Contact, None
@@ -58,7 +65,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
      var subscribedTrials: List<Trial> = ArrayList()
      var searchBoxExpanded by remember { mutableStateOf(false) }
      var displaySearchResults by remember { mutableStateOf(false) }
-
+     val focusRequester = remember { FocusRequester()  }
+     val focusManager = LocalFocusManager.current
+     val scope = rememberCoroutineScope()
 
      if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
          trialsViewModel.getViewModelSubscribedTrials()
@@ -71,11 +80,18 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
         topBar = {
             if(!searchBoxExpanded)
                 ProbeTopBar(icon = TopBarIcons.Search, onClick = {
-                    searchBoxExpanded = true
+                    // below lines of code is inspired by https://stackoverflow.com/questions/70654829/enable-and-focus-textfield-at-once-in-jetpack-compose
+                    // reply by Kamil Maciuszek, Jan 10 2022
+                    scope.launch {
+                        searchBoxExpanded = true
+                        delay(100)
+                        focusRequester.requestFocus()
+                    }
                 })
             else {
                 var searchWord by remember { mutableStateOf("") }
                 SearchTopBar(searchWord,
+                    focusRequester,
                     {searchWord = it},
                     searchOnClick = {
                         searchBoxExpanded = false
@@ -93,6 +109,14 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
             Column(modifier = Modifier
                 .padding(all = 8.dp)
                 .padding(bottom = 46.dp)
+                // next few lines of code clear the focus and keyboard when user taps outside of the keyboard
+                // code is from https://stackoverflow.com/questions/69139853/android-compose-textfield-how-to-dismiss-keyboard-on-touch-outside
+                // reply by Phil Dukhov, Sep 11 2021
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
             ) {
                 Row(
                     modifier = Modifier
@@ -456,23 +480,25 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
 }
 
 @Composable
-fun SearchTopBar(input: String, onValueChange: (String) -> Unit, searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SearchTopBar(input: String, focusRequester: FocusRequester, onValueChange: (String) -> Unit, searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         Modifier
             .fillMaxWidth()
             .height(70.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val focusManager = LocalFocusManager.current
-        Box(modifier = Modifier.padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
+        Box(modifier = Modifier
+            .padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
             .weight(1f)
-            .border(0.5.dp, Color.DarkGray, MaterialTheme.shapes.small)
+            .border(0.5.dp, Color.Gray, MaterialTheme.shapes.small)
         ) {
             BasicTextField(
                 value = input,
                 singleLine = true,
-                modifier = Modifier.padding(start = 10.dp, top = 4.dp, end = 3.dp)
-                    .fillMaxSize(),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 4.dp, end = 3.dp)
+                    .fillMaxSize()
+                    .focusRequester(focusRequester),
                 onValueChange = onValueChange,
                 textStyle = Typography.body1,
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -480,8 +506,7 @@ fun SearchTopBar(input: String, onValueChange: (String) -> Unit, searchOnClick: 
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { focusManager.clearFocus()
-                        searchOnClick()
+                    onDone = { searchOnClick()
                     }
                 )
             )
