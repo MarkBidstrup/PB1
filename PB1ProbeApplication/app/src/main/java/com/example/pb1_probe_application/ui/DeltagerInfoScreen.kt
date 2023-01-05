@@ -35,7 +35,10 @@ fun DeltagerInfo(
     onClickNav: () -> Unit,
     onClick: () -> Unit
 ) {
-    val data = trial.deltagerInformation
+    var data = trial.deltagerInformation
+    data = data.split("\\n").joinToString("\n")
+    // source for this line of code: https://stackoverflow.com/questions/72818759/carriage-return-text-resource-in-jetpack-compose
+    // reply by Mr Pine, Jul 7, 2022
 
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button
