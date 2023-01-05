@@ -3,7 +3,6 @@ package com.example.pb1_probe_application.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -11,15 +10,13 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
@@ -27,6 +24,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 @Composable
 fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
     var locations by remember { mutableStateOf(String()) }
+    var diagnoses by remember { mutableStateOf(String()) }
     var reward by remember { mutableStateOf(false) }
     var transport by remember { mutableStateOf(false) }
     var work by remember { mutableStateOf(false) }
@@ -53,35 +51,36 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
         },
         content = {
             Column(modifier = Modifier
-                .padding(16.dp)
                 .verticalScroll(scrollState)) {
                 Spacer(modifier = Modifier.height(10.dp))
-                DistanceComp()
+                DistanceComp() {
+                    locations = it
+                }
                 Divider(
-                    modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
                 CompensationComp(reward = reward, work = work, transport = transport, transportClick = {transport = !transport}, rewardClick = {reward = !reward}, workClick = {work = !work})
                 Divider(
-                    modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
                 DurationComp { maxDuration = it}
                 Divider(
-                    modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
                 VisitsComp{maxVisits = it}
                 Divider(
-                    modifier = Modifier.padding(start = 7.dp, end = 7.dp, bottom = 10.dp, top = 10.dp),
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
+                DiagnosesComp() {
+                    diagnoses = it
+                }
                 Row(
                     modifier = Modifier
+                        .padding(17.dp)
                         .padding(top = 40.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -92,11 +91,12 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
                             lostSalaryComp = work,
                             transportComp = transport,
                             location = locations,
+                            diagnoses = diagnoses,
                             searchText = null,
                             trialDuration = maxDuration,
                             numVisits = maxVisits
                         )
-                        if(reward || work || transport || locations.isNotEmpty() || maxVisits != null || maxDuration != null)
+                        if(reward || work || transport || locations != ""|| diagnoses != "" || maxVisits != null || maxDuration != null)
                             trialsViewModel.showFilterResult = true
                         onClickNav() }, R.string.filtrerKnap, true)
                 }
@@ -109,43 +109,27 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
 }
 
 @Composable
-fun DistanceComp() { // TODO - update using exposed drop down returning a location
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    Column {
+fun DistanceComp(onDone: (String) -> Unit) {
+    Column (modifier = Modifier.padding(17.dp)){
         Text(
-            text = stringResource(R.string.afstand),
+            text = stringResource(R.string.lokationer),
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            //horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(R.string.postnr),
-                style = MaterialTheme.typography.body1,
-                textAlign = TextAlign.Center
-            )
-            //Spacer(modifier = Modifier.width(8.dp))
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                placeholder = { Text(text = stringResource(R.string.postnrPlaceholder)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.scale(0.6f)
-            )
-        }
         Text(
-            text = stringResource(R.string.maksAfstand),
+            text = stringResource(R.string.indtastKommune),
             style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(10.dp))
     }
+    DropDownState(dropDownType = DropDownType.KOMMUNE, onDone, "")
+    Spacer(modifier = Modifier.height(30.dp))
 }
 
 @Composable
 fun CompensationComp(reward: Boolean, transport: Boolean, work: Boolean, rewardClick: (Boolean) -> Unit, transportClick: (Boolean) -> Unit, workClick: (Boolean) -> Unit ) {
-    Column(modifier = Modifier.padding(top = 10.dp)) {
+    Column(modifier = Modifier
+        .padding(all = 17.dp)) {
         Text(
             text = stringResource(R.string.kompensation),
             style = MaterialTheme.typography.body1,
@@ -178,7 +162,8 @@ fun DurationComp(updateSelection: (Int?) -> Unit) {
     var time2 by remember { mutableStateOf(false) }
     var time3 by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(top = 10.dp)) {
+    Column(modifier = Modifier
+        .padding(all = 17.dp)) {
         Text(
             text = stringResource(R.string.varighed_Filter),
             style = MaterialTheme.typography.body1,
@@ -244,7 +229,8 @@ fun VisitsComp(updateSelection: (Int?) -> Unit) {
     var box3 by remember { mutableStateOf(false) }
     var box4 by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.padding(top = 10.dp)) {
+    Column(modifier = Modifier
+        .padding(all = 17.dp)) {
         Text(
             text = stringResource(R.string.antalBesoeg_Filter),
             style = MaterialTheme.typography.body1,
@@ -339,7 +325,23 @@ fun CheckOption(
 }
 
 
-
+@Composable
+fun DiagnosesComp(onDone: (String) -> Unit) {
+    Column (modifier = Modifier.padding(17.dp)){
+        Text(
+            text = stringResource(R.string.diagnose),
+            style = MaterialTheme.typography.body1,
+            color = TextColorGreen
+        )
+        Text(
+            text = stringResource(R.string.vælgDiagnoseSymptomer),
+            style = MaterialTheme.typography.body1,
+            textAlign = TextAlign.Center
+        )
+    }
+    DropDownState(dropDownType = DropDownType.DIAGNOSER, onDone, "")
+    Spacer(modifier = Modifier.height(30.dp))
+}
 
 
 

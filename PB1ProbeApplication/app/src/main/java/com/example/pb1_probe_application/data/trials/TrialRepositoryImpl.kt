@@ -93,6 +93,7 @@ class TrialRepositoryImpl @Inject constructor(
     override suspend fun getFilteredTrials(
         searchText: String?,
         location: String?,
+        diagnoses: String?,
         compensation: Boolean,
         transportComp: Boolean,
         lostSalaryComp: Boolean,
@@ -127,12 +128,23 @@ class TrialRepositoryImpl @Inject constructor(
             var locationsList: MutableList<Trial>? = null
 
             // get the list of trials filtered by location
-            if(location != null) {
+            if(location != null && location != "") {
                 locationsList = ArrayList()
                 val snapshot = trialDB()
                     .whereEqualTo("kommuner", location)
                     .get().await()
                 snapshot.forEach { t -> locationsList.add(t.toObject()) }
+            }
+
+            var diagnosesList: MutableList<Trial>? = null
+
+            // get the list of trials filtered by diagnosis
+            if(diagnoses != null && diagnoses != "") {
+                diagnosesList = ArrayList()
+                val snapshot = trialDB()
+                    .whereArrayContains("diagnoses", diagnoses)
+                    .get().await()
+                snapshot.forEach { t -> diagnosesList.add(t.toObject()) }
             }
 
             // get the list of trial filtered by various forms of compensation (using logical AND)
@@ -201,14 +213,20 @@ class TrialRepositoryImpl @Inject constructor(
             if (locationsList != null) {
                 list = locationsList
             }
-            if (compensation || lostSalaryComp || transportComp) {
+            if (diagnosesList != null) {
                 list = if (locationsList == null) {
+                    diagnosesList
+                } else
+                    (list intersect diagnosesList.toSet()).toMutableList()
+            }
+            if (compensation || lostSalaryComp || transportComp) {
+                list = if (locationsList == null && diagnosesList == null) {
                     compList
                 } else
                     (list intersect compList.toSet()).toMutableList()
             }
             if((trialDuration != null && trialDuration > 0) || (numVisits != null && numVisits > 0)) {
-                list = if(locationsList == null && !(compensation || lostSalaryComp || transportComp))
+                list = if(locationsList == null && diagnosesList == null && !(compensation || lostSalaryComp || transportComp))
                     tempList
                 else
                     (list intersect tempList.toSet()).toMutableList()

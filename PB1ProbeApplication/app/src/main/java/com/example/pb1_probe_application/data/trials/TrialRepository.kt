@@ -9,6 +9,7 @@ interface TrialRepository {
     suspend fun getFilteredTrials(
         searchText: String?,
         location: String?,
+        diagnoses: String?,
         compensation: Boolean,
         transportComp: Boolean,
         lostSalaryComp: Boolean,
