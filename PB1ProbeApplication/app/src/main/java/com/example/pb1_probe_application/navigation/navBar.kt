@@ -215,8 +215,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 }
             }
         }
+        //TODO fix the navigation Fathi
         composable(route = Route.ReadMoreTrialPost.route) {
-            ReadMoreTrialPostScreen(trialsViewModel.currentNavTrial!!) {
+            ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!) {
                 navController.popBackStack()
             }
         }

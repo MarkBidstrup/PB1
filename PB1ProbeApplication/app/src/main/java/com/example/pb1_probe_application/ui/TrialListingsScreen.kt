@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
@@ -201,6 +204,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,
               iconOnClick: () -> Unit, applyOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
+    val navHostController = rememberNavController()
 
     Card(
         elevation = 4.dp,
@@ -242,7 +246,13 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     text = stringResource(R.string.mereInfo),
                     style = MaterialTheme.typography.body2,
                     color = ReadMoreColor,
-                    modifier = modifier.padding(start = 8.dp, top = 16.dp),)
+                    modifier = modifier
+                        .padding(start = 8.dp, top = 16.dp)
+                        .clickable(onClick = {
+                            navHostController.navigate("ReadMoreTrialPost")
+                        })
+
+                   ,)
                 Spacer(Modifier.weight(1f))
                 TrialApplyButton(buttonEnabled, onClick = applyOnClick)
             }
@@ -464,14 +474,16 @@ fun SearchTopBar(input: String, onValueChange: (String) -> Unit, searchOnClick: 
         verticalAlignment = Alignment.CenterVertically
     ) {
         val focusManager = LocalFocusManager.current
-        Box(modifier = Modifier.padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
+        Box(modifier = Modifier
+            .padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
             .weight(1f)
             .border(0.5.dp, Color.DarkGray, MaterialTheme.shapes.small)
         ) {
             BasicTextField(
                 value = input,
                 singleLine = true,
-                modifier = Modifier.padding(start = 10.dp, top = 4.dp, end = 3.dp)
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 4.dp, end = 3.dp)
                     .fillMaxSize(),
                 onValueChange = onValueChange,
                 textStyle = Typography.body1,
