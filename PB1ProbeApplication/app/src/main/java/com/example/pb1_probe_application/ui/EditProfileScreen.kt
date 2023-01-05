@@ -36,17 +36,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 @Composable
-fun EditProfileScreen(role: Role,onClick: () -> Unit, logOutNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
+fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
 
     if (role == Role.TRIAL_PARTICIPANT)
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
     if (role == Role.RESEARCHER)
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, logOutNav = logOutNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, logOutNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, deleteNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
@@ -181,10 +181,8 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             modifier = Modifier
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
-                                    authViewModel.delete()
-                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
-                                    userViewModel.deleteUser(uid)
-                                    logOutNav()
+                                    // TODO: Navigate to DeleteProfileScreen
+                                    deleteNav()
                                 }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -247,24 +245,3 @@ fun EditUserInfoField(
 
     }
 }
-
-//@Composable
-//fun DeleteUserDialog() {
-//    AlertDialog(
-//        onDismissRequest = {
-//                           /*TODO*/
-//                           },
-//        title = { Text(stringResource(id = R.string.sletProfil))},
-//        text = { Text("Er du sikker på du vil slette din profil?") },
-//        confirmButton = {
-//                        Button(onClick = { /*TODO*/ }) {
-//                            Text(text = "SLET PROFIL")
-//                        }
-//        },
-//        dismissButton = {
-//            Button(onClick = { /*TODO*/ }) {
-//                Text(text = "FORTRYD")
-//            }
-//        }
-//    )
-//}

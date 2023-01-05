@@ -149,7 +149,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             EditProfileScreen(
                 role = role,
                 onClick = { navController.popBackStack() },
-                logOutNav = { navController.navigate(BottomBarItems.Home.route) },
+                deleteNav = { navController.navigate("DeleteProfileScreen") },
                 trialsViewModel = trialsViewModel,
                 authViewModel = authViewModel,
                 userViewModel = userViewModel
@@ -183,6 +183,16 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             {
                 navController.navigate("Home")
             }
+            )
+        }
+
+        composable(route = Route.DeleteProfileScreen.route) {
+            DeleteProfileScreen(
+                onClick = { navController.popBackStack() },
+                logOutNav = { navController.navigate(BottomBarItems.Home.route) },
+                trialsViewModel = trialsViewModel,
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
             )
         }
 

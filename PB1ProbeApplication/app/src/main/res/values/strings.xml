@@ -164,6 +164,8 @@
     <string name="sletStudie">Slet studie</string>
     <string name="IndtastYderligereOplysninger">Indtast yderligere oplysninger</string>
     <string name="visit">besøg</string>
+    <string name="SLETPROFILCAPS">SLET PROFIL</string>
+    <string name="ErDuSikkerSlet">Er du sikker på at du vil slette din profil?</string>
 
 
 </resources>

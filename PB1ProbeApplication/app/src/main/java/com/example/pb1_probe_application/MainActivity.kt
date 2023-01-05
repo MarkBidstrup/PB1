@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
 //                    FurtherInformationScreen(role = Role.TRIAL_PARTICIPANT) {
 //
 //                    }
-
                 }
             }
         }
