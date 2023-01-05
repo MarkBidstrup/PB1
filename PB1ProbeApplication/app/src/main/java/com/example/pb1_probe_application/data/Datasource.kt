@@ -3,30 +3,32 @@ package com.example.pb1_probe_application.data
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.UserInfo
+import com.example.pb1_probe_application.dataClasses.userInfoAttributes
 
 class Datasource() {
 
     // TODO: fix state variables
     fun loadProfilePatientInfo(): List<UserInfo> {
         return listOf<UserInfo>(
-            UserInfo(R.string.navn,""),
-            UserInfo(R.string.efternavn,""),
-            UserInfo(R.string.koen,""),
-            UserInfo(R.string.alder,""),
-            UserInfo(R.string.vaegt,""),
-            UserInfo(R.string.diagnose,""),
-            UserInfo(R.string.email,""),
-            UserInfo(R.string.telefon,""),
+            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
+            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
+            UserInfo(R.string.koen,userInfoAttributes.gender,""),
+            UserInfo(R.string.alder,userInfoAttributes.age,""),
+            UserInfo(R.string.vaegt,userInfoAttributes.weight,""),
+            UserInfo(R.string.diagnose,userInfoAttributes.diagnosis,""),
+            UserInfo(R.string.email,userInfoAttributes.email,""),
+            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
         )
     }
 
     // TODO: fix state variables
     fun loadProfileResearcherInfo(): List<UserInfo> {
         return listOf<UserInfo>(
-            UserInfo(R.string.navn,""),
-            UserInfo(R.string.efternavn,""),
-            UserInfo(R.string.forskningsenhed,""),
-            UserInfo(R.string.email,""),
+            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
+            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
+            UserInfo(R.string.email,userInfoAttributes.email,""),
+            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
+            UserInfo(R.string.forskningsenhed,userInfoAttributes.institute,""),
         )
     }
 
