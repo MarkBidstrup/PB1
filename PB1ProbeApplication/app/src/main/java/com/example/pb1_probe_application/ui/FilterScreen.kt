@@ -3,6 +3,7 @@ package com.example.pb1_probe_application.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,7 +11,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -31,6 +34,7 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
     var maxDuration by remember { mutableStateOf<Int?>(null) }
     var maxVisits by remember { mutableStateOf<Int?>(null) }
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = {
@@ -53,7 +57,7 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
             Column(modifier = Modifier
                 .verticalScroll(scrollState)) {
                 Spacer(modifier = Modifier.height(10.dp))
-                DistanceComp() {
+                DistanceComp(focusManager) {
                     locations = it
                 }
                 Divider(
@@ -75,7 +79,7 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
                     thickness = 1.dp,
                     color = Color.LightGray
                 )
-                DiagnosesComp() {
+                DiagnosesComp(focusManager) {
                     diagnoses = it
                 }
                 Row(
@@ -109,7 +113,7 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
 }
 
 @Composable
-fun DistanceComp(onDone: (String) -> Unit) {
+fun DistanceComp(focusManager: FocusManager, onDone: (String) -> Unit) {
     Column (modifier = Modifier.padding(17.dp)){
         Text(
             text = stringResource(R.string.lokationer),
@@ -122,7 +126,9 @@ fun DistanceComp(onDone: (String) -> Unit) {
             textAlign = TextAlign.Center
         )
     }
-    DropDownState(dropDownType = DropDownType.KOMMUNE, onDone, "")
+    DropDownState(dropDownType = DropDownType.KOMMUNE, onDone, "", KeyboardActions(
+        onDone = { focusManager.clearFocus() }
+    ))
     Spacer(modifier = Modifier.height(30.dp))
 }
 
@@ -326,7 +332,7 @@ fun CheckOption(
 
 
 @Composable
-fun DiagnosesComp(onDone: (String) -> Unit) {
+fun DiagnosesComp(focusManager: FocusManager, onDone: (String) -> Unit) {
     Column (modifier = Modifier.padding(17.dp)){
         Text(
             text = stringResource(R.string.diagnose),
@@ -339,7 +345,9 @@ fun DiagnosesComp(onDone: (String) -> Unit) {
             textAlign = TextAlign.Center
         )
     }
-    DropDownState(dropDownType = DropDownType.DIAGNOSER, onDone, "")
+    DropDownState(dropDownType = DropDownType.DIAGNOSER, onDone, "", KeyboardActions(
+        onDone = { focusManager.clearFocus() }
+    ))
     Spacer(modifier = Modifier.height(30.dp))
 }
 
