@@ -157,7 +157,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.LogInd.route) {
-            LogInScreen(navHostController = navController, authViewModel = authViewModel) {
+            LogInScreen(navHostController = navController, authViewModel = authViewModel, userViewModel = userViewModel) {
                 navController.popBackStack()
             }
         }
@@ -169,7 +169,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.Register.route) {
-            RegisterScreen(navHostController = navController, authViewModel = authViewModel) {
+            RegisterScreen(navHostController = navController, authViewModel = authViewModel, userViewModel = userViewModel) {
                 navController.popBackStack()
             }
         }

@@ -50,7 +50,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
-    //if (data is UserPatient)
+    var edited by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,8 +64,10 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
             ) {
                 IconButton(
                     onClick = {
-                        data.name = userInfoList.get(0).uiData
-
+                        if (edited) {
+                            userViewModel.saveUserData(uid,data)
+                            edited = false
+                        }
                         /*f (data is UserPatient) {
                             data.
                         }
@@ -73,7 +75,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             data.
                         }*/
 
-                        userViewModel.saveUserData(uid,data)
+
                     }
                 ) {
                     Icon(
@@ -120,11 +122,12 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             else -> {input = ""}
                         }
                     }
+                    var userInput by remember { mutableStateOf(input) }
                     EditUserInfoField(
                         userInfo = UserInfo,
                         label = UserInfo.StringResourceHeaderId,
-                        inputField = UserInfo.uiData, //TODO Check if this works
-                        onChange = { UserInfo.uiData = it }, //If not, try using input (.data from above)
+                        inputField = userInput,
+                        onChange = { userInput = it },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
@@ -133,6 +136,32 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             onDone = { focusManager.clearFocus() }
                         )
                     )
+                    if (userInput != input) {
+                        edited = true
+                        if (data is UserPatient) {
+                            when (UserInfo.profileInfo) {
+                                userInfoAttributes.firstName -> data.name = userInput
+                                userInfoAttributes.lastName -> data.lastName = userInput
+                                userInfoAttributes.gender -> data.gender = userInput
+                                userInfoAttributes.age -> data.age = userInput
+                                userInfoAttributes.weight -> data.weight = userInput
+                                userInfoAttributes.diagnosis -> data.diagnosis = userInput
+                                userInfoAttributes.email -> data.email = userInput
+                                userInfoAttributes.tlf -> data.phone = userInput
+                                else -> {}
+                            }
+                        }
+                        if (data is UserResearcher) {
+                            when (UserInfo.profileInfo) {
+                                userInfoAttributes.firstName -> data.name = userInput
+                                userInfoAttributes.lastName -> data.lastName = userInput
+                                userInfoAttributes.institute -> data.department = userInput
+                                userInfoAttributes.email -> data.email = userInput
+                                userInfoAttributes.tlf -> data.phone = userInput
+                                else -> {}
+                            }
+                        }
+                    }
                     if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex) {
                         Divider(
                             modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),

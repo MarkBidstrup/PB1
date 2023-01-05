@@ -48,7 +48,7 @@ class UserViewModel @Inject constructor(
     }
 
     fun getUserRole(): Role? {
-        val result = userDataFlow.value?.userType
+        val result = userDataFlow.value?.role
         return result
     }
 

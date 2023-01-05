@@ -1,7 +1,7 @@
 package com.example.pb1_probe_application.dataClasses
 
 sealed class UserData(
-    val userType: Role,
+    val role: Role,
     var name: String = "",
     var lastName: String = "",
     var email: String = "",

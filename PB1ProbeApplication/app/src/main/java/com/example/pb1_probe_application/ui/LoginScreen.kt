@@ -22,13 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.auth.Resource
 import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, navigateBack: () -> Unit){
+fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, userViewModel: UserViewModel, navigateBack: () -> Unit){
 
     // changes for login
     val loginFlow = authViewModel?.loginFlow?.collectAsState()
@@ -85,6 +86,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
                     }
                     is Resource.Success -> {
                         LaunchedEffect(Unit) {
+                            userViewModel.setCurrentUser(authViewModel.currentUser!!.uid)
                             navHostController?.navigate("Home")
                         }
                     }
