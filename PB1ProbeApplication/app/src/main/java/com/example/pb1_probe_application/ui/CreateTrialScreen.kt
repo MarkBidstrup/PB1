@@ -84,11 +84,11 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
                                 trialAttributes.interventions -> trial.interventions = userInput
                                 trialAttributes.startDate -> trial.startDate = userInput
                                 trialAttributes.endDate -> trial.endDate = userInput
-                                trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
-                                trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
+                                trialAttributes.lostSalaryComp -> trial.lostSalaryComp = StringToBool(userInput)
+                                trialAttributes.transportComp -> trial.transportComp = StringToBool(userInput)
                                 trialAttributes.locations -> trial.locations = userInput
                                 trialAttributes.kommuner -> trial.kommuner = userInput
-                                trialAttributes.compensation -> trial.compensation = userInput=="Ja"
+                                trialAttributes.compensation -> trial.compensation = StringToBool(userInput)
                                 trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                 trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
                                 trialAttributes.numParticipants -> trial.numParticipants = Integer.parseInt(userInput)
@@ -152,7 +152,7 @@ fun TrialInputField(
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
         ) {
-            DropDown(DropDownType.JA_NEJ)
+            DropDownState(DropDownType.JA_NEJ, onValueChange, input)
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
@@ -171,7 +171,7 @@ fun TrialInputField(
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
         ) {
-            DropDownFilter(dropDownType = DropDownType.KOMMUNE)
+            DropDownState(dropDownType = DropDownType.KOMMUNE, onValueChange, input)
         } else {
             OutlinedTextField(
                 value = input,

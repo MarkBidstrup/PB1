@@ -120,11 +120,11 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                             modifier = Modifier
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
-                                    authViewModel?.delete()
-                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
-                                    if (authViewModel != null)
-                                        userViewModel.deleteUser(authViewModel.currentUser!!.uid)
-                                    logOutNav()
+//                                    authViewModel?.delete()
+//                                    trialsViewModel.deleteCurrentUserFromAllTrialDBEntries()
+//                                    if (authViewModel != null)
+//                                        userViewModel.deleteUser(authViewModel.currentUser!!.uid)
+//                                    logOutNav()
                                 }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -152,7 +152,7 @@ fun EditUserInfoField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDown(dropDownType = DropDownType.KOEN)
+            DropDownState(dropDownType = DropDownType.KOEN, onChange, inputField)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
@@ -187,3 +187,24 @@ fun EditUserInfoField(
 
     }
 }
+
+//@Composable
+//fun DeleteUserDialog() {
+//    AlertDialog(
+//        onDismissRequest = {
+//                           /*TODO*/
+//                           },
+//        title = { Text(stringResource(id = R.string.sletProfil))},
+//        text = { Text("Er du sikker på du vil slette din profil?") },
+//        confirmButton = {
+//                        Button(onClick = { /*TODO*/ }) {
+//                            Text(text = "SLET PROFIL")
+//                        }
+//        },
+//        dismissButton = {
+//            Button(onClick = { /*TODO*/ }) {
+//                Text(text = "FORTRYD")
+//            }
+//        }
+//    )
+//}

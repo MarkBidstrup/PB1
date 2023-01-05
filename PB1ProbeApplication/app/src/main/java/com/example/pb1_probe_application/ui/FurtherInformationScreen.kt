@@ -117,7 +117,7 @@ fun FurtherInformationField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDown(DropDownType.KOEN)
+            DropDownState(DropDownType.KOEN,onChange, inputField)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
@@ -152,16 +152,26 @@ fun FurtherInformationField(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDown(dropDownType: DropDownType) {
-
+fun DropDownState(dropDownType: DropDownType, onValueChange: (String) -> Unit, startValue: String) {
     val listItems = Datasource().loadDropDownList(dropDownType)
 
-    var selectedItem by remember {
-        mutableStateOf("")
+    if (dropDownType == DropDownType.KOEN || dropDownType == DropDownType.JA_NEJ) {
+        listItems?.let { DropDown(it, onValueChange = onValueChange, startValue) }
     }
+    if (dropDownType == DropDownType.KOMMUNE)
+        listItems?.let { DropDownFilter(it, onValueChange = onValueChange, startValue) }
+}
 
+
+// This drop down function has taken inspiration from: https://semicolonspace.com/dropdown-menu-jetpack-compose/
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun DropDown(listItems: List<String>, onValueChange: (String) -> Unit, startValue: String) {
+
+    var selectedItem by remember {
+        mutableStateOf(startValue)
+    }
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -186,7 +196,10 @@ fun DropDown(dropDownType: DropDownType) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = selectedItem,
-                onValueChange = {},
+                onValueChange = {
+                    onValueChange(it)
+                    selectedItem = it
+                                },
                 readOnly = true,
                 label = {  },
                 trailingIcon = {
@@ -206,6 +219,7 @@ fun DropDown(dropDownType: DropDownType) {
                     // menu item
                     DropdownMenuItem(onClick = {
                         selectedItem = selectedOption
+                        onValueChange(selectedItem)
                         expanded = false
                     }) {
                         Text(text = selectedOption)
@@ -216,26 +230,16 @@ fun DropDown(dropDownType: DropDownType) {
     }
 }
 
-/*
-
-Commented function is a drop down where you can filter options by typing with keyboard
-
- */
-
+// This drop down function has taken inspiration from: https://semicolonspace.com/dropdown-menu-jetpack-compose/
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownFilter(dropDownType: DropDownType) {
-
-    var listItems = Datasource().loadDropDownList(dropDownType)
-
+fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, startValue: String) {
     var selectedItem by remember {
-        mutableStateOf("")
+        mutableStateOf(startValue)
     }
-
     var expanded by remember {
         mutableStateOf(false)
     }
-
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
@@ -256,7 +260,10 @@ fun DropDownFilter(dropDownType: DropDownType) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = selectedItem,
-                onValueChange = { selectedItem = it },
+                onValueChange = {
+                    onValueChange(it)
+                    selectedItem = it
+                },
                 label = {  },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
@@ -280,6 +287,7 @@ fun DropDownFilter(dropDownType: DropDownType) {
                             DropdownMenuItem(
                                 onClick = {
                                     selectedItem = selectionOption
+                                    onValueChange(selectedItem)
                                     expanded = false
                                 }
                             ) {
@@ -291,6 +299,17 @@ fun DropDownFilter(dropDownType: DropDownType) {
             }
         }
     }
+}
+
+fun BoolToString(boolean: Boolean): String {
+    if (boolean)
+        return "Ja"
+    else
+        return "Nej"
+}
+
+fun StringToBool(string: String): Boolean {
+    return string == "Ja"
 }
 
 fun OpretProfilonClick(){

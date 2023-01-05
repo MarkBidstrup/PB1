@@ -34,6 +34,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 
+
     Scaffold(
         topBar = {
 
@@ -70,11 +71,11 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 trialAttributes.interventions -> input = trial.interventions
                                 trialAttributes.startDate -> input = trial.startDate
                                 trialAttributes.endDate -> input = trial.endDate
-                                trialAttributes.lostSalaryComp -> input = trial.lostSalaryComp.toString()
-                                trialAttributes.transportComp -> input = trial.transportComp.toString()
+                                trialAttributes.lostSalaryComp -> input = BoolToString(trial.lostSalaryComp)
+                                trialAttributes.transportComp -> input = BoolToString(trial.transportComp)
                                 trialAttributes.locations -> input = trial.locations
                                 trialAttributes.kommuner -> input = trial.kommuner
-                                trialAttributes.compensation -> input = trial.compensation.toString()
+                                trialAttributes.compensation -> input = BoolToString(trial.compensation)
                                 trialAttributes.exclusionCriteria -> input = trial.exclusionCriteria
                                 trialAttributes.inclusionCriteria -> input = trial.inclusionCriteria
                                 trialAttributes.numParticipants -> input = trial.numParticipants.toString()
@@ -106,11 +107,11 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                     trialAttributes.interventions -> trial.interventions = userInput
                                     trialAttributes.startDate -> trial.startDate = userInput
                                     trialAttributes.endDate -> trial.endDate = userInput
-                                    trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
-                                    trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
+                                    trialAttributes.lostSalaryComp -> trial.lostSalaryComp = StringToBool(userInput)
+                                    trialAttributes.transportComp -> trial.transportComp = StringToBool(userInput)
                                     trialAttributes.locations -> trial.locations = userInput
                                     trialAttributes.kommuner -> trial.kommuner = userInput
-                                    trialAttributes.compensation -> trial.compensation = userInput=="Ja"
+                                    trialAttributes.compensation -> trial.compensation = StringToBool(userInput)
                                     trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                     trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
                                     trialAttributes.numParticipants -> trial.numParticipants =
@@ -187,7 +188,7 @@ fun EditTrialField(
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
         ) {
-            DropDown(DropDownType.JA_NEJ)
+            DropDownState(DropDownType.JA_NEJ, onValueChange, input)
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
@@ -206,7 +207,7 @@ fun EditTrialField(
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
         ) {
-            DropDownFilter(dropDownType = DropDownType.KOMMUNE)
+            DropDownState(dropDownType = DropDownType.KOMMUNE, onValueChange, input)
         } else {
             OutlinedTextField(
                 value = input,
