@@ -117,7 +117,7 @@ fun FurtherInformationField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDownState(DropDownType.KOEN,onChange, inputField)
+            DropDownState(DropDownType.KOEN,onChange, inputField, null)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
@@ -153,14 +153,18 @@ fun FurtherInformationField(
 }
 
 @Composable
-fun DropDownState(dropDownType: DropDownType, onValueChange: (String) -> Unit, startValue: String) {
+fun DropDownState(dropDownType: DropDownType, onValueChange: (String) -> Unit, startValue: String, keyboardActions: KeyboardActions?) {
     val listItems = Datasource().loadDropDownList(dropDownType)
 
     if (dropDownType == DropDownType.KOEN || dropDownType == DropDownType.JA_NEJ) {
         listItems?.let { DropDown(it, onValueChange = onValueChange, startValue) }
     }
     if (dropDownType == DropDownType.KOMMUNE || dropDownType == DropDownType.DIAGNOSER )
-        listItems?.let { DropDownFilter(it, onValueChange = onValueChange, startValue) }
+        listItems?.let {
+            if (keyboardActions != null) {
+                DropDownFilter(it, onValueChange = onValueChange, startValue, keyboardActions)
+            }
+        }
 }
 
 
@@ -233,7 +237,7 @@ fun DropDown(listItems: List<String>, onValueChange: (String) -> Unit, startValu
 // This drop down function has taken inspiration from: https://semicolonspace.com/dropdown-menu-jetpack-compose/
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, startValue: String) {
+fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, startValue: String, keyboardActions: KeyboardActions) {
     var selectedItem by remember {
         mutableStateOf(startValue)
     }
@@ -264,6 +268,11 @@ fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, st
                     onValueChange(it)
                     selectedItem = it
                 },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = keyboardActions,
                 label = {  },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
