@@ -187,8 +187,9 @@ fun EditTrialField(
         if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.honorar)
         ) {
-            DropDownState(DropDownType.JA_NEJ, onValueChange, input)
+            DropDownState(DropDownType.JA_NEJ, onValueChange, input,null)
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
             || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
@@ -207,7 +208,7 @@ fun EditTrialField(
         } else if (
             LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
         ) {
-            DropDownState(dropDownType = DropDownType.KOMMUNE, onValueChange, input)
+            DropDownState(dropDownType = DropDownType.KOMMUNE, onValueChange, input, keyboardActions)
         } else {
             OutlinedTextField(
                 value = input,
