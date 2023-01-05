@@ -86,7 +86,9 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                         LoginButton(
-                            onClick = { OpretProfilonClick() },
+                            onClick = {
+                                OpretProfilonClick()
+                                onClick() },
                             text = R.string.createProfileCAPS,
                             filled = true)
                         }

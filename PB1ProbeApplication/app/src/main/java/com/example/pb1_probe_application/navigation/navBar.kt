@@ -181,6 +181,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             //TODO
             FurtherInformationScreen(role, onClick =
             {
+                navController.navigate("Home")
             }
             )
         }

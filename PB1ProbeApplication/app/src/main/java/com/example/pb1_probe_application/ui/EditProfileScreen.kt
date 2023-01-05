@@ -183,7 +183,7 @@ fun EditUserInfoField(
             color = TextColorGreen
         )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
-            DropDownState(dropDownType = DropDownType.KOEN, onChange, inputField)
+            DropDownState(dropDownType = DropDownType.KOEN, onChange, inputField,null)
         } else if (
             LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.alder)
             || LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.vaegt)
