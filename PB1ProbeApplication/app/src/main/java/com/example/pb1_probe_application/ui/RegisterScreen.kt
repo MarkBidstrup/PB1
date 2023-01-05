@@ -101,7 +101,9 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                         Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
                         LaunchedEffect(Unit) {
                             val role = if (participantChecked) Role.TRIAL_PARTICIPANT else Role.RESEARCHER
-                            userViewModel.createUser(authViewModel!!.currentUser!!.uid,email, role)
+                            val uid = authViewModel!!.currentUser!!.uid
+                            userViewModel.createUser(uid,email, role)
+                            userViewModel.setCurrentUser(uid)
                             navHostController?.navigate("FurtherInformation")
                         }
                     }
