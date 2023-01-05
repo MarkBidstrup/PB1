@@ -75,12 +75,12 @@ class TrialsViewModel @Inject constructor(
         repository.registerForTrial(trial.trialID)
     }
 
-    fun getViewModelRegisteredParticipants(trialID: String): StateFlow<List<String>> {
+    fun getRegisteredParticipantsUIDList(trialID: String): StateFlow<List<String>> {
         if(!_registeredParticipants.containsKey(trialID)) {
             _registeredParticipants[trialID] = MutableStateFlow(ArrayList())
         }
         viewModelScope.launch {
-            val result = repository.getRegisteredParticipants(trialID)
+            val result = repository.getRegisteredParticipantsUID(trialID)
             _registeredParticipants[trialID]?.value = result
         }
         return _registeredParticipants[trialID]?.asStateFlow() ?: MutableStateFlow<List<String>>(ArrayList()).asStateFlow()
