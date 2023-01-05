@@ -35,7 +35,10 @@ class TrialRepositoryImpl @Inject constructor(
 
     override suspend fun delete(trialId: String) {
         trialDB().document(trialId).delete().await()
-        // TODO - also delete from subscribed list etc. Notify users first?
+        val snapshot1 = registrationDB().whereEqualTo("trialID", trialId).get().await()
+        snapshot1.forEach { t -> t.reference.delete().await()}
+        val snapshot2 = subscriptionDB().whereEqualTo("trialID", trialId).get().await()
+        snapshot2.forEach { t -> t.reference.delete().await()}
     }
 
     override suspend fun getMyTrialsParticipant(): List<Trial> {
