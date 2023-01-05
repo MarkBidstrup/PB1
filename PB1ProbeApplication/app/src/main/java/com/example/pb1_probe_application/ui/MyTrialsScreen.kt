@@ -95,7 +95,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
-                                val list = trialsViewModel.getViewModelRegisteredParticipants(it.trialID).collectAsState().value
+                                val list = trialsViewModel.getRegisteredParticipantsUIDList(it.trialID).collectAsState().value
                                 ResearcherTrialPost(it, list.size) {
                                     trialsViewModel.setCurrentNavTrialID(it)
                                     navHostController.navigate("ManageTrial") }
