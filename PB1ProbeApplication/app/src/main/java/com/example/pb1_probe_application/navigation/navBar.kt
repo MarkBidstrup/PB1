@@ -96,8 +96,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
 
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
-            // temp solution - TODO update if/else
-            val role = if (loggedIn && authViewModel?.currentUser?.email == "forsker@test.com")
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (loggedIn && researcher)
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
@@ -111,8 +111,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         composable(route = BottomBarItems.Trials.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
-                // temp solution - TODO update if/else
-                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+                val role = if (researcher)
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
@@ -126,8 +126,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         composable(route = BottomBarItems.Profile.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
-                // temp solution - TODO update if/else
-                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+                val role = if (researcher)
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
@@ -139,8 +139,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.EditProfile.route) {
-            // temp solution - TODO update if/else
-            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
@@ -171,7 +171,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
         composable(route = Route.FurtherInformation.route) {
-            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
