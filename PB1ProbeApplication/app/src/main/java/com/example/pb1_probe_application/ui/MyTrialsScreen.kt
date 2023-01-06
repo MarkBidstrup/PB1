@@ -96,7 +96,8 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                         ) {
                             items(myTrials) {
                                 val list = trialsViewModel.getRegisteredParticipantsUIDList(it.trialID).collectAsState().value
-                                ResearcherTrialPost(it, list.size) {
+                                val potentialCandidates = trialsViewModel.getTotalNumOfPotentialCandidates(it.trialID, it.diagnoses).collectAsState().value
+                                ResearcherTrialPost(it, list.size, potentialCandidates) {
                                     trialsViewModel.setCurrentNavTrialID(it)
                                     navHostController.navigate("ManageTrial") }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
@@ -235,7 +236,7 @@ private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) 
 }
 
 @Composable
-fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTrialOnClick: () -> Unit) {
+fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligible: Int, manageTrialOnClick: () -> Unit) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -264,7 +265,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
                     text = stringResource(R.string.antalTilmeldte) + " "+ numRegisteredParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO - what do we show here?
+                    text = stringResource(R.string.potentielleKandidater) + " "+ numEligible,
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }

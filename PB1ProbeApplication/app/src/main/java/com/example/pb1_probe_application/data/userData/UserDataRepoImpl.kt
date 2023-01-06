@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.data.userData
 
 import com.example.pb1_probe_application.data.auth.utils.await
+import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.UserData
 import com.example.pb1_probe_application.dataClasses.UserPatient
 import com.example.pb1_probe_application.dataClasses.UserResearcher
@@ -36,6 +37,25 @@ class UserDataRepoImpl @Inject constructor(
 
     override suspend fun delete(userID: String) {
         userDataDB().document(userID).delete()
+    }
+
+    // gets the number of trial participants who have at least one of the conditions/ diagnoses
+    override suspend fun getNumUsersWithCondition(diagnoses: List<String>): Int {
+        val eligibleList: MutableList<String> = ArrayList()
+        return if(diagnoses.isNotEmpty() && diagnoses[0] != "") {
+            for(d in diagnoses) {
+                val snapshot = userDataDB()
+                    .whereArrayContains("diagnosis", d)
+                    .get().await()
+                snapshot.forEach { t -> eligibleList.add(t.id) }
+            }
+            val set = eligibleList.toSet() //remove duplicates
+            set.size
+        } else {
+            val snapshot1 = userDataDB().whereEqualTo("role", Role.TRIAL_PARTICIPANT.name).get().await()
+            snapshot1.forEach { t -> eligibleList.add(t.id)}
+            eligibleList.size
+        }
     }
 
     private fun userDataDB(): CollectionReference =

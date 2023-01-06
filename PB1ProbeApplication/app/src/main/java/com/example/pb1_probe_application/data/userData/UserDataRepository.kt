@@ -9,6 +9,9 @@ interface UserDataRepository {
 
     suspend fun addNew(userID: String, data: UserData)
     suspend fun update(userID: String, data: UserData)
+
     suspend fun delete(userID: String)
 
-}
+    suspend fun getNumUsersWithCondition(diagnoses: List<String>): Int
+
+    }

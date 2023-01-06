@@ -3,6 +3,7 @@ package com.example.pb1_probe_application.application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pb1_probe_application.data.trials.TrialRepository
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.Trial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrialsViewModel @Inject constructor(
-    private val repository: TrialRepository
+    private val repository: TrialRepository, private val userRepository: UserDataRepository
 ) : ViewModel(){
     val trials = repository.trials
     private val _trial = MutableStateFlow<Trial?>(null)
@@ -31,6 +32,7 @@ class TrialsViewModel @Inject constructor(
     private val _filteredTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val filteredTrials: StateFlow<List<Trial>> = _filteredTrials.asStateFlow()
     private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
+    private val _eligibleParticipants = HashMap<String, MutableStateFlow<Int>>()
     var currentNavTrial: Trial? = null // for navigation
         private set
     var showFilterResult: Boolean = false // for navigation
@@ -86,11 +88,24 @@ class TrialsViewModel @Inject constructor(
         return _registeredParticipants[trialID]?.asStateFlow() ?: MutableStateFlow<List<String>>(ArrayList()).asStateFlow()
     }
 
+    fun getTotalNumOfPotentialCandidates(trialID: String, diagnoses: List<String>): StateFlow<Int> {
+        if(!_eligibleParticipants.containsKey(trialID)) {
+            _eligibleParticipants[trialID] = MutableStateFlow(0)
+        }
+        viewModelScope.launch {
+            val result = userRepository.getNumUsersWithCondition(diagnoses)
+            _eligibleParticipants[trialID]?.value = result
+        }
+        return _eligibleParticipants[trialID]?.asStateFlow() ?: MutableStateFlow(0).asStateFlow()
+    }
+
+
     fun createNewTrial(trial: Trial) {
         viewModelScope.launch {
             repository.addNew(trial)
         }
         _registeredParticipants[trial.trialID] = MutableStateFlow(ArrayList())
+        _eligibleParticipants[trial.trialID] = MutableStateFlow(0)
     }
 
     fun updateTrial(trial: Trial) {
@@ -104,6 +119,7 @@ class TrialsViewModel @Inject constructor(
             repository.delete(trial.trialID)
         }
         _registeredParticipants.remove(trial.trialID)
+        _eligibleParticipants.remove(trial.trialID)
     }
 
     fun deleteCurrentUserFromAllTrialDBEntries() {
