@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.location.Location
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -103,7 +102,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 when (EditTrialField.trialAttribute) {
                                     trialAttributes.title -> trial.title = userInput
                                     trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                    trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
+                                    trialAttributes.diagnoses -> trial.diagnoses = MakeList(userInput)
                                     trialAttributes.interventions -> trial.interventions = userInput
                                     trialAttributes.startDate -> trial.startDate = userInput
                                     trialAttributes.endDate -> trial.endDate = userInput
@@ -161,7 +160,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
     )
 }
 
-fun makeList(userInput: String): List<String> {
+fun MakeList(userInput: String): List<String> {
     val list: List<String> = userInput.split(",").map { it.trim() }
 
     return list
