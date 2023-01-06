@@ -4,32 +4,32 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.dataClasses.Diagnoses
 import com.example.pb1_probe_application.dataClasses.DropDownType
 import com.example.pb1_probe_application.dataClasses.UserInfo
-import com.example.pb1_probe_application.dataClasses.userInfoAttributes
+import com.example.pb1_probe_application.dataClasses.UserInfoTypes
 
-class Datasource() {
+class Datasource {
 
     // TODO: fix state variables
     fun loadProfilePatientInfo(): List<UserInfo> {
-        return listOf<UserInfo>(
-            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
-            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
-            UserInfo(R.string.koen,userInfoAttributes.gender,""),
-            UserInfo(R.string.alder,userInfoAttributes.age,""),
-            UserInfo(R.string.vaegt,userInfoAttributes.weight,""),
-            UserInfo(R.string.diagnose,userInfoAttributes.diagnosis,""),
-            UserInfo(R.string.email,userInfoAttributes.email,""),
-            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
+        return listOf(
+            UserInfo(R.string.navn,UserInfoTypes.FirstName),
+            UserInfo(R.string.efternavn,UserInfoTypes.LastName),
+            UserInfo(R.string.koen,UserInfoTypes.Gender),
+            UserInfo(R.string.alder,UserInfoTypes.Age),
+            UserInfo(R.string.vaegt,UserInfoTypes.Weight),
+            UserInfo(R.string.diagnose,UserInfoTypes.Diagnosis),
+            UserInfo(R.string.email,UserInfoTypes.Email),
+            UserInfo(R.string.telefon,UserInfoTypes.Phone),
         )
     }
 
     // TODO: fix state variables
     fun loadProfileResearcherInfo(): List<UserInfo> {
-        return listOf<UserInfo>(
-            UserInfo(R.string.navn,userInfoAttributes.firstName,""),
-            UserInfo(R.string.efternavn,userInfoAttributes.lastName,""),
-            UserInfo(R.string.email,userInfoAttributes.email,""),
-            UserInfo(R.string.telefon,userInfoAttributes.tlf,""),
-            UserInfo(R.string.forskningsenhed,userInfoAttributes.institute,""),
+        return listOf(
+            UserInfo(R.string.navn,UserInfoTypes.FirstName),
+            UserInfo(R.string.efternavn,UserInfoTypes.LastName),
+            UserInfo(R.string.email,UserInfoTypes.Email),
+            UserInfo(R.string.telefon,UserInfoTypes.Phone),
+            UserInfo(R.string.forskningsenhed,UserInfoTypes.Department),
         )
     }
 

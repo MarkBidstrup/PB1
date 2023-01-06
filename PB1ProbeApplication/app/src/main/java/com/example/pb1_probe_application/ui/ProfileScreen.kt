@@ -12,30 +12,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.Datasource
-import com.example.pb1_probe_application.dataClasses.Role
-import com.example.pb1_probe_application.dataClasses.UserInfo
+import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @Composable
-fun ProfileScreen(role: Role, navHostController: NavHostController) {
+fun ProfileScreen(role: Role, navHostController: NavHostController, userViewModel: UserViewModel) {
     val currentUser: Role = role
-
-    if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        UserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), navHostController = navHostController)
-    if (currentUser.equals(Role.RESEARCHER))
-        UserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), navHostController = navHostController)
+    if (currentUser == Role.TRIAL_PARTICIPANT)
+        UserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), navHostController = navHostController, userViewModel = userViewModel)
+    if (currentUser == Role.RESEARCHER)
+        UserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), navHostController = navHostController, userViewModel = userViewModel)
 }
 
 @Composable
-fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, navHostController: NavHostController) {
-
+fun UserInfoList(userInfoList: List<UserInfo>, navHostController: NavHostController, userViewModel: UserViewModel) {
 
     Scaffold(
         topBar = {
@@ -66,19 +63,44 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, na
             }
                  },
         content = { padding ->
-                    LazyColumn (modifier = Modifier.padding(padding)) {
-                        items(userInfoList) { UserInfo ->
-                            UserInfoField(UserInfo)
-                            if (!(userInfoList.lastIndexOf(element = UserInfo) == userInfoList.lastIndex)) {
-                                Divider(
-                                    modifier = Modifier.padding(start = 17.dp, top = 10.dp, bottom = 10.dp, end = 17.dp),
-                                    thickness = 1.dp,
-                                    color = androidx.compose.ui.graphics.Color.LightGray
-                                )
-                            }
+            val userData = userViewModel.currentUserData
+            LazyColumn (modifier = Modifier.padding(padding)) {
+                items(userInfoList) { UserInfo ->
+                    var content = ""
+                    if (userData is UserPatient) {
+                        when (UserInfo.userInfoType) {
+                            UserInfoTypes.FirstName -> content = userData.name
+                            UserInfoTypes.LastName -> content = userData.lastName
+                            UserInfoTypes.Gender -> content = userData.gender
+                            UserInfoTypes.Age -> content = userData.age
+                            UserInfoTypes.Weight -> content = userData.weight + " kg"
+                            UserInfoTypes.Diagnosis -> content = userData.diagnosis
+                            UserInfoTypes.Email -> content = userData.email
+                            UserInfoTypes.Phone -> content = userData.phone
+                            else -> {}
                         }
                     }
-                  },
+                    if (userData is UserResearcher) {
+                        when (UserInfo.userInfoType) {
+                            UserInfoTypes.FirstName -> content = userData.name
+                            UserInfoTypes.LastName -> content = userData.lastName
+                            UserInfoTypes.Email -> content = userData.email
+                            UserInfoTypes.Phone -> content = userData.phone
+                            UserInfoTypes.Department -> content = userData.department
+                            else -> {}
+                        }
+                    }
+                    UserInfoField(UserInfo, content)
+                    if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex) {
+                        Divider(
+                            modifier = Modifier.padding(start = 17.dp, top = 10.dp, bottom = 10.dp, end = 17.dp),
+                            thickness = 1.dp,
+                            color = androidx.compose.ui.graphics.Color.LightGray
+                        )
+                    }
+                }
+            }
+                },
         bottomBar = {
             BottomBar(navController = navHostController)
         }
@@ -86,7 +108,7 @@ fun UserInfoList(userInfoList: List<UserInfo>, modifier: Modifier = Modifier, na
 }
 
 @Composable
-fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
+fun UserInfoField(userInfo: UserInfo, content: String) {
     Column {
         Text(
             text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
@@ -95,17 +117,10 @@ fun UserInfoField(userInfo: UserInfo, modifier: Modifier = Modifier) {
             color = TextColorGreen
         )
         Text(
-            text = stringResource(R.string.placeholder), // TODO: insert variable text here
+            text = content,
             modifier = Modifier.padding(start = 17.dp),
             style = MaterialTheme.typography.body1,
         )
     }
-}
-
-
-@Preview
-@Composable
-private fun ProfileUserScreenPreview() {
-//    UserInfoList(userInfoList = Datasource().loadProfilePatientInfo())
 }
 

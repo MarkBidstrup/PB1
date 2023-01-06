@@ -15,9 +15,7 @@ import androidx.navigation.compose.*
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
-
 import com.example.pb1_probe_application.dataClasses.Role
-import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
@@ -133,7 +131,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
-                ProfileScreen(role = role, navHostController = navController)
+                ProfileScreen(role = role, navHostController = navController, userViewModel)
             }
             else
                 NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
@@ -150,7 +148,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 role = role,
                 onClick = { navController.popBackStack() },
                 deleteNav = { navController.navigate("DeleteProfileScreen") },
-                trialsViewModel = trialsViewModel,
                 authViewModel = authViewModel,
                 userViewModel = userViewModel
             )
@@ -268,7 +265,7 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
 fun NavGraphBuilder.notificationNav(navController: NavHostController) {
     navigation(route = Graph.NOTIFICATION, startDestination = BottomBarItems.Profile.route) {
         composable(route = Route.Notification.route) {
-            NotificationsScreen() {
+            NotificationsScreen {
                 navController.popBackStack()
             }
         }

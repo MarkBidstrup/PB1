@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
-import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.Datasource
 import com.example.pb1_probe_application.dataClasses.*
@@ -36,17 +34,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 @Composable
-fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
+fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
 
     if (role == Role.TRIAL_PARTICIPANT)
-        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, authViewModel = authViewModel, userViewModel = userViewModel)
     if (role == Role.RESEARCHER)
-        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, trialsViewModel = trialsViewModel, authViewModel = authViewModel, userViewModel = userViewModel)
+        EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, authViewModel = authViewModel, userViewModel = userViewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier,onClick: () -> Unit, deleteNav :() -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
+fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, onClick: () -> Unit, deleteNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
@@ -55,7 +53,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1, ) },
+                title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1) },
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
             Row(modifier = Modifier.fillMaxWidth(),
@@ -97,29 +95,29 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                 },
         content = {
             LazyColumn {
-                itemsIndexed(userInfoList) { i, UserInfo ->
+                items(userInfoList) { UserInfo ->
                     var input by remember { mutableStateOf("") }
                     if (data is UserPatient) {
-                        when (UserInfo.profileInfo) {
-                            userInfoAttributes.firstName -> input = data.name
-                            userInfoAttributes.lastName -> input = data.lastName
-                            userInfoAttributes.email -> input = data.email
-                            userInfoAttributes.tlf -> input = data.phone
-                            userInfoAttributes.age -> input = data.age
-                            userInfoAttributes.gender -> input = data.gender
-                            userInfoAttributes.weight -> input = data.weight
-                            userInfoAttributes.diagnosis -> input = data.diagnosis
-                            else -> {input = ""}
+                        input = when (UserInfo.userInfoType) {
+                            UserInfoTypes.FirstName -> data.name
+                            UserInfoTypes.LastName -> data.lastName
+                            UserInfoTypes.Email -> data.email
+                            UserInfoTypes.Phone -> data.phone
+                            UserInfoTypes.Age -> data.age
+                            UserInfoTypes.Gender -> data.gender
+                            UserInfoTypes.Weight -> data.weight
+                            UserInfoTypes.Diagnosis -> data.diagnosis
+                            else -> { "" }
                         }
                     }
                     if (data is UserResearcher) {
-                        when (UserInfo.profileInfo) {
-                            userInfoAttributes.firstName -> input = data.name
-                            userInfoAttributes.lastName -> input = data.lastName
-                            userInfoAttributes.email -> input = data.email
-                            userInfoAttributes.tlf -> input = data.phone
-                            userInfoAttributes.institute -> input = data.department
-                            else -> {input = ""}
+                        input = when (UserInfo.userInfoType) {
+                            UserInfoTypes.FirstName -> data.name
+                            UserInfoTypes.LastName -> data.lastName
+                            UserInfoTypes.Email -> data.email
+                            UserInfoTypes.Phone -> data.phone
+                            UserInfoTypes.Department -> data.department
+                            else -> { "" }
                         }
                     }
                     var userInput by remember { mutableStateOf(input) }
@@ -139,25 +137,25 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, m
                     if (userInput != input) {
                         edited = true
                         if (data is UserPatient) {
-                            when (UserInfo.profileInfo) {
-                                userInfoAttributes.firstName -> data.name = userInput
-                                userInfoAttributes.lastName -> data.lastName = userInput
-                                userInfoAttributes.gender -> data.gender = userInput
-                                userInfoAttributes.age -> data.age = userInput
-                                userInfoAttributes.weight -> data.weight = userInput
-                                userInfoAttributes.diagnosis -> data.diagnosis = userInput
-                                userInfoAttributes.email -> data.email = userInput
-                                userInfoAttributes.tlf -> data.phone = userInput
+                            when (UserInfo.userInfoType) {
+                                UserInfoTypes.FirstName -> data.name = userInput
+                                UserInfoTypes.LastName -> data.lastName = userInput
+                                UserInfoTypes.Gender -> data.gender = userInput
+                                UserInfoTypes.Age -> data.age = userInput
+                                UserInfoTypes.Weight -> data.weight = userInput
+                                UserInfoTypes.Diagnosis -> data.diagnosis = userInput
+                                UserInfoTypes.Email -> data.email = userInput
+                                UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
                         }
                         if (data is UserResearcher) {
-                            when (UserInfo.profileInfo) {
-                                userInfoAttributes.firstName -> data.name = userInput
-                                userInfoAttributes.lastName -> data.lastName = userInput
-                                userInfoAttributes.institute -> data.department = userInput
-                                userInfoAttributes.email -> data.email = userInput
-                                userInfoAttributes.tlf -> data.phone = userInput
+                            when (UserInfo.userInfoType) {
+                                UserInfoTypes.FirstName -> data.name = userInput
+                                UserInfoTypes.LastName -> data.lastName = userInput
+                                UserInfoTypes.Department -> data.department = userInput
+                                UserInfoTypes.Email -> data.email = userInput
+                                UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
                         }
@@ -199,8 +197,7 @@ fun EditUserInfoField(
     inputField: String,
     onChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions,
-    modifier: Modifier = Modifier) {
+    keyboardActions: KeyboardActions) {
 
     Column {
         Text(
