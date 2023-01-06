@@ -33,12 +33,22 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun forgotPassword(email: String): Resource<Boolean> {
+        return try {
+            firebaseAuth.sendPasswordResetEmail(email).await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     override fun logout() {
         firebaseAuth.signOut()
     }
 
     override fun delete() {
-        val user = firebaseAuth.currentUser;
+        val user = firebaseAuth.currentUser
 
         if (user != null) {
             try {

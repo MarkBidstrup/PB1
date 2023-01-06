@@ -231,7 +231,11 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
-
+        composable(route = Route.ForgottenPassword.route) {
+            ForgottenPasswordScreen(navHostController = navController, authViewModel){
+            navController.popBackStack()
+        }
+        }
 
         composable(route = Route.Applied.route) {
             AppliedScreen(navHostController = navController)

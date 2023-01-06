@@ -3,6 +3,7 @@ package com.example.pb1_probe_application.ui
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -15,6 +16,7 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -58,13 +60,24 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
                 focusManager = LocalFocusManager.current
             )
             Spacer(modifier = Modifier.height(20.dp))
-            textField(
-                label = stringResource(R.string.password),
-                text = password,
-                hiddenText = true,
-                onValueChange = { password = it },
-                focusManager = LocalFocusManager.current
-            )
+            Column {
+                textField(
+                    label = stringResource(R.string.password),
+                    text = password,
+                    hiddenText = true,
+                    onValueChange = { password = it },
+                    focusManager = LocalFocusManager.current
+                )
+                Text(text = stringResource(R.string.glemtKodeord), fontStyle = FontStyle.Italic,
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .clickable {
+                            if (authViewModel != null) {
+                                authViewModel.forgottenEmail = email
+                            }
+                            navHostController?.navigate("ForgottenPassword")
+                        })
+            }
 
             Spacer(modifier = Modifier.height(50.dp))
             LoginButton(

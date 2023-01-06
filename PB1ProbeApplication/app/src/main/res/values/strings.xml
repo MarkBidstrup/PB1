@@ -96,6 +96,9 @@
     <!--Login Strings-->
     <string name="logInd">LOG IND</string>
     <string name="logInd2">Log ind</string>
+    <string name="glemtKodeord">Glemt adgangskode</string>
+    <string name="nulstilKodeord">Nulstil adgangskode</string>
+    <string name="tjekEmail">Email sendt. Tjek din email (evt. i spam-folderen) for at nulstille din kode</string>
     <string name="notLoggedIn">Log ind for at se denne skærm</string>
     <string name="registrer">REGISTRER</string>
     <string name="createProfile">Opret profil</string>
