@@ -148,9 +148,14 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                             if(trial.title == "")
                                 Toast.makeText(context, R.string.indtastTitel, Toast.LENGTH_LONG).show()
                             else {
-                                if (edited)
+                                if (edited) {
                                     trialsViewModel.updateTrial(trial)
-                                navMyTrials()
+                                    Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()
+                                    navMyTrials()
+                                }
+                                else {
+                                    Toast.makeText(context, R.string.noChangesMade, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }, R.string.bekræft, true)
                     }

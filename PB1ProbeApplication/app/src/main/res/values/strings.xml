@@ -169,6 +169,8 @@
     <string name="visit">besøg</string>
     <string name="SLETPROFILCAPS">SLET PROFIL</string>
     <string name="ErDuSikkerSlet">Er du sikker på at du vil slette din profil?</string>
+    <string name="changesSaved">Dine ændringer er blevet gemt</string>
+    <string name="noChangesMade">Der er ikke lavet nogen ændringer</string>
 
 
 </resources>
