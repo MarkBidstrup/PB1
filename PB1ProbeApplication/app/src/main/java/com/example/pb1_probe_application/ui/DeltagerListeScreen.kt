@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.*
@@ -30,10 +31,13 @@ import com.google.firebase.firestore.auth.User
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostController: NavController) {
+fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel,authViewModel: AuthViewModel?) {
     val trial = Trial()
+    val uid = authViewModel!!.currentUser!!.uid
+    userViewModel.setCurrentUser(uid)
+
 //    val currentTrialID = trialsViewModel.getTrial(trialID = String())
-    val registeredParticipants = trialsViewModel.getRegisteredParticipantsUIDList(trial.trialID).collectAsState().value
+    val registeredParticipants = trialsViewModel.getRegisteredParticipantsUIDList(uid).collectAsState().value
     Scaffold(
         topBar = {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
@@ -63,7 +67,7 @@ fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostCon
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
              items(registeredParticipants ) {
-//                         CardItem()
+//                         CardItem(userData = it)
                  Spacer(modifier = Modifier.height(15.dp))
                      }
                  }

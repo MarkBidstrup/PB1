@@ -216,7 +216,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 { navController.navigate("DeltagerListe") })
         }
         composable(route = Route.DeltagerListe.route) {
-            DeltagerListeScreen( id = String(), trialsViewModel, navHostController = navController)
+            DeltagerListeScreen( id = String(), trialsViewModel, navHostController = navController,userViewModel, authViewModel)
         }
 
 
