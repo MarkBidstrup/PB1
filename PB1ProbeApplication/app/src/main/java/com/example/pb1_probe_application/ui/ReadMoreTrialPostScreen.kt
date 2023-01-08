@@ -11,14 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.dataClasses.Trial
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ReadMoreTrialPostScreen(
     trial: Trial,
-    onClickNav: () -> Unit,
+    navHostController: NavHostController?,
+    onClickNav: () -> Unit
+
 ) {
-    val data = trial.deltagerInformation
+    var data = trial.deltagerInformation
+    data = data.split("\\n").joinToString("\n")
     val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
@@ -27,15 +31,16 @@ fun ReadMoreTrialPostScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                IconButton(
-                    onClick = onClickNav
-                ) {
-                    Icon(
-                        Icons.Default.ExitToApp,
-                        contentDescription = "Exit"
-                    )
+                    IconButton(
+                        onClick = onClickNav
+
+                    ) {
+                        Icon(
+                            Icons.Default.ExitToApp,
+                            contentDescription = "Exit"
+                        )
+                    }
                 }
-            }
         },
         content = {
             Column(

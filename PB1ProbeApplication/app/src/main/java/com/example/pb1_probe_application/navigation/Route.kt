@@ -1,5 +1,5 @@
 package com.example.pb1_probe_application.navigation
-// routes ( bottombar items routes not included )
+// routes ( bottom bar items routes not included )
 sealed class Route(val route: String) {
 
     object Setting: Route("Setting")
@@ -18,5 +18,6 @@ sealed class Route(val route: String) {
     object ReadMoreTrialPost: Route("ReadMoreTrialPost")
     object DeleteProfileScreen: Route("DeleteProfileScreen")
     object ForgottenPassword: Route("ForgottenPassword")
+    object DeltagerListe: Route("DeltagerListe")
 
 }

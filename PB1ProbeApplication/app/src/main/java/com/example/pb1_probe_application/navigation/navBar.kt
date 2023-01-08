@@ -20,7 +20,7 @@ import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
-
+// code from https://developer.android.com/jetpack/compose/navigation#kts
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
@@ -211,10 +211,14 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.ManageTrial.route) {
-            ManageTrialScreen(trialsViewModel, { navController.popBackStack() }) {
-                navController.navigate(Route.EditTrial.route)
-            }
+            ManageTrialScreen( trialsViewModel,
+                { navController.popBackStack() },{ navController.navigate(Route.EditTrial.route) },
+                { navController.navigate("DeltagerListe") })
         }
+        composable(route = Route.DeltagerListe.route) {
+            DeltagerListeScreen( id = String(), trialsViewModel, navHostController = navController)
+        }
+
 
         composable(route = Route.DeltagerInfo.route) {
 
@@ -226,12 +230,12 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
         //TODO fix the navigation Fathi
         composable(route = Route.ReadMoreTrialPost.route) {
-            ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!) {
+            ReadMoreTrialPostScreen( trialsViewModel.currentNavTrial!!,navHostController = navController) {
                 navController.popBackStack()
             }
         }
 
-        composable(route = Route.ForgottenPassword.route) {
+            composable(route = Route.ForgottenPassword.route) {
             ForgottenPasswordScreen(navHostController = navController, authViewModel){
             navController.popBackStack()
         }

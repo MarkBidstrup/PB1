@@ -172,5 +172,11 @@
     <string name="changesSaved">Dine ændringer er blevet gemt</string>
     <string name="noChangesMade">Der er ikke lavet nogen ændringer</string>
 
+    <!--Participants list Strings -->
+    <string name="Navn">Navn:</string>
+    <string name="EfterNavn">EfterNavn:</string>
+    <string name="Email">Email:</string>
+    <string name="Telefonnummer">Telefonnummer:</string>
+
 
 </resources>
