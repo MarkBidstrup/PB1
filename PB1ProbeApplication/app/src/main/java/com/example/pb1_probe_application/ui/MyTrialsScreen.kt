@@ -160,13 +160,21 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                         else
                                             { {trialsViewModel.unsubscribeFromTrial(it) } }
                                     if(pagerState.currentPage == 0) // mytrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {})
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
+                                            readMoreOnClick = {
+                                                trialsViewModel.setCurrentNavTrialID(it)
+                                                navHostController?.navigate("ReadMoreTrialPost")
+                                            })
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick,
+                                            applyOnClick = {
                                             trialsViewModel.setCurrentNavTrialID(it)
                                             navHostController.navigate("DeltagerInfo") }
-                                        )
+                                        , readMoreOnClick = {
+                                                trialsViewModel.setCurrentNavTrialID(it)
+                                                navHostController?.navigate("ReadMoreTrialPost")
+                                            })
                                     }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))

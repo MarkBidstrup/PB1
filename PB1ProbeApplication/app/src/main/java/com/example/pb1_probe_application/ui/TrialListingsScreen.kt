@@ -191,7 +191,11 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                                 navHostController?.navigate("NotLoggedIn")
                             }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
-                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController)
+                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController,
+                         readMoreOnClick = {
+                             trialsViewModel.setCurrentNavTrialID(it)
+                             navHostController?.navigate("ReadMoreTrialPost")
+                         })
                         if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -225,7 +229,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
 @Composable
 fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,navHostController: NavHostController?,
-              iconOnClick: () -> Unit, applyOnClick: () -> Unit) {
+              iconOnClick: () -> Unit, applyOnClick: () -> Unit, readMoreOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -270,9 +274,7 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     color = ReadMoreColor,
                     modifier = modifier
                         .padding(start = 8.dp, top = 16.dp)
-                        .clickable(onClick = {
-//                            navHostController?.navigate(route = Route.ReadMoreTrialPost.route)
-                        }),)
+                        .clickable(onClick = readMoreOnClick),)
                 Spacer(Modifier.weight(1f))
                 TrialApplyButton(buttonEnabled, onClick = applyOnClick)
             }
