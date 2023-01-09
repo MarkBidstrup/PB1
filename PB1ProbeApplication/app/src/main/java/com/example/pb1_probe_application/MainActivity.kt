@@ -43,11 +43,11 @@ class MainActivity : ComponentActivity() {
                 ) {
 
 //                    ManageTrialScreen()
-                    DeltagerListeScreen(id = String(),trialsViewModel = trialsViewModel,navHostController = rememberNavController(
-                    ),userViewModel,authViewModel)
+//                    DeltagerListeScreen(id = String(),trialsViewModel = trialsViewModel,navHostController = rememberNavController(
+//                    ),userViewModel,authViewModel)
 
 //                    ReadMoreTrialPostScreen( trialsViewModel.currentNavTrial!!, onClickNav = null)
-//                      MainHome(authViewModel, trialsViewModel, userViewModel)
+                      MainHome(authViewModel, trialsViewModel, userViewModel)
 //                    NotificationsScreen()
 //                    ManageTrialScreen()
 //                    ManageTrialScreen(trialsViewModel = trialsViewModel, navBack = { /*TODO*/ }, onClickNavToEditTrial = {

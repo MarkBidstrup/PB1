@@ -3,6 +3,7 @@ package com.example.pb1_probe_application.navigation
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
@@ -219,10 +220,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.ManageTrial.route) {
-            ManageTrialScreen(
-                trialsViewModel,
-                { navController.popBackStack() },
-                { navController.navigate(Route.EditTrial.route) }) {
+            ManageTrialScreen(trialsViewModel, { navController.popBackStack() },
+                { navController.navigate(Route.EditTrial.route) },
+                { navController.navigate(Route.DeltagerListe.route) }) {
                 navController.navigate(Route.DeleteTrialScreen.route)
             }
         }
@@ -237,15 +237,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
         //TODO fix the navigation Fathi
         composable(route = Route.ReadMoreTrialPost.route) {
-            ReadMoreTrialPostScreen( trialsViewModel.currentNavTrial!!,navHostController = navController) {
+            ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!, navController) {
                 navController.popBackStack()
             }
-        }
-
-            composable(route = Route.ForgottenPassword.route) {
-            ForgottenPasswordScreen(navHostController = navController, authViewModel){
-            navController.popBackStack()
-        }
         }
 
 
