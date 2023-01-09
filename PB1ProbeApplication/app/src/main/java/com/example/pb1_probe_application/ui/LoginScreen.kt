@@ -38,6 +38,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 
     var email by remember { mutableStateOf("test@test.com") }
     var password by remember { mutableStateOf("123456") }
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
 
@@ -92,7 +93,10 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
                 when (it) {
                     is Resource.Failure -> {
 //                    val context = LocalContext.current
-                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                        if (toastErrorShow) {
+                            Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                            toastErrorShow = false
+                        }
                     }
                     Resource.Loading -> {
                         CircularProgressIndicator()

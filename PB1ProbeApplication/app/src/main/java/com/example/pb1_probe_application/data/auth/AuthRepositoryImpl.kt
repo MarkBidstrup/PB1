@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
-// code from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
+// some of the code from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
@@ -57,6 +57,16 @@ class AuthRepositoryImpl @Inject constructor(
                 e.printStackTrace()
                 Resource.Failure(e)
             }
+        }
+    }
+
+    override suspend fun updateEmail(email: String): Resource<Boolean> {
+        return try {
+            currentUser?.updateEmail(email)?.await()
+            Resource.Success(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
         }
     }
 }
