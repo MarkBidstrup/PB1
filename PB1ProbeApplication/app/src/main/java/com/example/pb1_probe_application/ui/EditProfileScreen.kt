@@ -33,6 +33,9 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.pb1_probe_application.data.auth.Resource
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
@@ -43,7 +46,7 @@ fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, au
         EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, authViewModel = authViewModel, userViewModel = userViewModel)
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, onClick: () -> Unit, deleteNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
     val uid = authViewModel!!.currentUser!!.uid
@@ -51,6 +54,8 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     val data = remember { userViewModel.currentUserData }
     var edited by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val updateEmailFlow = authViewModel.updateEmailFlow.collectAsState()
+    var emailEdited: Boolean = false
 
     Scaffold(
         topBar = {
@@ -69,6 +74,9 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             userViewModel.saveUserData(uid,data)
                             Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()
                             edited = false
+                            onClick()
+                        } else if (emailEdited) {
+                            authViewModel.updateEmail(data)
                             onClick()
                         } else {
                             Toast.makeText(context, R.string.noChangesMade, Toast.LENGTH_LONG).show()
@@ -134,7 +142,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             onDone = { focusManager.clearFocus() }
                         )
                     )
-                    if (userInput != input) {
+                    if (userInput != input && !(UserInfo.userInfoType == UserInfoTypes.Email)) {
                         edited = true
                         if (data is UserPatient) {
                             when (UserInfo.userInfoType) {
@@ -144,7 +152,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 UserInfoTypes.Age -> data.age = userInput
                                 UserInfoTypes.Weight -> data.weight = userInput
                                 UserInfoTypes.Diagnosis -> data.diagnosis = userInput
-                                UserInfoTypes.Email -> data.email = userInput
                                 UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
@@ -154,8 +161,28 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 UserInfoTypes.FirstName -> data.name = userInput
                                 UserInfoTypes.LastName -> data.lastName = userInput
                                 UserInfoTypes.Department -> data.department = userInput
-                                UserInfoTypes.Email -> data.email = userInput
                                 UserInfoTypes.Phone -> data.phone = userInput
+                                else -> {}
+                            }
+                        }
+                    }
+                    if (userInput != input && UserInfo.userInfoType == UserInfoTypes.Email) {
+                        emailEdited = true
+                        data.email = userInput
+                        updateEmailFlow.value.let {
+                            when (it) {
+                                is Resource.Failure -> {
+                                    Toast.makeText(context, it.exception.message,Toast.LENGTH_SHORT).show()
+                                }
+                                Resource.Loading -> {
+                                    CircularProgressIndicator()
+                                }
+                                is Resource.Success -> {
+                                    Toast.makeText(context, stringResource(R.string.ændretEmail),Toast.LENGTH_LONG).show()
+                                    LaunchedEffect(Unit) {
+                                        userViewModel.saveUserData(uid,data)
+                                    }
+                                }
                                 else -> {}
                             }
                         }
@@ -179,7 +206,9 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
                                     authViewModel.resetPassword(data.email)
-                                    Toast.makeText(context, R.string.tjekEmail, Toast.LENGTH_LONG).show()
+                                    Toast
+                                        .makeText(context, R.string.tjekEmail, Toast.LENGTH_LONG)
+                                        .show()
                                 }
                         )
                         Divider(

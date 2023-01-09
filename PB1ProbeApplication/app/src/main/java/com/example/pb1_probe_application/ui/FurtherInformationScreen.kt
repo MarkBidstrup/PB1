@@ -102,6 +102,7 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
     )
 
 }
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun FurtherInformationField(
     userInfo: UserInfo,

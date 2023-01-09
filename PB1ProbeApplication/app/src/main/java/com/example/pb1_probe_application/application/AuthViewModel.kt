@@ -23,6 +23,8 @@ class AuthViewModel @Inject constructor(
     val signupFlow: StateFlow<Resource<FirebaseUser>?> = _signupFlow
     private val _resetPasswordFlow = MutableStateFlow<Resource<Boolean>?>(null)
     val resetPasswordFlow: StateFlow<Resource<Boolean>?> = _resetPasswordFlow
+    private val _updateEmailFlow = MutableStateFlow<Resource<Boolean>?>(null)
+    val updateEmailFlow: StateFlow<Resource<Boolean>?> = _updateEmailFlow
     val currentUser: FirebaseUser?
         get() = repository.currentUser
     var forgottenEmail: String = "" // for navigation
@@ -61,5 +63,11 @@ class AuthViewModel @Inject constructor(
         repository.delete()
         _loginFlow.value = null
         _signupFlow.value = null
+    }
+
+    fun updateEmail(email: String) = viewModelScope.launch {
+        _updateEmailFlow.value = Resource.Loading
+        val result = repository.updateEmail(email)
+        _updateEmailFlow.value = result
     }
 }

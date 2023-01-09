@@ -180,6 +180,7 @@
     <string name="ErDuSikkerSletForsøg">Er du sikker på at du vil slette dette studie?</string>
     <string name="SletStudieCAPS">SLET STUDIE</string>
     <string name="SletForsøgsStudie">Slet studie</string>
+    <string name="ændretEmail">Email ændret</string>
 
 
 </resources>
