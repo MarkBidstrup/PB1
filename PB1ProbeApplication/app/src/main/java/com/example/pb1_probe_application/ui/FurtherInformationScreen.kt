@@ -30,6 +30,7 @@ import com.example.pb1_probe_application.dataClasses.UserPatient
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 
 @Composable
 fun FurtherInformationScreen(role: Role, onClick: () -> Unit) {
@@ -73,13 +74,14 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
                             onDone = { focusManager.clearFocus() }
                         )
                     )
-                    if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex) {
+                    if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex
+                        && !(UserInfo.StringResourceHeaderId == R.string.email)) {
                         Divider(
                             modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
                             thickness = 1.dp,
                             color = Color.LightGray
                         )
-                    } else {
+                    } else if (!(UserInfo.StringResourceHeaderId == R.string.email)){
                         Spacer(modifier = Modifier.height(20.dp))
                         Column (
                             modifier = modifier.fillMaxSize(),
@@ -112,6 +114,7 @@ fun FurtherInformationField(
 ) {
 
     Column {
+        if (!(LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.email)))
         Text(
             text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
             modifier = Modifier.padding(start = 17.dp),
@@ -137,6 +140,8 @@ fun FurtherInformationField(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 keyboardActions = keyboardActions
             )
+        } else if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.email)) {
+            // dont show email here
         } else {
             OutlinedTextField(
                 value = inputField,
