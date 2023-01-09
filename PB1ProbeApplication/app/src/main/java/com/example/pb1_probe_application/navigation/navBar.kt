@@ -3,7 +3,6 @@ package com.example.pb1_probe_application.navigation
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
@@ -25,7 +24,6 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
-//    authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 
 }
@@ -230,28 +228,25 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.DeltagerInfo.route) {
-
             if(trialsViewModel.currentNavTrial != null) {
                 DeltagerInfo(trialsViewModel.currentNavTrial!!, trialsViewModel, { navController.popBackStack() }) {
                     navController.navigate(Route.Applied.route)
                 }
             }
         }
-        //TODO fix the navigation Fathi
+
         composable(route = Route.ReadMoreTrialPost.route) {
             ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!, navController) {
                 navController.popBackStack()
             }
         }
 
-
-
         composable(route = Route.Applied.route) {
             AppliedScreen(navHostController = navController)
         }
 
         composable(route = Route.ForgottenPassword.route) {
-            ForgottenPasswordScreen(navHostController = navController, authViewModel){
+            ForgottenPasswordScreen(authViewModel){
                 navController.popBackStack()
             }
         }

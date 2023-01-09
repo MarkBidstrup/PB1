@@ -85,7 +85,9 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it}, focusManager = LocalFocusManager.current)
 
             Spacer(modifier = Modifier.height(50.dp))
-            LoginButton(onClick = { signup(authViewModel, userViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
+            LoginButton(onClick = {
+                toastErrorShow = true
+                signup(authViewModel, userViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
                 text = R.string.registrer, filled = true)
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -105,7 +107,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                         Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
                         LaunchedEffect(Unit) {
                             val role = if (participantChecked) Role.TRIAL_PARTICIPANT else Role.RESEARCHER
-                            val uid = authViewModel!!.currentUser!!.uid
+                            val uid = authViewModel.currentUser!!.uid
                             userViewModel.createUser(uid,email, role)
                             userViewModel.setCurrentUser(uid)
                             navHostController?.navigate("FurtherInformation")

@@ -82,7 +82,9 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
 
             Spacer(modifier = Modifier.height(50.dp))
             LoginButton(
-                onClick = { authViewModel?.login(email, password) },
+                onClick = {
+                    toastErrorShow = true
+                    authViewModel?.login(email, password) },
                 text = R.string.logInd,
                 filled = true
             )

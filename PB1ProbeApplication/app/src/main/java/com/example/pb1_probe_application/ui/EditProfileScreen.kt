@@ -34,8 +34,6 @@ import com.example.pb1_probe_application.ui.theme.Typography
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.pb1_probe_application.data.auth.Resource
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
@@ -56,7 +54,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     var edited by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val updateEmailFlow = authViewModel.updateEmailFlow.collectAsState()
-    var emailEdited: Boolean = false
+    var emailEdited = false
     var toastErrorShow by remember { mutableStateOf(true) }
 
     Scaffold(
@@ -72,6 +70,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
             ) {
                 IconButton(
                     onClick = {
+                        toastErrorShow = true
                         if (edited && !emailEdited) {
                             userViewModel.saveUserData(uid,data)
                             Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()

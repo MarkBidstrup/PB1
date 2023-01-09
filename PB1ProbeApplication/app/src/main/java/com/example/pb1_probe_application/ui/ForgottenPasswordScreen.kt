@@ -19,12 +19,14 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ForgottenPasswordScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, navigateBack: () -> Unit) {
+fun ForgottenPasswordScreen(authViewModel: AuthViewModel?, navigateBack: () -> Unit) {
 
     // changes for login
     val resetFlow = authViewModel?.resetPasswordFlow?.collectAsState()
 
     var email by remember { mutableStateOf(authViewModel?.forgottenEmail) }
+
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
 
@@ -49,7 +51,9 @@ fun ForgottenPasswordScreen(navHostController: NavHostController?, authViewModel
 
                 Spacer(modifier = Modifier.height(50.dp))
                 LoginButton(
-                    onClick = { authViewModel?.resetPassword(email!!) },
+                    onClick = {
+                        toastErrorShow = true
+                        authViewModel?.resetPassword(email!!) },
                     text = R.string.nulstilKodeord,
                     filled = true
                 )
@@ -58,7 +62,10 @@ fun ForgottenPasswordScreen(navHostController: NavHostController?, authViewModel
                 resetFlow?.value?.let {
                     when (it) {
                         is Resource.Failure -> {
-                            Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                            if (toastErrorShow) {
+                                Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                                toastErrorShow = false
+                            }
                         }
                         Resource.Loading -> {
                             CircularProgressIndicator()
