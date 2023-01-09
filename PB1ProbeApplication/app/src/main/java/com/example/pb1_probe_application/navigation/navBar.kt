@@ -25,9 +25,11 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
-    authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
+//    authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
+
 }
+
 
 @Composable
 fun BottomBar(navController: NavHostController){

@@ -20,6 +20,7 @@ class UserViewModel @Inject constructor(
     private val repository: UserDataRepository,
 
 ) : ViewModel() {
+
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
     lateinit var currentUserID: String
@@ -42,7 +43,6 @@ class UserViewModel @Inject constructor(
     fun getViewModelUserData(userID: String) = viewModelScope.launch {
         _userDataFlow.value = repository.getData(userID)
     }
-
     fun deleteUser(userID: String) = viewModelScope.launch {
         repository.delete(userID)
     }
@@ -57,4 +57,10 @@ class UserViewModel @Inject constructor(
         currentUserData = repository.getData(userID)
         _userDataFlow.value = repository.getData(currentUserID)
     }
+//    public override fun onCleared() {
+//        super.onCleared()
+//    }
+
+
+
 }
