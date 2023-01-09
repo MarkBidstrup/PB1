@@ -57,6 +57,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     val context = LocalContext.current
     val updateEmailFlow = authViewModel.updateEmailFlow.collectAsState()
     var emailEdited: Boolean = false
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -81,7 +82,10 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             updateEmailFlow.value.let {
                                 when (it) {
                                     is Resource.Failure -> {
-                                        Toast.makeText(context, it.exception.message,Toast.LENGTH_SHORT).show()
+                                        if (toastErrorShow) {
+                                            Toast.makeText(context, it.exception.message,Toast.LENGTH_SHORT).show()
+                                            toastErrorShow = false
+                                        }
                                     }
                                     is Resource.Success -> {
                                         if(edited) // email and other info updated
