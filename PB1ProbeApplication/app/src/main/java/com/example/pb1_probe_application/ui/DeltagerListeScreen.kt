@@ -25,19 +25,22 @@ import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.StrokeColor
 import com.google.firebase.firestore.auth.User
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel,authViewModel: AuthViewModel?) {
-    val trial = Trial()
-    val uid = authViewModel!!.currentUser!!.uid
-    userViewModel.setCurrentUser(uid)
+fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel) {
+    val currentTrialID = trialsViewModel.currentNavTrial?.trialID
+    val registeredParticipants =
+        currentTrialID?.let { trialsViewModel.getRegisteredParticipantsUIDList(it).collectAsState().value }
+    val userDataList = registeredParticipants?.map {
+        userViewModel.getViewModelUserData(it)
+    }
 
-//    val currentTrialID = trialsViewModel.getTrial(trialID = String())
-    val registeredParticipants = trialsViewModel.getRegisteredParticipantsUIDList(uid).collectAsState().value
+
     Scaffold(
         topBar = {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
@@ -66,8 +69,8 @@ fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostCon
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-             items(registeredParticipants ) {
-//                         CardItem(userData = it)
+             items(userDataList) {
+                         CardItem(userData = it)
                  Spacer(modifier = Modifier.height(15.dp))
                      }
                  }
@@ -78,9 +81,11 @@ fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostCon
 
 @Composable
 fun ContactInfo(
-    userData: UserData,
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier
 ) {
+//    ("BJUd41JgLShgB5NvBTr1nNHkipk1")
+    val user = userViewModel.userDataFlow.collectAsState().value
     Column(
         modifier = modifier.padding(
             start = 16.dp,
@@ -90,23 +95,23 @@ fun ContactInfo(
         )
     ) {
         Text(
-            text = stringResource(R.string.Navn)+" "+ userData.name,
+            text = stringResource(R.string.Navn)+" "+ user?.name,
             style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
-            text = stringResource(R.string.EfterNavn)+" "+ userData.lastName,
+            text = stringResource(R.string.EfterNavn)+" "+ user?.lastName,
             style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp)
         )
 
         Text(
-                text = stringResource(R.string.Email)+" "+ userData.email,
+                text = stringResource(R.string.Email)+" "+ user?.email,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
-                text = stringResource(R.string.Telefonnummer)+" "+ userData.phone,
+                text = stringResource(R.string.Telefonnummer)+" "+ user?.phone,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
         )
