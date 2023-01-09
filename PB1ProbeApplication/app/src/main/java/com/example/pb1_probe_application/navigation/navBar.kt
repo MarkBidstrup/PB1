@@ -248,6 +248,12 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             AppliedScreen(navHostController = navController)
         }
 
+        composable(route = Route.ForgottenPassword.route) {
+            ForgottenPasswordScreen(navHostController = navController, authViewModel){
+                navController.popBackStack()
+            }
+        }
+
         navigationAppHost(navController = navController, authViewModel, trialsViewModel)
         notificationNav(navController = navController)
 
