@@ -193,6 +193,14 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             )
         }
 
+        composable(route = Route.DeleteTrialScreen.route) {
+            DeleteTrialScreen(
+                onClick = { navController.popBackStack() },
+                trialsViewModel = trialsViewModel,
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
+            )
+        }
 
         composable(route = Route.CreateTrial.route) {
             val id: String?
@@ -210,8 +218,11 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         }
 
         composable(route = Route.ManageTrial.route) {
-            ManageTrialScreen(trialsViewModel, { navController.popBackStack() }) {
-                navController.navigate(Route.EditTrial.route)
+            ManageTrialScreen(
+                trialsViewModel,
+                { navController.popBackStack() },
+                { navController.navigate(Route.EditTrial.route) }) {
+                navController.navigate(Route.DeleteTrialScreen.route)
             }
         }
 

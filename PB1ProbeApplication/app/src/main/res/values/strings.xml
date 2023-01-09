@@ -166,6 +166,9 @@
     <string name="visit">besøg</string>
     <string name="SLETPROFILCAPS">SLET PROFIL</string>
     <string name="ErDuSikkerSlet">Er du sikker på at du vil slette din profil?</string>
+    <string name="ErDuSikkerSletForsøg">Er du sikker på at du vil slette dette studie?</string>
+    <string name="SletStudieCAPS">SLET STUDIE</string>
+    <string name="SletForsøgsStudie">Slet studie</string>
 
 
 </resources>
