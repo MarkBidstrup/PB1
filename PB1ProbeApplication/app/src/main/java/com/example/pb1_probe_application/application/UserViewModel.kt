@@ -39,8 +39,8 @@ class UserViewModel @Inject constructor(
         repository.addNew(userID, user)
     }
 
-    fun getViewModelUserData() = viewModelScope.launch {
-        _userDataFlow.value = repository.getData(currentUserID)
+    fun getViewModelUserData(userID: String) = viewModelScope.launch {
+        _userDataFlow.value = repository.getData(userID)
     }
 
     fun deleteUser(userID: String) = viewModelScope.launch {
