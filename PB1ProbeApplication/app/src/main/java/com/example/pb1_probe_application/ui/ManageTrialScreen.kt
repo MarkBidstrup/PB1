@@ -11,14 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onClickNavToEditTrial: () -> Unit, navDelete: () -> Unit) {
+fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onClickNavToEditTrial: () -> Unit, onClickNav:() -> Unit, navDelete: () -> Unit) {
 
     Scaffold(
 
@@ -41,7 +45,8 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
                 Text(
                     text = stringResource(id = R.string.redigerStudie),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable { onClickNavToEditTrial() }
                 )
                 Divider(
@@ -52,8 +57,11 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
                 Text(
                     text = stringResource(R.string.seDeltagerliste),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
-                    // TODO add deltagerliste view
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                        .clickable {
+                            onClickNav()
+                        }
                 )
                 Divider(
                     thickness = 1.dp,
@@ -64,7 +72,8 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
                     text = stringResource(R.string.sletStudie),
                     style = Typography.body1,
                     color = TextColorRed,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             navDelete()
                         }

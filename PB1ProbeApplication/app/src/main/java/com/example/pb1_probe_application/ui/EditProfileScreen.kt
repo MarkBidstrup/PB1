@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -49,6 +50,8 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
     var edited by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,15 +67,12 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                     onClick = {
                         if (edited) {
                             userViewModel.saveUserData(uid,data)
+                            Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()
                             edited = false
+                            onClick()
+                        } else {
+                            Toast.makeText(context, R.string.noChangesMade, Toast.LENGTH_LONG).show()
                         }
-                        /*f (data is UserPatient) {
-                            data.
-                        }
-                        if (data is UserResearcher) {
-                            data.
-                        }*/
-
 
                     }
                 ) {
@@ -173,13 +173,27 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             color = androidx.compose.ui.graphics.Color.LightGray
                         )
                         Text(
+                            text = stringResource(R.string.nulstilKodeord),
+                            style = Typography.body1,
+                            modifier = Modifier
+                                .padding(start = 17.dp, end = 17.dp)
+                                .clickable {
+                                    authViewModel.resetPassword(data.email)
+                                    Toast.makeText(context, R.string.tjekEmail, Toast.LENGTH_LONG).show()
+                                }
+                        )
+                        Divider(
+                            modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
+                            thickness = 1.dp,
+                            color = androidx.compose.ui.graphics.Color.LightGray
+                        )
+                        Text(
                             text = stringResource(R.string.sletProfil),
                             style = Typography.body1,
                             color = TextColorRed,
                             modifier = Modifier
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
-                                    // TODO: Navigate to DeleteProfileScreen
                                     deleteNav()
                                 }
                         )

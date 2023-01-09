@@ -10,10 +10,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
-import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.navigation.MainHome
 import com.example.pb1_probe_application.ui.*
 
@@ -38,13 +41,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
+
 //                    ManageTrialScreen()
-                      MainHome(authViewModel, trialsViewModel, userViewModel)
+                    DeltagerListeScreen(id = String(),trialsViewModel = trialsViewModel,navHostController = rememberNavController(
+                    ),userViewModel,authViewModel)
+
+//                    ReadMoreTrialPostScreen( trialsViewModel.currentNavTrial!!, onClickNav = null)
+//                      MainHome(authViewModel, trialsViewModel, userViewModel)
 //                    NotificationsScreen()
 //                    ManageTrialScreen()
-//                    ManageTrialScreen(trialsViewModel = trialsViewModel, navBack = { /*TODO*/ }) {
-//                        
-//                    }
+//                    ManageTrialScreen(trialsViewModel = trialsViewModel, navBack = { /*TODO*/ }, onClickNavToEditTrial = {
+//
+//                    }, onClickNav = {
+//                        navController.navigate("DeltagerListe")
+//                    })
+
 //                    FurtherInformationScreen(role = Role.TRIAL_PARTICIPANT) {
 //
 //                    }

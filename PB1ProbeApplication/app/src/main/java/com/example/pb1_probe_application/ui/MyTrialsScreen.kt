@@ -96,7 +96,8 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                         ) {
                             items(myTrials) {
                                 val list = trialsViewModel.getRegisteredParticipantsUIDList(it.trialID).collectAsState().value
-                                ResearcherTrialPost(it, list.size) {
+                                val potentialCandidates = trialsViewModel.getTotalNumOfPotentialCandidates(it.trialID, it.diagnoses).collectAsState().value
+                                ResearcherTrialPost(it, list.size, potentialCandidates) {
                                     trialsViewModel.setCurrentNavTrialID(it)
                                     navHostController.navigate("ManageTrial") }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
@@ -159,12 +160,13 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                         else
                                             { {trialsViewModel.unsubscribeFromTrial(it) } }
                                     if(pagerState.currentPage == 0) // mytrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {})
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick, applyOnClick = {
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {
                                             trialsViewModel.setCurrentNavTrialID(it)
-                                            navHostController.navigate("DeltagerInfo") })
+                                            navHostController.navigate("DeltagerInfo") }
+                                        )
                                     }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
@@ -235,7 +237,7 @@ private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) 
 }
 
 @Composable
-fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTrialOnClick: () -> Unit) {
+fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligible: Int, manageTrialOnClick: () -> Unit) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -264,7 +266,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
                     text = stringResource(R.string.antalTilmeldte) + " "+ numRegisteredParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO - what do we show here?
+                    text = stringResource(R.string.potentielleKandidater) + " "+ numEligible,
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }

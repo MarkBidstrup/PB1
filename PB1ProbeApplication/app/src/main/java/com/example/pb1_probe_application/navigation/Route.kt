@@ -17,6 +17,8 @@ sealed class Route(val route: String) {
     object FurtherInformation : Route("FurtherInformation")
     object ReadMoreTrialPost: Route("ReadMoreTrialPost")
     object DeleteProfileScreen: Route("DeleteProfileScreen")
+    object ForgottenPassword: Route("ForgottenPassword")
+    object DeltagerListe: Route("DeltagerListe")
     object DeleteTrialScreen: Route("DeleteTrialScreen")
 
 }
