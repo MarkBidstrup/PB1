@@ -5,7 +5,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ fun ReadMoreTrialPostScreen(
     val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -36,8 +39,8 @@ fun ReadMoreTrialPostScreen(
 
                     ) {
                         Icon(
-                            Icons.Default.ExitToApp,
-                            contentDescription = "Exit"
+                            Icons.Default.Close,
+                            contentDescription = "close"
                         )
                     }
                 }
