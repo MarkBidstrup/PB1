@@ -57,6 +57,10 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     var emailEdited = false
     var toastErrorShow by remember { mutableStateOf(true) }
 
+    //userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
+    //var user = userViewModel.userDataFlow.collectAsState().value as UserResearcher
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -134,7 +138,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             UserInfoTypes.Age -> data.age
                             UserInfoTypes.Gender -> data.gender
                             UserInfoTypes.Weight -> data.weight
-                            UserInfoTypes.Diagnosis -> data.diagnosis
+                            UserInfoTypes.Diagnosis -> listToString(data.diagnosis)
                             else -> { "" }
                         }
                     }
@@ -171,7 +175,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 UserInfoTypes.Gender -> data.gender = userInput
                                 UserInfoTypes.Age -> data.age = userInput
                                 UserInfoTypes.Weight -> data.weight = userInput
-                                UserInfoTypes.Diagnosis -> data.diagnosis = userInput
+                                UserInfoTypes.Diagnosis -> data.diagnosis = makeList(userInput)
                                 UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
@@ -236,6 +240,18 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
         },
     )
 }
+
+
+fun listToString(list: List<String>): String {
+    var result = ""
+    for (string in list) {
+        result += string
+        if (string != list.last()) { result += ", " }
+    }
+    return result
+    //.toString().drop(1).dropLast(1)
+}
+
 @Composable
 fun EditUserInfoField(
     userInfo: UserInfo,

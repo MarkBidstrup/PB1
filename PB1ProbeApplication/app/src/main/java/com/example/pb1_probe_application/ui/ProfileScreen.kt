@@ -73,11 +73,14 @@ fun UserInfoList(userInfoList: List<UserInfo>, navHostController: NavHostControl
                             UserInfoTypes.LastName -> content = userData.lastName
                             UserInfoTypes.Gender -> content = userData.gender
                             UserInfoTypes.Age -> content = userData.age
-                            UserInfoTypes.Weight -> content = userData.weight + " kg"
-                            UserInfoTypes.Diagnosis -> content = userData.diagnosis
+                            UserInfoTypes.Weight -> content = userData.weight
+                            UserInfoTypes.Diagnosis -> content = listToString(userData.diagnosis)
                             UserInfoTypes.Email -> content = userData.email
                             UserInfoTypes.Phone -> content = userData.phone
                             else -> {}
+                        }
+                        if (UserInfo.userInfoType == UserInfoTypes.Weight && content != "") {
+                            content += " kg" //If weight field isn't empty, append kg
                         }
                     }
                     if (userData is UserResearcher) {

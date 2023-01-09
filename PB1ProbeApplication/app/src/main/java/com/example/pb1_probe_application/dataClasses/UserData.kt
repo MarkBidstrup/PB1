@@ -12,7 +12,7 @@ data class UserPatient (
     var gender: String = "",
     var age: String = "",
     var weight: String = "",
-    var diagnosis: String = "",
+    var diagnosis: List<String> = emptyList(),
 ): UserData(Role.TRIAL_PARTICIPANT)
 
 data class UserResearcher (

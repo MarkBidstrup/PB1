@@ -70,11 +70,11 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 trialAttributes.interventions -> input = trial.interventions
                                 trialAttributes.startDate -> input = trial.startDate
                                 trialAttributes.endDate -> input = trial.endDate
-                                trialAttributes.lostSalaryComp -> input = BoolToString(trial.lostSalaryComp)
-                                trialAttributes.transportComp -> input = BoolToString(trial.transportComp)
+                                trialAttributes.lostSalaryComp -> input = boolToString(trial.lostSalaryComp)
+                                trialAttributes.transportComp -> input = boolToString(trial.transportComp)
                                 trialAttributes.locations -> input = trial.locations
                                 trialAttributes.kommuner -> input = trial.kommuner
-                                trialAttributes.compensation -> input = BoolToString(trial.compensation)
+                                trialAttributes.compensation -> input = boolToString(trial.compensation)
                                 trialAttributes.exclusionCriteria -> input = trial.exclusionCriteria
                                 trialAttributes.inclusionCriteria -> input = trial.inclusionCriteria
                                 trialAttributes.numParticipants -> input = trial.numParticipants.toString()
@@ -102,15 +102,15 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 when (EditTrialField.trialAttribute) {
                                     trialAttributes.title -> trial.title = userInput
                                     trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                    trialAttributes.diagnoses -> trial.diagnoses = MakeList(userInput)
+                                    trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                     trialAttributes.interventions -> trial.interventions = userInput
                                     trialAttributes.startDate -> trial.startDate = userInput
                                     trialAttributes.endDate -> trial.endDate = userInput
-                                    trialAttributes.lostSalaryComp -> trial.lostSalaryComp = StringToBool(userInput)
-                                    trialAttributes.transportComp -> trial.transportComp = StringToBool(userInput)
+                                    trialAttributes.lostSalaryComp -> trial.lostSalaryComp = stringToBool(userInput)
+                                    trialAttributes.transportComp -> trial.transportComp = stringToBool(userInput)
                                     trialAttributes.locations -> trial.locations = userInput
                                     trialAttributes.kommuner -> trial.kommuner = userInput
-                                    trialAttributes.compensation -> trial.compensation = StringToBool(userInput)
+                                    trialAttributes.compensation -> trial.compensation = stringToBool(userInput)
                                     trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                     trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
                                     trialAttributes.numParticipants -> trial.numParticipants =
@@ -165,7 +165,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
     )
 }
 
-fun MakeList(userInput: String): List<String> {
+fun makeList(userInput: String): List<String> {
     val list: List<String> = userInput.split(",").map { it.trim() }
 
     return list

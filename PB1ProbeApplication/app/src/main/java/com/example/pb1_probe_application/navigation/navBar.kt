@@ -194,7 +194,8 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             else
                 Role.TRIAL_PARTICIPANT
             //TODO
-            FurtherInformationScreen(role, onClick =
+            FurtherInformationScreen(role, authViewModel, userViewModel,
+                onClick =
             {
                 navController.navigate("Home") {
                     launchSingleTop = true

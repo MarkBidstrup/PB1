@@ -13,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -22,35 +21,38 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
+import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.Datasource
-import com.example.pb1_probe_application.dataClasses.DropDownType
-import com.example.pb1_probe_application.dataClasses.Role
-import com.example.pb1_probe_application.dataClasses.UserInfo
-import com.example.pb1_probe_application.dataClasses.UserPatient
+import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.auth.User
 
-@Composable
-fun FurtherInformationScreen(role: Role, onClick: () -> Unit) {
+/*@Composable
+fun FurtherInformationScreens(role: Role, authViewModel: AuthViewModel?, userViewModel: UserViewModel, onClick: () -> Unit) {
 
     if (role == Role.TRIAL_PARTICIPANT)
-        FurtherInformationList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
+        FurtherInformationList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, authViewModel = authViewModel, userViewModel = userViewModel)
     if (role == Role.RESEARCHER)
-        FurtherInformationList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick)
-}
+        FurtherInformationList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, authViewModel = authViewModel, userViewModel = userViewModel)
+}*/
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusManager, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    var input by remember { mutableStateOf("") }
+fun FurtherInformationScreen(role: Role, authViewModel: AuthViewModel?, userViewModel: UserViewModel, onClick: () -> Unit) {
+    val focusManager = LocalFocusManager.current
+    val uid = authViewModel!!.currentUser!!.uid
+    val userInfoList = when(role) {
+        Role.TRIAL_PARTICIPANT -> Datasource().loadProfilePatientInfo()
+        Role.RESEARCHER -> Datasource().loadProfileResearcherInfo()
+    }
+    userViewModel.setCurrentUser(uid)
 
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
-                title = { Text(stringResource(R.string.IndtastYderligereOplysninger), style = Typography.h1, ) },
+                title = { Text(stringResource(R.string.IndtastYderligereOplysninger), style = Typography.h1 ) },
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
             Row(modifier = Modifier.fillMaxWidth(),
@@ -59,13 +61,20 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
             ) { }
         },
         content = {
+            val data: UserData = when(role) {
+                Role.TRIAL_PARTICIPANT -> UserPatient()
+                Role.RESEARCHER -> UserResearcher()
+            }
+
             LazyColumn {
                 items(userInfoList) { UserInfo ->
+                    val input by remember { mutableStateOf("") }
+                    var userInput by remember { mutableStateOf(input) }
                     FurtherInformationField(
                         userInfo = UserInfo,
-                        label = R.string.placeholder, // TODO: make this variable
-                        inputField = input,
-                        onChange = { input = it },
+                        label = UserInfo.StringResourceHeaderId,
+                        inputField = userInput,
+                        onChange = { userInput = it },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
@@ -74,22 +83,49 @@ fun FurtherInformationList(userInfoList: List<UserInfo>, focusManager: FocusMana
                             onDone = { focusManager.clearFocus() }
                         )
                     )
+                    if (userInput != input) {
+                        if (data is UserPatient) {
+                            when (UserInfo.userInfoType) {
+                                UserInfoTypes.FirstName -> data.name = userInput
+                                UserInfoTypes.LastName -> data.lastName = userInput
+                                UserInfoTypes.Gender -> data.gender = userInput
+                                UserInfoTypes.Age -> data.age = userInput
+                                UserInfoTypes.Weight -> data.weight = userInput
+                                UserInfoTypes.Diagnosis -> data.diagnosis = makeList(userInput)
+                                UserInfoTypes.Email -> data.email = userInput
+                                UserInfoTypes.Phone -> data.phone = userInput
+                                else -> {}
+                            }
+                        }
+                        if (data is UserResearcher) {
+                            when (UserInfo.userInfoType) {
+                                UserInfoTypes.FirstName -> data.name = userInput
+                                UserInfoTypes.LastName -> data.lastName = userInput
+                                UserInfoTypes.Department -> data.department = userInput
+                                UserInfoTypes.Email -> data.email = userInput
+                                UserInfoTypes.Phone -> data.phone = userInput
+                                else -> {}
+                            }
+                        }
+                    }
                     if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex
-                        && !(UserInfo.StringResourceHeaderId == R.string.email)) {
+                        && UserInfo.StringResourceHeaderId != R.string.email
+                    ) {
                         Divider(
                             modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp),
                             thickness = 1.dp,
                             color = Color.LightGray
                         )
-                    } else if (!(UserInfo.StringResourceHeaderId == R.string.email)){
+                    } else if (UserInfo.StringResourceHeaderId != R.string.email){
                         Spacer(modifier = Modifier.height(20.dp))
                         Column (
-                            modifier = modifier.fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                         LoginButton(
                             onClick = {
-                                OpretProfilonClick()
+                                data.email = userViewModel.currentUserData.email
+                                userViewModel.saveUserData(uid, data)
                                 onClick() },
                             text = R.string.createProfileCAPS,
                             filled = true)
@@ -110,18 +146,17 @@ fun FurtherInformationField(
     inputField: String,
     onChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions,
-    modifier: Modifier = Modifier
+    keyboardActions: KeyboardActions
 ) {
 
     Column {
-        if (!(LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.email)))
-        Text(
-            text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
-            modifier = Modifier.padding(start = 17.dp),
-            style = MaterialTheme.typography.body1,
-            color = TextColorGreen
-        )
+        if (LocalContext.current.getString(userInfo.StringResourceHeaderId) != stringResource(id = R.string.email))
+            Text(
+                text = LocalContext.current.getString(userInfo.StringResourceHeaderId),
+                modifier = Modifier.padding(start = 17.dp),
+                style = MaterialTheme.typography.body1,
+                color = TextColorGreen
+            )
         if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.koen)) {
             DropDownState(DropDownType.KOEN,onChange, inputField, null)
         } else if (
@@ -142,7 +177,7 @@ fun FurtherInformationField(
                 keyboardActions = keyboardActions
             )
         } else if (LocalContext.current.getString(userInfo.StringResourceHeaderId) == stringResource(id = R.string.email)) {
-            // dont show email here
+            // don't show email here
         } else {
             OutlinedTextField(
                 value = inputField,
@@ -227,7 +262,7 @@ fun DropDown(listItems: List<String>, onValueChange: (String) -> Unit, startValu
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                listItems?.forEach { selectedOption ->
+                listItems.forEach { selectedOption ->
                     // menu item
                     DropdownMenuItem(onClick = {
                         selectedItem = selectedOption
@@ -291,7 +326,7 @@ fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, st
             )
 
             val filteringOptions =
-                listItems?.filter { it.contains(selectedItem, ignoreCase = true) }
+                listItems.filter { it.contains(selectedItem, ignoreCase = true) }
 
             if (filteringOptions != null) {
                 if (filteringOptions.isNotEmpty()) {
@@ -318,20 +353,14 @@ fun DropDownFilter(listItems: List<String> , onValueChange: (String) -> Unit, st
     }
 }
 
-fun BoolToString(boolean: Boolean): String {
-    if (boolean)
-        return "Ja"
+fun boolToString(boolean: Boolean): String {
+    return if (boolean)
+        "Ja"
     else
-        return "Nej"
+        "Nej"
 }
 
-fun StringToBool(string: String): Boolean {
+fun stringToBool(string: String): Boolean {
     return string == "Ja"
-}
-
-fun OpretProfilonClick(){
-    val data = UserPatient()
-    val s: String = FirebaseAuth.getInstance().currentUser!!.uid
-    //TODO connect to database
 }
 
