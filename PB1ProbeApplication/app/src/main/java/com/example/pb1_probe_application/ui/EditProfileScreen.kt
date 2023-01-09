@@ -33,6 +33,9 @@ import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.pb1_probe_application.data.auth.Resource
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
@@ -43,14 +46,18 @@ fun EditProfileScreen(role: Role,onClick: () -> Unit, deleteNav : () -> Unit, au
         EditUserInfoList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, deleteNav = deleteNav, authViewModel = authViewModel, userViewModel = userViewModel)
 }
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
 fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, onClick: () -> Unit, deleteNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
+    var updatedEmail by remember { mutableStateOf("") }
     var edited by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val updateEmailFlow = authViewModel.updateEmailFlow.collectAsState()
+    var emailEdited: Boolean = false
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -65,11 +72,33 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
             ) {
                 IconButton(
                     onClick = {
-                        if (edited) {
+                        if (edited && !emailEdited) {
                             userViewModel.saveUserData(uid,data)
                             Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()
                             edited = false
                             onClick()
+                        } else if (emailEdited) {
+                            authViewModel.updateEmail(updatedEmail)
+                            updateEmailFlow.value.let {
+                                when (it) {
+                                    is Resource.Failure -> {
+                                        if (toastErrorShow) {
+                                            Toast.makeText(context, it.exception.message,Toast.LENGTH_SHORT).show()
+                                            toastErrorShow = false
+                                        }
+                                    }
+                                    is Resource.Success -> {
+                                        if(edited) // email and other info updated
+                                            Toast.makeText(context, R.string.changesSaved,Toast.LENGTH_LONG).show()
+                                        else // only email updated
+                                            Toast.makeText(context, R.string.ændretEmail,Toast.LENGTH_LONG).show()
+                                        data.email = updatedEmail
+                                        userViewModel.saveUserData(uid,data)
+                                        onClick()
+                                    }
+                                    else -> {}
+                                }
+                            }
                         } else {
                             Toast.makeText(context, R.string.noChangesMade, Toast.LENGTH_LONG).show()
                         }
@@ -134,7 +163,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                             onDone = { focusManager.clearFocus() }
                         )
                     )
-                    if (userInput != input) {
+                    if (userInput != input && UserInfo.userInfoType != UserInfoTypes.Email) {
                         edited = true
                         if (data is UserPatient) {
                             when (UserInfo.userInfoType) {
@@ -144,7 +173,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 UserInfoTypes.Age -> data.age = userInput
                                 UserInfoTypes.Weight -> data.weight = userInput
                                 UserInfoTypes.Diagnosis -> data.diagnosis = userInput
-                                UserInfoTypes.Email -> data.email = userInput
                                 UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
@@ -154,11 +182,14 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 UserInfoTypes.FirstName -> data.name = userInput
                                 UserInfoTypes.LastName -> data.lastName = userInput
                                 UserInfoTypes.Department -> data.department = userInput
-                                UserInfoTypes.Email -> data.email = userInput
                                 UserInfoTypes.Phone -> data.phone = userInput
                                 else -> {}
                             }
                         }
+                    }
+                    if (userInput != input && UserInfo.userInfoType == UserInfoTypes.Email) {
+                        emailEdited = true
+                        updatedEmail = userInput
                     }
                     if (userInfoList.lastIndexOf(element = UserInfo) != userInfoList.lastIndex) {
                         Divider(
@@ -179,7 +210,9 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                                 .padding(start = 17.dp, end = 17.dp)
                                 .clickable {
                                     authViewModel.resetPassword(data.email)
-                                    Toast.makeText(context, R.string.tjekEmail, Toast.LENGTH_LONG).show()
+                                    Toast
+                                        .makeText(context, R.string.tjekEmail, Toast.LENGTH_LONG)
+                                        .show()
                                 }
                         )
                         Divider(

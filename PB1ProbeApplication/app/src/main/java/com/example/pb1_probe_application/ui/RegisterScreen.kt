@@ -32,6 +32,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
 
     var participantChecked by remember { mutableStateOf(false) }
     var researcherChecked by remember { mutableStateOf(false) }
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
 
@@ -92,7 +93,10 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             signupFlow?.value?.let {
                 when (it) {
                     is Resource.Failure -> {
-                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                        if (toastErrorShow) {
+                            Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                            toastErrorShow = false
+                        }
                     }
                     Resource.Loading -> {
                         CircularProgressIndicator()
