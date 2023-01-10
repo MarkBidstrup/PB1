@@ -41,7 +41,7 @@ enum class trialAttributes {
 }
 
 fun loadCreateTrialList(): List<CreateTrialField> {
-    return listOf<CreateTrialField>(
+    return listOf(
         CreateTrialField(trialAttributes.deltagerInformation, R.string.deltagerinformation, R.string.vedhæftFil),
         CreateTrialField(trialAttributes.title, R.string.titelPåStudie, R.string.indtastTitel),
         CreateTrialField(trialAttributes.purpose, R.string.formaal1, R.string.indtastformaal),

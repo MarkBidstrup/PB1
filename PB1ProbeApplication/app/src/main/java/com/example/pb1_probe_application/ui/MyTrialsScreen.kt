@@ -81,14 +81,6 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                             text = stringResource(R.string.ingenAktiveStudier), style = Typography.body1,
                             modifier = Modifier.align(CenterHorizontally) )
                         Spacer(modifier = modifier.weight(1f))
-                        PostNewTrialButton(
-                            Modifier
-                                .height(45.dp)
-                                .padding(bottom = 5.dp)
-                                .align(CenterHorizontally)
-                        ) {
-                            navHostController.popBackStack()
-                        }
                     } else {
                         LazyColumn(
                             modifier = modifier.weight(1f),
@@ -105,18 +97,19 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                             }
                         }
                         Spacer(modifier = Modifier.height(20.dp))
-                        PostNewTrialButton(
-                            modifier
-                                .height(45.dp)
-                                .padding(bottom = 5.dp)
-                                .align(CenterHorizontally)
-                        ) {
-                            navHostController.navigate("CreateTrial")
-                        }
+                    }
+                    PostNewTrialButton(
+                        modifier
+                            .height(45.dp)
+                            .padding(bottom = 5.dp)
+                            .align(CenterHorizontally)
+                    ) {
+                        navHostController.navigate("CreateTrial")
                     }
                 } else { // trial participant
                     val pagerState = rememberPagerState(pageCount = TabPage.values().size)
                     val scope = rememberCoroutineScope()
+                    // source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
                     TrialParticipantTabs(
                         selectedTabIndex = pagerState.currentPage,
                         onSelectedTab = {
@@ -163,7 +156,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
                                             readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
-                                                navHostController?.navigate("ReadMoreTrialPost")
+                                                navHostController.navigate("ReadMoreTrialPost")
                                             })
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
@@ -173,7 +166,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             navHostController.navigate("DeltagerInfo") }
                                         , readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
-                                                navHostController?.navigate("ReadMoreTrialPost")
+                                                navHostController.navigate("ReadMoreTrialPost")
                                             })
                                     }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
@@ -191,6 +184,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
     )
 }
 
+// source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun TrialParticipantTabs(selectedTabIndex: Int, onSelectedTab: (TabPage) -> Unit, pagerState: PagerState) {
@@ -306,7 +300,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligibl
                         .align(Alignment.End)
                         .fillMaxWidth()
                         .height(35.dp),
-                    onClick = { /*TODO*/  },
+                    onClick = { /*TODO anmod*/  },
                     shape = RoundedCornerShape(6.dp),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 10.dp,

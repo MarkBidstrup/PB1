@@ -92,7 +92,7 @@ class TrialRepositoryImpl @Inject constructor(
         return uidList
     }
 
-    override suspend fun getFilteredTrials(
+    override suspend fun getFilteredTrials( // used for both search and filter results
         searchText: String?,
         location: String?,
         diagnoses: String?,
@@ -186,7 +186,7 @@ class TrialRepositoryImpl @Inject constructor(
                 tempList = ArrayList()
             }
 
-            if(trialDuration != null && trialDuration > 0) {
+            if(trialDuration != null && trialDuration > 0) { // if maxDuration filter was checked, add to templist
                 for(i in 1 .. trialDuration) {
                     val month = if(i == 1)
                         " måned"
@@ -198,7 +198,7 @@ class TrialRepositoryImpl @Inject constructor(
                     snapshot.forEach { t -> tempList.add(t.toObject()) }
                 }
             }
-            if(numVisits != null && numVisits > 0) {
+            if(numVisits != null && numVisits > 0) { // if maxNumVisits was checked, store in templist2
                 val tempList2: MutableList<Trial> = ArrayList()
                 for(i in 1 .. numVisits) {
                     val snapshot = trialDB()
@@ -206,9 +206,9 @@ class TrialRepositoryImpl @Inject constructor(
                         .get().await()
                     snapshot.forEach { t -> tempList2.add(t.toObject()) }
                 }
-                tempList = if(trialDuration != null && trialDuration > 0)
+                tempList = if(trialDuration != null && trialDuration > 0) // if both maxDuration and maxVisits were checked, get the intersection
                     (tempList intersect tempList2.toSet()).toMutableList()
-                else
+                else // if only maxNumVisits but not maxDuration was checked
                     tempList2
             }
 
@@ -218,19 +218,21 @@ class TrialRepositoryImpl @Inject constructor(
             if (diagnosesList != null) {
                 list = if (locationsList == null) {
                     diagnosesList
-                } else
+                } else // if there were filters on both location and diagnoses, get the intersection
                     (list intersect diagnosesList.toSet()).toMutableList()
             }
-            if (compensation || lostSalaryComp || transportComp) {
+            if (compensation || lostSalaryComp || transportComp) { // if any compensation filters were applied
+                // if there were no filters applied on location or diagnoses, the result list is the complist
                 list = if (locationsList == null && diagnosesList == null) {
                     compList
-                } else
+                } else // if there were filters applied, the result is the intersection
                     (list intersect compList.toSet()).toMutableList()
             }
             if((trialDuration != null && trialDuration > 0) || (numVisits != null && numVisits > 0)) {
+                // if no other filters were applied, the result list is the tempList
                 list = if(locationsList == null && diagnosesList == null && !(compensation || lostSalaryComp || transportComp))
                     tempList
-                else
+                else // if any other filters were applied, the result is the intersection
                     (list intersect tempList.toSet()).toMutableList()
             }
         }

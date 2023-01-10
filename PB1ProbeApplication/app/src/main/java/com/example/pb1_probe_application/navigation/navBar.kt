@@ -102,7 +102,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            TrialListingsScreen(role = role, trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
+            TrialListingsScreen(role = role, userViewModel = userViewModel, trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
 
         composable(route = Route.Filter.route) {

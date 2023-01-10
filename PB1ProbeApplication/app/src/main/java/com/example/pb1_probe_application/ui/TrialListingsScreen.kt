@@ -41,12 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
-import com.example.pb1_probe_application.navigation.Route
 import com.example.pb1_probe_application.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,7 +60,7 @@ enum class TopBarIcons {
 
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
-fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
+fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userViewModel: UserViewModel, navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
      var trials = trialsViewModel.trials.collectAsState(emptyList()).value
      var myTrials: List<Trial> = ArrayList()
      var subscribedTrials: List<Trial> = ArrayList()
@@ -161,11 +160,15 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-
+                    if(loggedIn && userViewModel.getUserRole() == null) {
+                        scope.launch {
+                            delay(10) // this is to make sure that role has had time to be updated
+                        }
+                    }
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.None) }
                         var onClick: () -> Unit = {}
-                        if(loggedIn && role == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
+                        if(loggedIn && userViewModel.getUserRole() == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
                             if(subscribedTrials.contains(it)) {
                                 icon = TrialPostIcons.NotificationOff
                                 onClick = { icon = TrialPostIcons.NotificationOn
@@ -181,7 +184,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             if (!loggedIn)
                                 true
                             else
-                                role == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
+                                userViewModel.getUserRole() == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
                             { {
@@ -605,6 +608,6 @@ fun UnSearchFilterButton(
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        TrialListingsScreen(navHostController = null, loggedIn = false)
+//        TrialListingsScreen(navHostController = null, loggedIn = false)
     }
 }

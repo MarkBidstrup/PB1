@@ -41,7 +41,7 @@ fun DeltagerInfo(
     // reply by Mr Pine, Jul 7, 2022
 
     var consentBoxChecked by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState() // alternatively used to enable "apply" button
+    val scrollState = rememberScrollState() // alternatively used to enable "apply" button when user has scrolled to bottom of screen
 
     Scaffold(
         topBar = {

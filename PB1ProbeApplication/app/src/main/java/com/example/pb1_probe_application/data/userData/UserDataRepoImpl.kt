@@ -51,7 +51,7 @@ class UserDataRepoImpl @Inject constructor(
             }
             val set = eligibleList.toSet() //remove duplicates
             set.size
-        } else {
+        } else { // if there are no conditions/ listed diagnoses, all trial participants are eligible
             val snapshot1 = userDataDB().whereEqualTo("role", Role.TRIAL_PARTICIPANT.name).get().await()
             snapshot1.forEach { t -> eligibleList.add(t.id)}
             eligibleList.size

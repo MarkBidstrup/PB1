@@ -67,7 +67,6 @@ fun DeleteTrialScreen(onClick: () -> Unit, trialsViewModel: TrialsViewModel, aut
                         .align(alignment = Alignment.CenterHorizontally)
                 ) {
                     LoginButton(onClick = {
-                        // TODO: delete trial
                         trialsViewModel.currentNavTrial?.let {
                                 it1 -> trialsViewModel.deleteTrial(it1)
                         }

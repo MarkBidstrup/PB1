@@ -74,7 +74,7 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
             ) {
                 IconButton(
                     onClick = {
-                        toastErrorShow = true
+                        toastErrorShow = true // displays a toast message
                         if (edited && !emailEdited) {
                             userViewModel.saveUserData(uid,data)
                             Toast.makeText(context, R.string.changesSaved, Toast.LENGTH_LONG).show()

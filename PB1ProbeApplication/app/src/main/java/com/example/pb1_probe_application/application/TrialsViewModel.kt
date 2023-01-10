@@ -20,9 +20,9 @@ import javax.inject.Inject
 class TrialsViewModel @Inject constructor(
     private val repository: TrialRepository, private val userRepository: UserDataRepository
 ) : ViewModel(){
-    val trials = repository.trials
+    val trials = repository.trials // list of all trials
     private val _trial = MutableStateFlow<Trial?>(null)
-    val trial: StateFlow<Trial?> = _trial.asStateFlow()
+    val trial: StateFlow<Trial?> = _trial.asStateFlow() // a specific trial
     private val _myTrialsResearcher = MutableStateFlow<List<Trial>>(ArrayList())
     val myTrialsResearcher: StateFlow<List<Trial>> = _myTrialsResearcher.asStateFlow()
     private val _myTrialsParticipants = MutableStateFlow<List<Trial>>(ArrayList())
@@ -31,11 +31,13 @@ class TrialsViewModel @Inject constructor(
     val subscribedTrials: StateFlow<List<Trial>> = _subscribedTrials.asStateFlow()
     private val _filteredTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val filteredTrials: StateFlow<List<Trial>> = _filteredTrials.asStateFlow()
+    // for each trial, a list of the uids of the registered participants
     private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
+    // the number of eligible particpants for each trial
     private val _eligibleParticipants = HashMap<String, MutableStateFlow<Int>>()
-    var currentNavTrial: Trial? = null // for navigation
+    var currentNavTrial: Trial? = null // current trial, for navigation
         private set
-    var showFilterResult: Boolean = false // for navigation
+    var showFilterResult: Boolean = false // whether to show filter page, used for navigation
 
 
     fun getTrial(trialID: String)= viewModelScope.launch {
@@ -78,7 +80,7 @@ class TrialsViewModel @Inject constructor(
     }
 
     fun getRegisteredParticipantsUIDList(trialID: String): StateFlow<List<String>> {
-        if(!_registeredParticipants.containsKey(trialID)) {
+        if(!_registeredParticipants.containsKey(trialID)) { // creates a new entry in the hashmap
             _registeredParticipants[trialID] = MutableStateFlow(ArrayList())
         }
         viewModelScope.launch {
@@ -89,7 +91,7 @@ class TrialsViewModel @Inject constructor(
     }
 
     fun getTotalNumOfPotentialCandidates(trialID: String, diagnoses: List<String>): StateFlow<Int> {
-        if(!_eligibleParticipants.containsKey(trialID)) {
+        if(!_eligibleParticipants.containsKey(trialID)) { // creates a new entry in the hashmap
             _eligibleParticipants[trialID] = MutableStateFlow(0)
         }
         viewModelScope.launch {
