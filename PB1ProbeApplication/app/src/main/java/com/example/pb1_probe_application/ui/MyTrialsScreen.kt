@@ -91,7 +91,9 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 val potentialCandidates = trialsViewModel.getTotalNumOfPotentialCandidates(it.trialID, it.diagnoses).collectAsState().value
                                 ResearcherTrialPost(it, list.size, potentialCandidates) {
                                     trialsViewModel.setCurrentNavTrialID(it)
-                                    navHostController.navigate("ManageTrial") }
+                                    navHostController.navigate("ManageTrial") {
+                                        launchSingleTop = true
+                                    } }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
@@ -156,17 +158,23 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
                                             readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
-                                                navHostController.navigate("ReadMoreTrialPost")
+                                                navHostController.navigate("ReadMoreTrialPost") {
+                                                    launchSingleTop = true
+                                                }
                                             })
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
                                         TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick,
                                             applyOnClick = {
                                             trialsViewModel.setCurrentNavTrialID(it)
-                                            navHostController.navigate("DeltagerInfo") }
+                                            navHostController.navigate("DeltagerInfo") {
+                                                launchSingleTop = true
+                                            } }
                                         , readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
-                                                navHostController.navigate("ReadMoreTrialPost")
+                                                navHostController.navigate("ReadMoreTrialPost") {
+                                                    launchSingleTop = true
+                                                }
                                             })
                                     }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)

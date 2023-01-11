@@ -43,7 +43,9 @@ fun UserInfoList(userInfoList: List<UserInfo>, navHostController: NavHostControl
                 elevation = 0.dp)
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                  IconButton(onClick = {
-                     navHostController.navigate("EditProfile")
+                     navHostController.navigate("EditProfile") {
+                         launchSingleTop = true
+                     }
                  }) {
                      Icon(
                          Icons.Default.Edit,
@@ -52,7 +54,9 @@ fun UserInfoList(userInfoList: List<UserInfo>, navHostController: NavHostControl
                  }
                 IconButton(onClick = {
                     // to navigate
-                   navHostController.navigate("Setting")
+                   navHostController.navigate("Setting") {
+                       launchSingleTop = true
+                   }
 
                }) {
                     Icon(

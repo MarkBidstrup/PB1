@@ -120,7 +120,7 @@
     <string name="annuller">ANNULLER</string>
     <string name="bekræft">BEKRÆFT</string>
     <string name="deltagerinformation">Deltagerinformation</string>
-    <string name="vedhæftFil">Vedhæft fil...</string>
+    <string name="indtastDeltagerinfo">Indtast deltagerinformation</string>
     <string name="titelPåStudie">Titel på studie</string>
     <string name="indtastTitel">Indtast titel</string>
     <string name="antalDeltagere">Antal deltagere</string>

@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pb1_probe_application.R
@@ -27,27 +26,21 @@ import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.*
+import com.example.pb1_probe_application.navigation.Route
+import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.StrokeColor
 import com.google.firebase.firestore.auth.User
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel) {
+fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel,onNavBack: () -> Unit) {
     val currentTrialID = trialsViewModel.currentNavTrial?.trialID
     val registeredParticipants =
         currentTrialID?.let { trialsViewModel.getRegisteredParticipantsUIDList(it).collectAsState().value }
-    val userDataList = mutableListOf<UserData>()
-    if (registeredParticipants != null) {
-        for (uid in registeredParticipants) {
-            userViewModel.getViewModelUserData(uid)
-            val user = userViewModel.otherUserDataFlow.collectAsState().value
-            if (user != null) {userDataList.add(user)}
-        }
-    }
     if (registeredParticipants != null) {
         userViewModel.getViewModelMultiUserData(registeredParticipants)
     }
-    val userList = userViewModel.multiUserDataFlow.collectAsState().value
+    val userDataList = userViewModel.multiUserDataFlow.collectAsState().value
 
     Scaffold(
         topBar = {
@@ -55,9 +48,7 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                 IconButton(
                     onClick = {
                       //TODO navigation
-//                        onNavBack()
-
-
+                       onNavBack()
                     }) {
                     Icon(
                         Icons.Default.ArrowBack,
@@ -80,7 +71,7 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                         .background(MaterialTheme.colors.background)
                         .weight(4f)
                 ) {
-                    items(userList) {
+                    items(userDataList) {
                         CardItem(userData = it, trial = trialsViewModel.currentNavTrial!!)
                         Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -160,5 +151,5 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
                 modifier = Modifier.padding(start = 17.dp, end = 17.dp)
             )*/
         }
-        }
+    }
 }
