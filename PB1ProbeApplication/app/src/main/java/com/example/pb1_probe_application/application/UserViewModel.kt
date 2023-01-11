@@ -23,6 +23,10 @@ class UserViewModel @Inject constructor(
 
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
+    private val _otherUserDataFlow = MutableStateFlow<UserData?>(null)
+    val otherUserDataFlow: StateFlow<UserData?> = _otherUserDataFlow.asStateFlow()
+    private val _multiUserDataFlow = MutableStateFlow<List<UserData>>(emptyList())
+    val multiUserDataFlow: StateFlow<List<UserData>> = _multiUserDataFlow.asStateFlow()
     lateinit var currentUserID: String
     lateinit var currentUserData: UserData
 
@@ -41,8 +45,13 @@ class UserViewModel @Inject constructor(
     }
 
     fun getViewModelUserData(userID: String) = viewModelScope.launch {
-        _userDataFlow.value = repository.getData(userID)
+        _otherUserDataFlow.value = repository.getData(userID)
     }
+
+    fun getViewModelMultiUserData(userIDs: List<String>) = viewModelScope.launch {
+        _multiUserDataFlow.value = repository.getData(userIDs)
+    }
+
     fun deleteUser(userID: String) = viewModelScope.launch {
         repository.delete(userID)
     }

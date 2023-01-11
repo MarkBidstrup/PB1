@@ -40,14 +40,17 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
     if (registeredParticipants != null) {
         for (uid in registeredParticipants) {
             userViewModel.getViewModelUserData(uid)
-            val user = userViewModel.userDataFlow.collectAsState().value
+            val user = userViewModel.otherUserDataFlow.collectAsState().value
             if (user != null) {userDataList.add(user)}
         }
     }
+    if (registeredParticipants != null) {
+        userViewModel.getViewModelMultiUserData(registeredParticipants)
+    }
+    val userList = userViewModel.multiUserDataFlow.collectAsState().value
 
     Scaffold(
         topBar = {
-
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
                     onClick = {
@@ -77,7 +80,7 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                         .background(MaterialTheme.colors.background)
                         .weight(4f)
                 ) {
-                    items(userDataList) { //TODO commented out to suppress error
+                    items(userList) {
                         CardItem(userData = it, trial = trialsViewModel.currentNavTrial!!)
                         Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -92,9 +95,7 @@ fun ContactInfo(
     userData: UserData,
     modifier: Modifier = Modifier
 ) {
-//    ("BJUd41JgLShgB5NvBTr1nNHkipk1")
-//    userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
-//    val user = userViewModel.userDataFlow.collectAsState().value
+
     Column(
         modifier = modifier.padding(
             start = 16.dp,
@@ -126,6 +127,7 @@ fun ContactInfo(
         )
     }
 }
+
 @Composable
 fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
     Card(
@@ -150,7 +152,13 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
                 TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
             }
-            ContactInfo(userData) //TODO commented out to suppress error
+            ContactInfo(userData)
+            /*Spacer(Modifier.weight(1f))
+            Divider(
+                thickness = 1.dp,
+                color = androidx.compose.ui.graphics.Color.LightGray,
+                modifier = Modifier.padding(start = 17.dp, end = 17.dp)
+            )*/
         }
         }
 }
