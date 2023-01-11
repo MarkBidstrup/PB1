@@ -6,8 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,6 +35,7 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -55,12 +58,14 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
             if(id != null)
                 trial.researcherID = id
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
-                LazyColumn (
+                Column (
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
-                        .weight(4f)) {
+                        .weight(4f)
+                        .verticalScroll(scrollState)
+                ) {
                     val createTrialList = loadCreateTrialList()
-                    items(createTrialList) {
+                    createTrialList.forEach {
                         CreateTrialField ->
                         var userInput by remember { mutableStateOf("") }
                         TrialInputField(
