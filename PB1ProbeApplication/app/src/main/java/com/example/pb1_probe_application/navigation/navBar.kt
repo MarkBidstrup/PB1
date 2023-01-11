@@ -262,7 +262,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 trialsViewModel = trialsViewModel,
                 navHostController = navController ,
                 userViewModel = userViewModel
-            )
+            ) {
+                navController.popBackStack()
+            }
         }
 
         composable(route = Route.DeltagerInfo.route) {

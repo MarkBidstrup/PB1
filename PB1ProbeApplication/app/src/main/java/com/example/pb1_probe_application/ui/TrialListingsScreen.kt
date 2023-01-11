@@ -140,7 +140,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                             Spacer(Modifier.weight(2f))
                             UnSearchFilterButton(displaySearchResults, onClick = {
                                 trialsViewModel.showFilterResult = false
-                                navHostController.navigate("Home")
+                                navHostController.navigate("Home") {
+                                    launchSingleTop = true
+                                }
                             })
                         } else {
                             Text(
@@ -151,7 +153,9 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                     }
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
-                        navHostController?.navigate("Filter")
+                        navHostController?.navigate("Filter") {
+                            launchSingleTop = true
+                        }
                     })
                 }
 
@@ -193,15 +197,21 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                             if(loggedIn)
                             { {
                                 trialsViewModel.setCurrentNavTrialID(it)
-                                navHostController?.navigate("DeltagerInfo") } }
+                                navHostController?.navigate("DeltagerInfo") {
+                                    launchSingleTop = true
+                                } } }
                             else { {
-                                navHostController?.navigate("NotLoggedIn")
+                                navHostController?.navigate("NotLoggedIn") {
+                                    launchSingleTop = true
+                                }
                             }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
                             buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController,
                          readMoreOnClick = {
                              trialsViewModel.setCurrentNavTrialID(it)
-                             navHostController?.navigate("ReadMoreTrialPost")
+                             navHostController?.navigate("ReadMoreTrialPost") {
+                                 launchSingleTop = true
+                             }
                          })
                         if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
@@ -215,10 +225,14 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                             .align(alignment = CenterHorizontally)
                     ) {
                         LoginButton(onClick = {
-                            navHostController?.navigate("logInd")
+                            navHostController?.navigate("logInd") {
+                                launchSingleTop = true
+                            }
                         }, R.string.logInd, false)
                         LoginButton(onClick = {
-                            navHostController?.navigate("register")
+                            navHostController?.navigate("register") {
+                                launchSingleTop = true
+                            }
                         }, R.string.registrer, true)
                     }
                 }

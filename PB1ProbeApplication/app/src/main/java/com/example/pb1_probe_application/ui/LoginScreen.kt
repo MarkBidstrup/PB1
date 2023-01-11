@@ -106,7 +106,9 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
                     is Resource.Success -> {
                         LaunchedEffect(Unit) {
                             userViewModel.setCurrentUser(authViewModel.currentUser!!.uid)
-                            navHostController?.navigate("Home")
+                            navHostController?.navigate("Home") {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }
