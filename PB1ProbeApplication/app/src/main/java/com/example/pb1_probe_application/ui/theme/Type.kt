@@ -1,6 +1,5 @@
 package com.example.pb1_probe_application.ui.theme
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -38,6 +37,12 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 20.sp
+    ),
+    h4 = TextStyle(
+        fontFamily = Cairo,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+        lineHeight = 24.sp
     ),
     body1 = TextStyle(
         fontFamily = Cairo,

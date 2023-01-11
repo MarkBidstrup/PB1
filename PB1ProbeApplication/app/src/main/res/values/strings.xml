@@ -66,7 +66,7 @@
 
     <string name="deltager_info">Deltagerinformation</string>
     <string name="samtykkeerklaering">Jeg er indforstået med, at ved at trykke “Ansøg” så deles mine data med tredjeparts databehandler ansvarlig for forsøget, og jeg giver samtykke til at blive kontaktet telefonisk med henblik på booking af screening. Se yderligere om vores privatlivspolitik på https://probe.dk/privatlivspolitik/</string>
-    <string name="ansoegt">Din ansøgning er modtaget\n\nDu kan nu følge studiet under\n“Mine studier”</string>
+    <string name="ansoegt">Ansøgning modtaget.\n\n\nDine kontaktinformationer er blevet sendt til forskeren, som vil kontakte dig vedrørende det videre forløb.\n\n\nDu kan nu følge studiet under\n“Mine studier”</string>
 
     <!--Search Strings-->
     <string name="filtrer">Filtrer</string>

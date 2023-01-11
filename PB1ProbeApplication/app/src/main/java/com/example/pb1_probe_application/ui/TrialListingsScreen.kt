@@ -72,8 +72,8 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
 
      if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
          trialsViewModel.getViewModelSubscribedTrials()
-         subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
          trialsViewModel.getViewModelMyTrialsParticipants()
+         subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
          myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
      }
 
@@ -162,13 +162,17 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                         .weight(4f)) {
                     if(loggedIn && userViewModel.getUserRole() == null) {
                         scope.launch {
-                            delay(10) // this is to make sure that role has had time to be updated
+                            delay(20) // this is to make sure that role has had time to be updated
                         }
                     }
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.None) }
                         var onClick: () -> Unit = {}
                         if(loggedIn && userViewModel.getUserRole() == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
+                            trialsViewModel.getViewModelSubscribedTrials()
+                            trialsViewModel.getViewModelMyTrialsParticipants()
+                            subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
+                            myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
                             if(subscribedTrials.contains(it)) {
                                 icon = TrialPostIcons.NotificationOff
                                 onClick = { icon = TrialPostIcons.NotificationOn

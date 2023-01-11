@@ -39,7 +39,7 @@ fun AppliedScreen(navHostController: NavHostController = rememberNavController()
                         contentDescription = "checkmark",
                         contentScale = ContentScale.Fit)
                 }
-                Text(text = stringResource(R.string.ansoegt), style = Typography.h2,
+                Text(text = stringResource(R.string.ansoegt), style = Typography.h4,
                     textAlign = TextAlign.Center)
                 Spacer(modifier = Modifier.weight(1.5f))
             }
