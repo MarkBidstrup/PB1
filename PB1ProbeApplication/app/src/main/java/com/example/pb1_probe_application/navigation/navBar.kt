@@ -27,8 +27,6 @@ fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, use
     BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 
 }
-
-
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -249,7 +247,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 { navController.navigate(Route.EditTrial.route){
                     launchSingleTop = true
                 } },
-                { navController.navigate(Route.DeltagerListe.route){
+                { navController.navigate(Route.DeltagerListeScreen.route){
                     launchSingleTop = true
                 } }) {
                 navController.navigate(Route.DeleteTrialScreen.route) {
@@ -257,7 +255,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 }
             }
         }
-        composable(route = Route.DeltagerListe.route) {
+        composable(route = Route.DeltagerListeScreen.route) {
             DeltagerListeScreen(
                 trialsViewModel = trialsViewModel,
                 navHostController = navController ,
