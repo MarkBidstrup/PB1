@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,20 +18,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
-import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.*
-import com.example.pb1_probe_application.navigation.Route
-import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import com.example.pb1_probe_application.ui.theme.StrokeColor
-import com.google.firebase.firestore.auth.User
-
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel,onNavBack: () -> Unit) {
@@ -53,7 +45,6 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
                     onClick = {
-                      //TODO navigation
                        onNavBack()
                     }) {
                     Icon(
@@ -77,7 +68,7 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                         .background(MaterialTheme.colors.background)
                         .weight(4f)
                 ) {
-                    items(userDataList) { //TODO commented out to suppress error
+                    items(userDataList) {
                         CardItem(userData = it, trial = trialsViewModel.currentNavTrial!!)
                         Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -86,15 +77,12 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
         }
     )
 }
-
 @Composable
 fun ContactInfo(
     userData: UserData,
     modifier: Modifier = Modifier
 ) {
-//    ("BJUd41JgLShgB5NvBTr1nNHkipk1")
-//    userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
-//    val user = userViewModel.userDataFlow.collectAsState().value
+
     Column(
         modifier = modifier.padding(
             start = 16.dp,
@@ -103,16 +91,12 @@ fun ContactInfo(
             end = 16.dp
         )
     ) {
-        Text(
-            text = stringResource(R.string.Navn)+" "+ userData.name,
-            style = MaterialTheme.typography.body2,
-            modifier = modifier.padding(bottom = 8.dp),
-        )
-        Text(
-            text = stringResource(R.string.EfterNavn)+" "+ userData.lastName,
-            style = MaterialTheme.typography.body2,
-            modifier = modifier.padding(bottom = 8.dp)
-        )
+            Text(
+                text = stringResource(R.string.Navn)+" "+ userData.name + " " + userData.lastName,
+                style = MaterialTheme.typography.body2,
+                modifier = modifier.padding(bottom = 8.dp),
+            )
+
 
         Text(
                 text = stringResource(R.string.Email)+" "+ userData.email,
@@ -128,6 +112,8 @@ fun ContactInfo(
 }
 @Composable
 fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
+    TrialTitle(trial.title)
+
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
@@ -140,6 +126,7 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessLow
                 )
+
             )
         ) {
             Row(
@@ -147,10 +134,9 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
             }
-            ContactInfo(userData) //TODO commented out to suppress error
+            ContactInfo(userData)
         }
         }
 }
