@@ -32,21 +32,28 @@ import com.google.firebase.firestore.auth.User
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel) {
+fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel) {
     val currentTrialID = trialsViewModel.currentNavTrial?.trialID
     val registeredParticipants =
         currentTrialID?.let { trialsViewModel.getRegisteredParticipantsUIDList(it).collectAsState().value }
-    val userDataList = registeredParticipants?.map {
-        userViewModel.getViewModelUserData(it)
+    val userDataList = mutableListOf<UserData>()
+    if (registeredParticipants != null) {
+        for (uid in registeredParticipants) {
+            userViewModel.getViewModelUserData(uid)
+            val user = userViewModel.userDataFlow.collectAsState().value
+            if (user != null) {userDataList.add(user)}
+        }
     }
-
 
     Scaffold(
         topBar = {
+
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
                 IconButton(
                     onClick = {
                       //TODO navigation
+//                        onNavBack()
+
 
                     }) {
                     Icon(
@@ -70,10 +77,10 @@ fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostCon
                         .background(MaterialTheme.colors.background)
                         .weight(4f)
                 ) {
-                    /*items(userDataList) { //TODO commented out to suppress error
-                        CardItem(userData = it)
+                    items(userDataList) { //TODO commented out to suppress error
+                        CardItem(userData = it, trial = trialsViewModel.currentNavTrial!!)
                         Spacer(modifier = Modifier.height(15.dp))
-                    }*/
+                    }
                 }
              }
         }
@@ -82,11 +89,12 @@ fun DeltagerListeScreen(id: String?, trialsViewModel: TrialsViewModel,navHostCon
 
 @Composable
 fun ContactInfo(
-    userViewModel: UserViewModel,
+    userData: UserData,
     modifier: Modifier = Modifier
 ) {
 //    ("BJUd41JgLShgB5NvBTr1nNHkipk1")
-    val user = userViewModel.userDataFlow.collectAsState().value
+//    userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
+//    val user = userViewModel.userDataFlow.collectAsState().value
     Column(
         modifier = modifier.padding(
             start = 16.dp,
@@ -96,32 +104,30 @@ fun ContactInfo(
         )
     ) {
         Text(
-            text = stringResource(R.string.Navn)+" "+ user?.name,
+            text = stringResource(R.string.Navn)+" "+ userData.name,
             style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
-            text = stringResource(R.string.EfterNavn)+" "+ user?.lastName,
+            text = stringResource(R.string.EfterNavn)+" "+ userData.lastName,
             style = MaterialTheme.typography.body2,
             modifier = modifier.padding(bottom = 8.dp)
         )
 
         Text(
-                text = stringResource(R.string.Email)+" "+ user?.email,
+                text = stringResource(R.string.Email)+" "+ userData.email,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
         )
         Text(
-                text = stringResource(R.string.Telefonnummer)+" "+ user?.phone,
+                text = stringResource(R.string.Telefonnummer)+" "+ userData.phone,
                 style = MaterialTheme.typography.body2,
                 modifier = modifier.padding(bottom = 8.dp),
         )
     }
 }
-
 @Composable
-fun CardItem(userData: UserData, modifier: Modifier = Modifier ){
-    val trial = Trial()
+fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
@@ -144,13 +150,7 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier ){
                 TrialTitle(trial.title)
                 Spacer(Modifier.weight(1f))
             }
-            //ContactInfo(userData) //TODO commented out to suppress error
-            Spacer(Modifier.weight(1f))
-            Divider(
-                thickness = 1.dp,
-                color = androidx.compose.ui.graphics.Color.LightGray,
-                modifier = Modifier.padding(start = 17.dp, end = 17.dp)
-            )
+            ContactInfo(userData) //TODO commented out to suppress error
         }
         }
 }

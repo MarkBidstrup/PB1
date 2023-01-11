@@ -257,6 +257,13 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 }
             }
         }
+        composable(route = Route.DeltagerListe.route) {
+            DeltagerListeScreen(
+                trialsViewModel = trialsViewModel,
+                navHostController = navController ,
+                userViewModel = userViewModel
+            )
+        }
 
         composable(route = Route.DeltagerInfo.route) {
             if(trialsViewModel.currentNavTrial != null) {

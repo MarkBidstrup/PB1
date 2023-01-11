@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
 //                    ManageTrialScreen()
 //                    DeltagerListeScreen(id = String(),trialsViewModel = trialsViewModel,navHostController = rememberNavController(
-//                    ),userViewModel,authViewModel)
+//                    ),userViewModel)
 
 //                    ReadMoreTrialPostScreen( trialsViewModel.currentNavTrial!!, onClickNav = null)
                       MainHome(authViewModel, trialsViewModel, userViewModel)
@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
 //
 //                    }, onClickNav = {
 //
-//                    }, navDelete = {
 //
+//                    }, navDelete = {
 //                    })
 
 //                    FurtherInformationScreen(role = Role.TRIAL_PARTICIPANT) {
