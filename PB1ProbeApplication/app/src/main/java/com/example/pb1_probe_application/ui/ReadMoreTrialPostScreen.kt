@@ -23,7 +23,7 @@ fun ReadMoreTrialPostScreen(
     onClickNav: () -> Unit
 
 ) {
-    var data = trial.deltagerInformation
+    var data = trial.forsoegsBeskrivelse
     data = data.split("\\n").joinToString("\n")
     val scrollState = rememberScrollState()
     Scaffold(
