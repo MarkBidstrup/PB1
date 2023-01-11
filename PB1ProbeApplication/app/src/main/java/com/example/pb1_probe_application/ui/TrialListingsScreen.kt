@@ -141,7 +141,6 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                             UnSearchFilterButton(displaySearchResults, onClick = {
                                 trialsViewModel.showFilterResult = false
                                 navHostController.navigate("Home") {
-                                    launchSingleTop = true
                                 }
                             })
                         } else {
