@@ -110,7 +110,9 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                             val uid = authViewModel.currentUser!!.uid
                             userViewModel.createUser(uid,email, role)
                             userViewModel.setCurrentUser(uid)
-                            navHostController?.navigate("FurtherInformation")
+                            navHostController?.navigate("FurtherInformation") {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }
