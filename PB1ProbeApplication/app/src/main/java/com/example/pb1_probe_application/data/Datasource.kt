@@ -110,7 +110,7 @@ class Datasource {
             "Dragør" ,
             "Egedal" ,
             "Fredensborg" ,
-            "Frederiksberg" ,
+            "Frederiksberg C" ,
             "Frederikssund" ,
             "Furesø" ,
             "Gentofte" ,
@@ -130,7 +130,8 @@ class Datasource {
             "Rudersdal" ,
             "Rødovre" ,
             "Tårnby" ,
-            "Vallensbæk"
+            "Vallensbæk",
+            "Hellerup"
         )
     }
 
