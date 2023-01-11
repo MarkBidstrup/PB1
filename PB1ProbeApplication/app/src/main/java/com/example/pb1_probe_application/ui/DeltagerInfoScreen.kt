@@ -1,6 +1,9 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.media.SoundPool
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -27,6 +31,7 @@ import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.ui.theme.Typography
 
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DeltagerInfo(
@@ -39,7 +44,6 @@ fun DeltagerInfo(
     data = data.split("\\n").joinToString("\n")
     // source for this line of code: https://stackoverflow.com/questions/72818759/carriage-return-text-resource-in-jetpack-compose
     // reply by Mr Pine, Jul 7, 2022
-
     var consentBoxChecked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState() // alternatively used to enable "apply" button when user has scrolled to bottom of screen
 
@@ -103,8 +107,6 @@ fun DeltagerInfo(
         }
     )
 }
-
-
 // code below is from https://stackoverflow.com/questions/65567412/jetpack-compose-text-hyperlink-some-section-of-the-text
 // Thracian's reply on Jan 10, 2021
 @Composable

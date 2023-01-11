@@ -50,9 +50,9 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
     val uid = authViewModel!!.currentUser!!.uid
     userViewModel.setCurrentUser(uid)
     val data = remember { userViewModel.currentUserData }
-    var updatedEmail by remember { mutableStateOf("") }
     var edited by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    var updatedEmail by remember { mutableStateOf("") }
     val updateEmailFlow = authViewModel.updateEmailFlow.collectAsState()
     var emailEdited = false
     var toastErrorShow by remember { mutableStateOf(true) }

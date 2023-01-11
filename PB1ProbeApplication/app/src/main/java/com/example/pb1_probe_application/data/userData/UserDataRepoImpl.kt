@@ -27,7 +27,24 @@ class UserDataRepoImpl @Inject constructor(
         return userData
     }
 
-    override suspend fun addNew(userID: String, data: UserData) {
+    override suspend fun getData(userIDs: List<String>): List<UserData> {
+        val dataList = mutableListOf<UserData>()
+        for (uid in userIDs) {
+            val data = userDataDB().document(uid).get().await()
+            if (data.toObject<UserPatient>() != null) {
+                dataList.add(
+                    if (data.getString("role") == "TRIAL_PARTICIPANT") {
+                        data.toObject<UserPatient>()!!
+                    } else {
+                        data.toObject<UserResearcher>()!!
+                    }
+                )
+            }
+        }
+        return dataList
+    }
+
+            override suspend fun addNew(userID: String, data: UserData) {
         userDataDB().document(userID).set(data).await()
     }
 
