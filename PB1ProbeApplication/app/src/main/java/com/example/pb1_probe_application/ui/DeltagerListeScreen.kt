@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,6 +59,12 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                     bottom = 46.dp
                 ))
             {
+                Text(text = trialsViewModel.currentNavTrial!!.title,
+                        style = MaterialTheme.typography.h3,
+                    modifier = Modifier
+                        .padding(top = 4.dp, start = 10.dp)
+                        .width(245.dp)
+                )
                 LazyColumn (
                     contentPadding = PaddingValues(start = 9.dp, end = 9.dp),
                     modifier = Modifier
@@ -64,8 +72,8 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
                         .weight(4f)
                 ) {
                     items(userDataList) {
-                        CardItem(userData = it, trial = trialsViewModel.currentNavTrial!!)
-                        Spacer(modifier = Modifier.height(15.dp))
+                        CardItem(userData = it)
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
              }
@@ -106,11 +114,8 @@ fun ContactInfo(
         )
     }
 }
-
 @Composable
-fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
-    TrialTitle(trial.title)
-
+fun CardItem(userData: UserData, modifier: Modifier = Modifier){
     Card(
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
@@ -123,6 +128,7 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessLow
                 )
+
             )
         ) {
             Row(
@@ -134,5 +140,5 @@ fun CardItem(userData: UserData, modifier: Modifier = Modifier,trial: Trial){
             }
             ContactInfo(userData)
         }
-    }
+        }
 }

@@ -1,5 +1,7 @@
 package com.example.pb1_probe_application.navigation
 
+import android.media.MediaPlayer
+import android.transition.Transition
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -87,12 +89,10 @@ fun RowScope.addItem(
 
 @Composable
 fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
-    val ctx = LocalContext.current
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     )
     {
-
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
             val researcher = userViewModel.getUserRole() == Role.RESEARCHER
