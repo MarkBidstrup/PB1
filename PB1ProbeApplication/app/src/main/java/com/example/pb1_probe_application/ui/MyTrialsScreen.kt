@@ -29,7 +29,6 @@ import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
-import com.example.pb1_probe_application.dataClasses.UserResearcher
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
 import com.google.accompanist.pager.*
@@ -151,14 +150,16 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 items(trials1) {
                                     var showDialog by remember{ mutableStateOf(false)}
                                     if(showDialog){
-                                       Popup(alignment = Alignment.Center, onDismissRequest = {showDialog = false} ) {
-                                            InfoDisplay(userViewModel = userViewModel ){showDialog = false}
+                                       Popup(alignment = Alignment.Center,
+                                           onDismissRequest = {showDialog = false},
+                                       ) {
+                                            InfoDisplay(trialsViewModel.currentNavTrial ,userViewModel = userViewModel){showDialog = false}
                                         }
                                     }
                                     val onClick: () -> Unit =
                                         if(pagerState.currentPage == 0) {
                                             {
-                                              //trialsViewModel.setCurrentNavTrialID(it)
+                                              trialsViewModel.setCurrentNavTrialID(it)
                                               showDialog = !showDialog
                                             }
                                         }
@@ -202,49 +203,39 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
     )
 }
 @Composable
-fun InfoDisplay( userViewModel: UserViewModel, onClick: () -> Unit) {
+fun InfoDisplay(trial: Trial?, userViewModel: UserViewModel, onClick: () -> Unit) {
 
     Card(
-
         elevation = 4.dp,
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .border(1.dp, StrokeColor, RoundedCornerShape(10.dp))
-
+            .border(4.dp, StrokeColor, RoundedCornerShape(10.dp))
     ){ //card content
         Column(
-            modifier=Modifier.padding(24.dp)
+            modifier=Modifier.padding(start = 24.dp, bottom = 24.dp)
         ) {
-            IconButton(onClick = { onClick() }) {
+            Row(horizontalArrangement = Arrangement.End) {
+                Text(text = stringResource(R.string.Kontakt), style = Typography.h3,
+                    modifier = Modifier.padding(top = 20.dp))
+                IconButton(onClick = { onClick() }) {
+                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.Close))
+                }
+            }
+            if (trial != null) {
+                userViewModel.getViewModelUserData(trial.researcherID)
+                val user = userViewModel.otherUserDataFlow.collectAsState().value
 
-                //------------------------------------
-                Icon(Icons.Default.Close, contentDescription = "Close"
-                )
+                Text (text = stringResource(R.string.navn) +": "+ user.name +" "+ user.lastName,
+                    modifier = Modifier.padding(bottom = 2.dp))
+                Text (text=stringResource(R.string.email) +": "+ user.email,
+                    modifier = Modifier.padding(bottom = 2.dp))
+                //Text(text="tilknyttet hospital: "+user.department)
+                Text(text=stringResource(R.string.telefon) +": "+ user.phone)
             }
 
-            userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
-            var user = userViewModel.userDataFlow.collectAsState().value
-
-
-
-            Text (text="navn: "+ user!!.name +" "+ user.lastName)
-            Text (text="mail: "+ user.email)
-            //Text(text="tilknyttet hospital: "+user.department)
-            Text(text="telefonnummer: "+user.phone)
         }
     }
 }
-@Composable
-fun TestPopUp(userViewModel : UserViewModel){
-    var popUpController by remember{ mutableStateOf(false) }
-    Popup(alignment = Alignment.Center, onDismissRequest = {popUpController = false} ) {
-    InfoDisplay(userViewModel = userViewModel ){popUpController = false}
-
-
-    }
-}
-
-
 
 // source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
 @OptIn(ExperimentalPagerApi::class)
@@ -289,7 +280,7 @@ private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) 
         Row {
             Icon(
                 Icons.Default.Add,
-                contentDescription = "add",
+                contentDescription = stringResource(R.string.add),
                 Modifier,
                 Color.Black
             )

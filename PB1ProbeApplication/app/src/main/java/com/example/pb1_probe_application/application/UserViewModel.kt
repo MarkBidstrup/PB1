@@ -23,8 +23,8 @@ class UserViewModel @Inject constructor(
 
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
-    private val _otherUserDataFlow = MutableStateFlow<UserData?>(null)
-    val otherUserDataFlow: StateFlow<UserData?> = _otherUserDataFlow.asStateFlow()
+    private val _otherUserDataFlow = MutableStateFlow<UserData>(UserPatient())
+    val otherUserDataFlow: StateFlow<UserData> = _otherUserDataFlow.asStateFlow()
     private val _multiUserDataFlow = MutableStateFlow<List<UserData>>(emptyList())
     val multiUserDataFlow: StateFlow<List<UserData>> = _multiUserDataFlow.asStateFlow()
     lateinit var currentUserID: String

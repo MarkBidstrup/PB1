@@ -172,15 +172,21 @@
     <string name="changesSaved">Dine ændringer er blevet gemt</string>
     <string name="noChangesMade">Der er ikke lavet nogen ændringer</string>
 
+    //TODO this section probably needs a second look
     <!--Participants list Strings -->
     <string name="Navn">Navn:</string>
-    <string name="EfterNavn">EfterNavn:</string>
+    <string name="EfterNavn">Efternavn:</string>
     <string name="Email">Email:</string>
     <string name="Telefonnummer">Telefonnummer:</string>
     <string name="ErDuSikkerSletForsøg">Er du sikker på at du vil slette dette studie?</string>
     <string name="SletStudieCAPS">SLET STUDIE</string>
     <string name="SletForsøgsStudie">Slet studie</string>
     <string name="ændretEmail">Email ændret</string>
+
+    <!--Researcher contact info Strings-->
+    <string name="Kontakt">Forskerens kontaktoplysninger:</string>
+    <string name="Close">Close popup</string>
+    <string name="add">add icon</string>
 
 
 </resources>
