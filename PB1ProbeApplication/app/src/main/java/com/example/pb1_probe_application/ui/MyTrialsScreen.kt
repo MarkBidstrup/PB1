@@ -257,9 +257,8 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligibl
             .border(1.dp, Color.LightGray, shape)
     ) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
-            Arrangement.SpaceEvenly){
+            Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically){
             Column(modifier = Modifier
-                .height(110.dp)
                 .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
@@ -282,7 +281,6 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligibl
             }
             Spacer(modifier = Modifier.weight(.1f))
             Column(modifier = Modifier
-                .height(110.dp)
                 .width(130.dp)
                 .padding(top = 8.dp, bottom = 8.dp, end = 3.dp)) {
                 Button(
@@ -301,7 +299,7 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligibl
                     Text(stringResource(R.string.haandterStudie), style = Typography.button,
                         fontWeight = FontWeight.Bold, color = Color.Black)
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(24.dp))
                 Button(
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
