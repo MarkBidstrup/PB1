@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -19,18 +20,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
+import com.example.pb1_probe_application.dataClasses.UserResearcher
 import com.example.pb1_probe_application.navigation.BottomBar
-import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
-import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
-import com.example.pb1_probe_application.ui.theme.MediumGrey
-import com.example.pb1_probe_application.ui.theme.Typography
+import com.example.pb1_probe_application.ui.theme.*
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,7 @@ enum class TabPage {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT, userViewModel: UserViewModel) {
     val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
     if (role == Role.TRIAL_PARTICIPANT) {
@@ -148,9 +149,18 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 modifier = Modifier.fillMaxSize()
                             ) {
                                 items(trials1) {
+                                    var showDialog by remember{ mutableStateOf(false)}
+                                    if(showDialog){
+                                       Popup(alignment = Alignment.Center, onDismissRequest = {showDialog = false} ) {
+                                            InfoDisplay(userViewModel = userViewModel ){showDialog = false}
+                                        }
+                                    }
                                     val onClick: () -> Unit =
                                         if(pagerState.currentPage == 0) {
-                                            {} // TODO contact button
+                                            {
+                                              //trialsViewModel.setCurrentNavTrialID(it)
+                                              showDialog = !showDialog
+                                            }
                                         }
                                         else
                                             { {trialsViewModel.unsubscribeFromTrial(it) } }
@@ -191,6 +201,50 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
         }
     )
 }
+@Composable
+fun InfoDisplay( userViewModel: UserViewModel, onClick: () -> Unit) {
+
+    Card(
+
+        elevation = 4.dp,
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .border(1.dp, StrokeColor, RoundedCornerShape(10.dp))
+
+    ){ //card content
+        Column(
+            modifier=Modifier.padding(24.dp)
+        ) {
+            IconButton(onClick = { onClick() }) {
+
+                //------------------------------------
+                Icon(Icons.Default.Close, contentDescription = "Close"
+                )
+            }
+
+            userViewModel.getViewModelUserData("BJUd41JgLShgB5NvBTr1nNHkipk1")
+            var user = userViewModel.userDataFlow.collectAsState().value
+
+
+
+            Text (text="navn: "+ user!!.name +" "+ user.lastName)
+            Text (text="mail: "+ user.email)
+            //Text(text="tilknyttet hospital: "+user.department)
+            Text(text="telefonnummer: "+user.phone)
+        }
+    }
+}
+@Composable
+fun TestPopUp(userViewModel : UserViewModel){
+    var popUpController by remember{ mutableStateOf(false) }
+    Popup(alignment = Alignment.Center, onDismissRequest = {popUpController = false} ) {
+    InfoDisplay(userViewModel = userViewModel ){popUpController = false}
+
+
+    }
+}
+
+
 
 // source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
 @OptIn(ExperimentalPagerApi::class)
@@ -321,10 +375,12 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligibl
     }
 }
 
+
+
 @Preview
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials(role = Role.RESEARCHER)
+        //MyTrials(role = Role.RESEARCHER)
     }
 }

@@ -114,7 +114,7 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
-                MyTrials(trialsViewModel = trialsViewModel, role = role, navHostController = navController)
+                MyTrials(trialsViewModel = trialsViewModel, role = role, navHostController = navController, userViewModel = userViewModel)
             }
             else
                 NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) {

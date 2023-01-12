@@ -19,7 +19,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val repository: UserDataRepository,
 
-) : ViewModel() {
+    ): ViewModel() {
 
     private val _userDataFlow = MutableStateFlow<UserData?>(null)
     val userDataFlow: StateFlow<UserData?> = _userDataFlow.asStateFlow()
