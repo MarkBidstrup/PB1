@@ -21,7 +21,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DeleteTrialScreen(onClick: () -> Unit, trialsViewModel: TrialsViewModel, authViewModel: AuthViewModel?, userViewModel: UserViewModel) {
+fun DeleteTrialScreen(onClick: () -> Unit, trialsViewModel: TrialsViewModel, navMyTrials: () -> Unit) {
 
     Scaffold (
         topBar = {
@@ -70,10 +70,10 @@ fun DeleteTrialScreen(onClick: () -> Unit, trialsViewModel: TrialsViewModel, aut
                         trialsViewModel.currentNavTrial?.let {
                                 it1 -> trialsViewModel.deleteTrial(it1)
                         }
-                        onClick()
+                        navMyTrials()
                     }, R.string.SletStudieCAPS, true)
                     LoginButton(onClick = {
-                        onClick()
+                        navMyTrials()
                     }, R.string.annuller, false)
                 }
             }

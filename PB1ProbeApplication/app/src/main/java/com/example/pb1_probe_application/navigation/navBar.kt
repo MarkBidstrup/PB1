@@ -1,12 +1,9 @@
 package com.example.pb1_probe_application.navigation
 
-import android.media.MediaPlayer
-import android.transition.Transition
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -218,9 +215,10 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             DeleteTrialScreen(
                 onClick = { navController.popBackStack() },
                 trialsViewModel = trialsViewModel,
-                authViewModel = authViewModel,
-                userViewModel = userViewModel
-            )
+            ) { navController.navigate(BottomBarItems.Trials.route) {
+                    launchSingleTop = true
+                }
+            }
         }
 
         composable(route = Route.CreateTrial.route) {

@@ -9,7 +9,6 @@ data class Trial (
     var researcherID: String = "",
     var title: String = "",
     var purpose: String = "",
-    var briefDescription: String = "",
     var numParticipants: Int = 0,
     var registrationDeadline: String = "",
     var inclusionCriteria: String = "",
@@ -35,7 +34,7 @@ data class dbRegistrations(
 
 
 enum class trialAttributes {
-    title, purpose, briefDescription, numParticipants, registrationDeadline, inclusionCriteria,
+    title, purpose, numParticipants, registrationDeadline, inclusionCriteria,
     exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, numVisits, startDate, endDate,
     forsoegsBeskrivelse, deltagerInformation,  interventions, diagnoses, kommuner, locations
 }
@@ -47,7 +46,6 @@ fun loadCreateTrialList(): List<CreateTrialField> {
         CreateTrialField(trialAttributes.purpose, R.string.formaal1, R.string.indtastformaal),
         CreateTrialField(trialAttributes.numParticipants, R.string.antalDeltagere, R.string.indtastDeltagere),
         CreateTrialField(trialAttributes.registrationDeadline, R.string.frist, R.string.indtastFrist),
-        CreateTrialField(trialAttributes.briefDescription, R.string.kortBeskr, R.string.indtastKortBeskriv),
         CreateTrialField(trialAttributes.locations, R.string.lokationer, R.string.indtastLokationer),
         CreateTrialField(trialAttributes.kommuner, R.string.kommune, R.string.indtastKommune),
         CreateTrialField(trialAttributes.trialDuration, R.string.projektetsVarighed, R.string.indtastVarighed),

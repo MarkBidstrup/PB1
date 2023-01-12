@@ -82,7 +82,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                 trialAttributes.deltagerInformation -> input = trial.deltagerInformation
                                 trialAttributes.forsoegsBeskrivelse -> input = trial.forsoegsBeskrivelse
                                 trialAttributes.purpose -> input = trial.purpose
-                                else -> {input = trial.briefDescription }
+                                else -> {input = trial.registrationDeadline }
                             }
                             var userInput by remember { mutableStateOf(input) }
                             EditTrialField(
@@ -124,7 +124,7 @@ fun EditTrialScreen(trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit
                                     trialAttributes.deltagerInformation -> trial.deltagerInformation = userInput
                                     trialAttributes.forsoegsBeskrivelse -> trial.forsoegsBeskrivelse = userInput
                                     trialAttributes.purpose -> trial.purpose = userInput
-                                    else -> {trial.briefDescription = userInput}
+                                    else -> {trial.registrationDeadline = userInput}
                                 }
                             }
                             if (!(createTrialList.lastIndexOf(element = EditTrialField) == createTrialList.lastIndex)) {

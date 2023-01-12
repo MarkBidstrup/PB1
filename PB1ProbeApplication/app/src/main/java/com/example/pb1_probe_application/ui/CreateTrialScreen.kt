@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -84,7 +82,10 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
                             when (CreateTrialField.trialAttribute) {
                                 trialAttributes.title -> trial.title = userInput
                                 trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                trialAttributes.numVisits -> trial.numVisits = Integer.parseInt(userInput)
+                                trialAttributes.numVisits -> trial.numVisits =
+                                    if(userInput.toIntOrNull() != null)
+                                        Integer.parseInt(userInput)
+                                    else 0
                                 trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                 trialAttributes.interventions -> trial.interventions = userInput
                                 trialAttributes.startDate -> trial.startDate = userInput
@@ -96,11 +97,14 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
                                 trialAttributes.compensation -> trial.compensation = stringToBool(userInput)
                                 trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                 trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
-                                trialAttributes.numParticipants -> trial.numParticipants = Integer.parseInt(userInput)
+                                trialAttributes.numParticipants -> trial.numParticipants =
+                                    if(userInput.toIntOrNull() != null)
+                                        Integer.parseInt(userInput)
+                                    else 0
                                 trialAttributes.deltagerInformation -> trial.deltagerInformation = userInput
                                 trialAttributes.forsoegsBeskrivelse -> trial.forsoegsBeskrivelse = userInput
                                 trialAttributes.purpose -> trial.purpose = userInput
-                                else -> {trial.briefDescription = userInput}
+                                else -> {trial.registrationDeadline = userInput}
                             }
                         }
                         if (!(createTrialList.lastIndexOf(element = CreateTrialField) == createTrialList.lastIndex)) {
