@@ -9,17 +9,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.data.auth.Resource
+import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, navigateBack: () -> Unit){
+fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthViewModel?, userViewModel: UserViewModel, navigateBack: () -> Unit){
 
     val signupFlow = authViewModel?.signupFlow?.collectAsState()
 
@@ -29,6 +32,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
 
     var participantChecked by remember { mutableStateOf(false) }
     var researcherChecked by remember { mutableStateOf(false) }
+    var toastErrorShow by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
 
@@ -74,14 +78,16 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             }
 
             Spacer(modifier = Modifier.height(40.dp))
-            textField(label = stringResource(R.string.email), text = email, onValueChange = {email = it})
+            textField(label = stringResource(R.string.email), text = email, onValueChange = {email = it}, focusManager = LocalFocusManager.current)
             Spacer(modifier = Modifier.height(15.dp))
-            textField(label = stringResource(R.string.password), text = password, hiddenText = true, onValueChange = {password = it})
+            textField(label = stringResource(R.string.password), text = password, hiddenText = true, onValueChange = {password = it}, focusManager = LocalFocusManager.current)
             Spacer(modifier = Modifier.height(15.dp))
-            textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it})
+            textField(label = stringResource(R.string.repeatPassword), text = passwordRepeated, hiddenText = true, onValueChange = {passwordRepeated = it}, focusManager = LocalFocusManager.current)
 
             Spacer(modifier = Modifier.height(50.dp))
-            LoginButton(onClick = { signup(authViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
+            LoginButton(onClick = {
+                toastErrorShow = true
+                signup(authViewModel, userViewModel, email, password, passwordRepeated, context, participantChecked, researcherChecked)},
                 text = R.string.registrer, filled = true)
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -89,7 +95,10 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
             signupFlow?.value?.let {
                 when (it) {
                     is Resource.Failure -> {
-                        Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                        if (toastErrorShow) {
+                            Toast.makeText(context, it.exception.message, Toast.LENGTH_LONG).show()
+                            toastErrorShow = false
+                        }
                     }
                     Resource.Loading -> {
                         CircularProgressIndicator()
@@ -97,7 +106,13 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                     is Resource.Success -> {
                         Toast.makeText(context,R.string.registrationComplete,Toast.LENGTH_LONG).show()
                         LaunchedEffect(Unit) {
-                            navHostController?.navigate("Home")
+                            val role = if (participantChecked) Role.TRIAL_PARTICIPANT else Role.RESEARCHER
+                            val uid = authViewModel.currentUser!!.uid
+                            userViewModel.createUser(uid,email, role)
+                            userViewModel.setCurrentUser(uid)
+                            navHostController?.navigate("FurtherInformation") {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 }
@@ -107,7 +122,7 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
     )
 }
 
-private fun signup(authViewModel: AuthViewModel?, email: String, password: String, passwordRepeated: String, context: Context, participantChecked: Boolean, researcherChecked: Boolean) {
+private fun signup(authViewModel: AuthViewModel?, userViewModel: UserViewModel, email: String, password: String, passwordRepeated: String, context: Context, participantChecked: Boolean, researcherChecked: Boolean) {
     if(!participantChecked && !researcherChecked)
         Toast.makeText(context,R.string.trialParticipantOrResearcher,Toast.LENGTH_LONG).show()
     else if(email == "")
@@ -117,7 +132,6 @@ private fun signup(authViewModel: AuthViewModel?, email: String, password: Strin
     else if (password != passwordRepeated)
         Toast.makeText(context,R.string.passwordNotRepeated,Toast.LENGTH_LONG).show()
     else {
-        // TODO - make sure the role and email is saved with the profile data!
         authViewModel?.signup(email,password)
     }
 }

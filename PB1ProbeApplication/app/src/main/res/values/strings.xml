@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">PB1-Probe-Application</string>
+    <string name="app_name">PB1</string>
 
     <!--Patient profile Strings-->
     <string name="navn">Navn</string>
@@ -52,6 +52,8 @@
     <!--Trial listing Strings-->
     <string name="logo">Probes logo</string>
     <string name="nyesteStudier">Nyeste studier</string>
+    <string name="filtreredeStudier">%d fundne studier</string>
+    <string name="filtreredeStudierSingular">%d studie fundet</string>
     <string name="mereInfo">Læs mere...</string>
     <string name="ansoeg">Ansøg</string>
     <string name="formaal">Formål: </string>
@@ -64,22 +66,27 @@
 
     <string name="deltager_info">Deltagerinformation</string>
     <string name="samtykkeerklaering">Jeg er indforstået med, at ved at trykke “Ansøg” så deles mine data med tredjeparts databehandler ansvarlig for forsøget, og jeg giver samtykke til at blive kontaktet telefonisk med henblik på booking af screening. Se yderligere om vores privatlivspolitik på https://probe.dk/privatlivspolitik/</string>
-    <string name="ansoegt">Din ansøgning er modtaget\n\nDu kan nu følge studiet under\n“Mine studier”</string>
+    <string name="ansoegt">Ansøgning modtaget.\n\n\nDine kontaktinformationer er blevet sendt til forskeren, som vil kontakte dig vedrørende det videre forløb.\n\n\nDu kan nu følge studiet under\n“Mine studier”</string>
 
     <!--Search Strings-->
     <string name="filtrer">Filtrer</string>
+    <string name="unfiltrer">Fjern filtre</string>
+    <string name="unsearch">Fjern søgefilter</string>
     <string name="filtrer_forklaring">Filtrer hvilke studier du vil se</string>
+    <string name="unfiltrer_forklaring">Fjern filtre</string>
     <string name="soegForklaring">Søg efter et studie</string>
     <string name="filtrerStudier">Filtrer studier</string>
     <string name="afstand">Afstand</string>
     <string name="postnr">Indtast postnummer</string>
     <string name="postnrPlaceholder">e.g. 4200</string>
-    <string name="maksAfstand">Marks afstand til forsøgssted</string>
+    <string name="maksAfstand">Maks afstand til forsøgssted</string>
     <string name="kompensation">Kompensation tilbudt</string>
     <string name="koersel">Kørselsgodsgørelse</string>
     <string name="arbejdsgodtgoersel">Tabt arbejdsfortjeneste</string>
     <string name="varighed_Filter">Varighed</string>
     <string name="maksVarighed">Maks længde på forsøg</string>
+    <string name="antalBesoeg_Filter">Antal besøg/ interventioner</string>
+    <string name="maksantalBesoeg">Maks antal besøg</string>
     <string name="maaned1">1 måned</string>
     <string name="maaned3">3 måneder</string>
     <string name="maaned6">6 måneder</string>
@@ -89,6 +96,9 @@
     <!--Login Strings-->
     <string name="logInd">LOG IND</string>
     <string name="logInd2">Log ind</string>
+    <string name="glemtKodeord">Glemt adgangskode</string>
+    <string name="nulstilKodeord">Nulstil adgangskode</string>
+    <string name="tjekEmail">Email sendt. Tjek din email (evt. i spam-folderen) for at nulstille din kode</string>
     <string name="notLoggedIn">Log ind for at se denne skærm</string>
     <string name="registrer">REGISTRER</string>
     <string name="createProfile">Opret profil</string>
@@ -110,7 +120,7 @@
     <string name="annuller">ANNULLER</string>
     <string name="bekræft">BEKRÆFT</string>
     <string name="deltagerinformation">Deltagerinformation</string>
-    <string name="vedhæftFil">Vedhæft fil...</string>
+    <string name="indtastDeltagerinfo">Indtast deltagerinformation</string>
     <string name="titelPåStudie">Titel på studie</string>
     <string name="indtastTitel">Indtast titel</string>
     <string name="antalDeltagere">Antal deltagere</string>
@@ -121,10 +131,14 @@
     <string name="indtastEkslKriterier">Indtast ekslusionskriterier</string>
     <string name="honorar">Honorar</string>
     <string name="indtastHonorar">Indtast honorar</string>
-    <string name="lokationer">Lokation(er)</string>
-    <string name="indtastLokationer">Indtast lokation(er)</string>
+    <string name="lokationer">Lokation</string>
+    <string name="kommune">Kommune (bruges til filtrering)</string>
+    <string name="indtastLokationer">Indtast lokation</string>
+    <string name="indtastKommune">Indtast kommune</string>
     <string name="interventioner">Intervention(er)</string>
     <string name="indtastInterventioner">Indtast Intervention(er)</string>
+    <string name="besoeg">Antal besøg</string>
+    <string name="indtastBesoeg">Indtast antal besøg</string>
     <string name="transport">Transport</string>
     <string name="tilbydesTransport">Tilbydes transport?</string>
     <string name="tabtArbejdsfortjeneste">Tabt arbejdsfortjeneste</string>
@@ -151,6 +165,28 @@
     <string name="håndterStudie">Håndter studie</string>
     <string name="seDeltagerliste">Se deltagerliste</string>
     <string name="sletStudie">Slet studie</string>
+    <string name="IndtastYderligereOplysninger">Indtast yderligere oplysninger</string>
+    <string name="visit">besøg</string>
+    <string name="SLETPROFILCAPS">SLET PROFIL</string>
+    <string name="ErDuSikkerSlet">Er du sikker på at du vil slette din profil?</string>
+    <string name="changesSaved">Dine ændringer er blevet gemt</string>
+    <string name="noChangesMade">Der er ikke lavet nogen ændringer</string>
+
+    //TODO this section probably needs a second look
+    <!--Participants list Strings -->
+    <string name="Navn">Navn:</string>
+    <string name="EfterNavn">Efternavn:</string>
+    <string name="Email">Email:</string>
+    <string name="Telefonnummer">Telefonnummer:</string>
+    <string name="ErDuSikkerSletForsøg">Er du sikker på at du vil slette dette studie?</string>
+    <string name="SletStudieCAPS">SLET STUDIE</string>
+    <string name="SletForsøgsStudie">Slet studie</string>
+    <string name="ændretEmail">Email ændret</string>
+
+    <!--Researcher contact info Strings-->
+    <string name="Kontakt">Forskerens kontaktoplysninger:</string>
+    <string name="Close">Close popup</string>
+    <string name="add">add icon</string>
 
 
 </resources>

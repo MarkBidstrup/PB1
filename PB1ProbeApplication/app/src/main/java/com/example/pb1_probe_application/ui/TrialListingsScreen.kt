@@ -7,10 +7,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
@@ -21,22 +26,31 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pb1_probe_application.R
 import androidx.navigation.NavHostController
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
 import com.example.pb1_probe_application.ui.theme.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
- enum class TrialPostIcons {
+enum class TrialPostIcons {
      NotificationOn, NotificationOff, Contact, None
  }
 
@@ -46,37 +60,101 @@ enum class TopBarIcons {
 
  @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
  @Composable
-fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
-     val trials = trialsViewModel.trials.collectAsState(emptyList()).value
+fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userViewModel: UserViewModel, navHostController: NavHostController?, loggedIn: Boolean, role: Role = Role.TRIAL_PARTICIPANT) {
+     var trials = trialsViewModel.trials.collectAsState(emptyList()).value
      var myTrials: List<Trial> = ArrayList()
      var subscribedTrials: List<Trial> = ArrayList()
+     var searchBoxExpanded by remember { mutableStateOf(false) }
+     var displaySearchResults by remember { mutableStateOf(false) }
+     val focusRequester = remember { FocusRequester()  }
+     val focusManager = LocalFocusManager.current
+     val scope = rememberCoroutineScope()
+
      if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
          trialsViewModel.getViewModelSubscribedTrials()
-         subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
          trialsViewModel.getViewModelMyTrialsParticipants()
+         subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
          myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
      }
 
     Scaffold(
         topBar = {
-            ProbeTopBar(icon = TopBarIcons.Search, onClick = {}) //TODO - implement search onClick
+            if(!searchBoxExpanded)
+                ProbeTopBar(icon = TopBarIcons.Search, onClick = {
+                    // below lines of code is inspired by https://stackoverflow.com/questions/70654829/enable-and-focus-textfield-at-once-in-jetpack-compose
+                    // reply by Kamil Maciuszek, Jan 10 2022
+                    scope.launch {
+                        searchBoxExpanded = true
+                        delay(100)
+                        focusRequester.requestFocus()
+                    }
+                })
+            else {
+                var searchWord by remember { mutableStateOf("") }
+                SearchTopBar(searchWord,
+                    focusRequester,
+                    {searchWord = it},
+                    searchOnClick = {
+                        searchBoxExpanded = false
+                        if(searchWord != "") {
+                            trialsViewModel.getFilteredTrials(searchWord)
+                            trialsViewModel.showFilterResult = false
+                            displaySearchResults = true
+                        } },
+                    cancelOnClick = {searchBoxExpanded = false}
+                )
+
+            }
         },
         content = {
             Column(modifier = Modifier
                 .padding(all = 8.dp)
-                .padding(bottom = 46.dp)) {
+                .padding(bottom = 46.dp)
+                // next few lines of code clear the focus and keyboard when user taps outside of the keyboard
+                // code is from https://stackoverflow.com/questions/69139853/android-compose-textfield-how-to-dismiss-keyboard-on-touch-outside
+                // reply by Phil Dukhov, Sep 11 2021
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
+            ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        modifier = Modifier.padding(top = 12.dp, start = 17.dp, bottom = 12.dp),
-                        text = stringResource(R.string.nyesteStudier), style = Typography.h2
-                    )
+                    if (navHostController != null) {
+                        if(trialsViewModel.showFilterResult || displaySearchResults) {
+                            trials = trialsViewModel.filteredTrials.collectAsState().value
+                            if (trials.size != 1)
+                                Text(
+                                    modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
+                                    text = stringResource(R.string.filtreredeStudier, trials.size), style = Typography.h2
+                                )
+                            else
+                                Text(
+                                    modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
+                                    text = stringResource(R.string.filtreredeStudierSingular, trials.size), style = Typography.h2
+                                )
+                            Spacer(Modifier.weight(2f))
+                            UnSearchFilterButton(displaySearchResults, onClick = {
+                                trialsViewModel.showFilterResult = false
+                                navHostController.navigate("Home") {
+                                }
+                            })
+                        } else {
+                            Text(
+                                modifier = Modifier.padding(top = 12.dp, start = 9.dp, bottom = 12.dp),
+                                text = stringResource(R.string.nyesteStudier), style = Typography.h2
+                            )
+                        }
+                    }
                     Spacer(Modifier.weight(1f))
                     FilterButton(onClick = {
-                        //TODO: implement onClick
-                        navHostController?.navigate("Filter")
+                        navHostController?.navigate("Filter") {
+                            launchSingleTop = true
+                        }
                     })
                 }
 
@@ -85,11 +163,19 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .weight(4f)) {
-
+                    if(loggedIn && userViewModel.getUserRole() == null) {
+                        scope.launch {
+                            delay(20) // this is to make sure that role has had time to be updated
+                        }
+                    }
                     items(trials) {
                         var icon by remember { mutableStateOf(TrialPostIcons.None) }
                         var onClick: () -> Unit = {}
-                        if(loggedIn && role == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
+                        if(loggedIn && userViewModel.getUserRole() == Role.TRIAL_PARTICIPANT) { // subscribe button is only shown for logged in trial participants
+                            trialsViewModel.getViewModelSubscribedTrials()
+                            trialsViewModel.getViewModelMyTrialsParticipants()
+                            subscribedTrials = trialsViewModel.subscribedTrials.collectAsState().value
+                            myTrials = trialsViewModel.myTrialsParticipants.collectAsState().value
                             if(subscribedTrials.contains(it)) {
                                 icon = TrialPostIcons.NotificationOff
                                 onClick = { icon = TrialPostIcons.NotificationOn
@@ -105,17 +191,27 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             if (!loggedIn)
                                 true
                             else
-                                role == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
+                                userViewModel.getUserRole() == Role.TRIAL_PARTICIPANT && !myTrials.contains(it)
                         val applyOnClick: () -> Unit =
                             if(loggedIn)
                             { {
                                 trialsViewModel.setCurrentNavTrialID(it)
-                                navHostController?.navigate("DeltagerInfo") } }
+                                navHostController?.navigate("DeltagerInfo") {
+                                    launchSingleTop = true
+                                } } }
                             else { {
-                                navHostController?.navigate("NotLoggedIn")
+                                navHostController?.navigate("NotLoggedIn") {
+                                    launchSingleTop = true
+                                }
                             }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
-                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick)
+                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController,
+                         readMoreOnClick = {
+                             trialsViewModel.setCurrentNavTrialID(it)
+                             navHostController?.navigate("ReadMoreTrialPost") {
+                                 launchSingleTop = true
+                             }
+                         })
                         if (trials.indexOf(it) != trials.size)
                             Spacer(modifier = Modifier.height(15.dp))
                     }
@@ -128,10 +224,14 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
                             .align(alignment = CenterHorizontally)
                     ) {
                         LoginButton(onClick = {
-                            navHostController?.navigate("logInd")
+                            navHostController?.navigate("logInd") {
+                                launchSingleTop = true
+                            }
                         }, R.string.logInd, false)
                         LoginButton(onClick = {
-                            navHostController?.navigate("register")
+                            navHostController?.navigate("register") {
+                                launchSingleTop = true
+                            }
                         }, R.string.registrer, true)
                     }
                 }
@@ -148,8 +248,8 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), navHostC
 
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,
-              iconOnClick: () -> Unit, applyOnClick: () -> Unit) {
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,navHostController: NavHostController?,
+              iconOnClick: () -> Unit, applyOnClick: () -> Unit, readMoreOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -192,13 +292,17 @@ fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIc
                     text = stringResource(R.string.mereInfo),
                     style = MaterialTheme.typography.body2,
                     color = ReadMoreColor,
-                    modifier = modifier.padding(start = 8.dp, top = 16.dp),)
+                    modifier = modifier
+                        .padding(start = 8.dp, top = 16.dp)
+                        .clickable(onClick = readMoreOnClick),)
                 Spacer(Modifier.weight(1f))
                 TrialApplyButton(buttonEnabled, onClick = applyOnClick)
             }
         }
     }
 }
+
+
 
 @Composable
 fun TrialExpandButton(
@@ -279,12 +383,7 @@ fun TrialInfo(
             modifier = if (expanded) modifier.padding(bottom = 8.dp) else modifier.padding(bottom = 16.dp)
         )
         if (expanded) {
-            var locations = stringResource(R.string.lokation) +" "
-            if (trial.locations.isNotEmpty()) {
-                locations += trial.locations[0].hospitalName
-                for (i in 2 .. trial.locations.size)
-                    locations += ", " + trial.locations[i-1].hospitalName
-            }
+            val locations = stringResource(R.string.lokation) +" " + trial.locations
             Text(
                 text = locations,
                 style = MaterialTheme.typography.body2,
@@ -411,6 +510,58 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
 }
 
 @Composable
+fun SearchTopBar(input: String, focusRequester: FocusRequester, onValueChange: (String) -> Unit, searchOnClick: () -> Unit, cancelOnClick: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(70.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier
+            .padding(start = 17.dp, top = 17.dp, bottom = 17.dp)
+            .weight(1f)
+            .border(0.5.dp, Color.Gray, MaterialTheme.shapes.small)
+        ) {
+            BasicTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 4.dp, end = 3.dp)
+                    .fillMaxSize()
+                    .focusRequester(focusRequester),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { searchOnClick()
+                    }
+                )
+            )
+        }
+        IconButton(onClick = cancelOnClick, modifier = modifier
+            .padding(end = 2.dp)) {
+            Icon(
+                imageVector = Icons.Filled.Clear,
+                contentDescription = "search",
+                modifier = modifier.scale(1.2f)
+            )
+        }
+        IconButton(onClick = searchOnClick, modifier = modifier
+            .padding(end = 10.dp)) {
+            Icon(
+                imageVector = Icons.Filled.Search,
+                contentDescription = "search",
+                modifier = modifier.scale(1.2f)
+            )
+        }
+    }
+
+}
+
+@Composable
 fun FilterButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -426,10 +577,44 @@ fun FilterButton(
             modifier = modifier
                 .height(16.dp)
                 .padding(end = 2.dp)
+                .scale(1.5f)
         )
         Text(
             text = stringResource(R.string.filtrer),
             style = MaterialTheme.typography.body2,)
+    }
+}
+
+@Composable
+fun UnSearchFilterButton(
+    search: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onPrimary),
+        elevation = ButtonDefaults.elevation(0.dp)
+    ) {
+        val iconUsed = if (search)
+            Icons.Filled.SearchOff
+        else
+            Icons.Filled.FilterAltOff
+        val text = if (search)
+            R.string.unsearch
+        else
+            R.string.unfiltrer
+        Icon(
+            imageVector = iconUsed,
+            contentDescription = stringResource(R.string.unfiltrer_forklaring),
+            modifier = modifier
+                .height(16.dp)
+                .padding(end = 2.dp)
+                .scale(1.5f)
+        )
+        Text(
+            text = stringResource(text),
+            style = MaterialTheme.typography.body2)
     }
 }
 
@@ -440,6 +625,6 @@ fun FilterButton(
 @Composable
 fun TrialPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        TrialListingsScreen(navHostController = null, loggedIn = false)
+//        TrialListingsScreen(navHostController = null, loggedIn = false)
     }
 }

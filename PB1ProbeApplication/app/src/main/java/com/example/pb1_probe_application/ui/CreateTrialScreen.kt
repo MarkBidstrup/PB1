@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -29,10 +29,11 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
+fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavBack: () -> Unit, navMyTrials: () -> Unit) {
 
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val scrollState = rememberScrollState()
 
     Scaffold(
         topBar = {
@@ -52,15 +53,17 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
         },
         content = {
             val trial = Trial()
-            if(email != null)
-                trial.researcherEmail = email
+            if(id != null)
+                trial.researcherID = id
             Column(modifier = Modifier.padding(bottom = 0.dp)) {
-                LazyColumn (
+                Column (
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
-                        .weight(4f)) {
+                        .weight(4f)
+                        .verticalScroll(scrollState)
+                ) {
                     val createTrialList = loadCreateTrialList()
-                    items(createTrialList) {
+                    createTrialList.forEach {
                         CreateTrialField ->
                         var userInput by remember { mutableStateOf("") }
                         TrialInputField(
@@ -79,21 +82,29 @@ fun CreateTrialScreen(email: String?, trialsViewModel: TrialsViewModel, onClickN
                             when (CreateTrialField.trialAttribute) {
                                 trialAttributes.title -> trial.title = userInput
                                 trialAttributes.trialDuration -> trial.trialDuration = userInput
-                                trialAttributes.diagnoses -> trial.diagnoses = listOf(userInput)
+                                trialAttributes.numVisits -> trial.numVisits =
+                                    if(userInput.toIntOrNull() != null)
+                                        Integer.parseInt(userInput)
+                                    else 0
+                                trialAttributes.diagnoses -> trial.diagnoses = makeList(userInput)
                                 trialAttributes.interventions -> trial.interventions = userInput
                                 trialAttributes.startDate -> trial.startDate = userInput
                                 trialAttributes.endDate -> trial.endDate = userInput
-                                trialAttributes.lostSalaryComp -> trial.lostSalaryComp = userInput=="Ja"
-                                trialAttributes.transportComp -> trial.transportComp = userInput=="Ja"
-                                trialAttributes.locations -> trial.locations = listOf(TrialLocation(userInput))
-                                trialAttributes.compensation -> trial.compensation = userInput=="Ja"
+                                trialAttributes.lostSalaryComp -> trial.lostSalaryComp = stringToBool(userInput)
+                                trialAttributes.transportComp -> trial.transportComp = stringToBool(userInput)
+                                trialAttributes.locations -> trial.locations = userInput
+                                trialAttributes.kommuner -> trial.kommuner = userInput
+                                trialAttributes.compensation -> trial.compensation = stringToBool(userInput)
                                 trialAttributes.exclusionCriteria -> trial.exclusionCriteria = userInput
                                 trialAttributes.inclusionCriteria -> trial.inclusionCriteria = userInput
-                                trialAttributes.numParticipants -> trial.numParticipants = Integer.parseInt(userInput)
+                                trialAttributes.numParticipants -> trial.numParticipants =
+                                    if(userInput.toIntOrNull() != null)
+                                        Integer.parseInt(userInput)
+                                    else 0
                                 trialAttributes.deltagerInformation -> trial.deltagerInformation = userInput
                                 trialAttributes.forsoegsBeskrivelse -> trial.forsoegsBeskrivelse = userInput
                                 trialAttributes.purpose -> trial.purpose = userInput
-                                else -> {trial.briefDescription = userInput}
+                                else -> {trial.registrationDeadline = userInput}
                             }
                         }
                         if (!(createTrialList.lastIndexOf(element = CreateTrialField) == createTrialList.lastIndex)) {
@@ -146,18 +157,45 @@ fun TrialInputField(
             style = MaterialTheme.typography.body1,
             color = TextColorGreen
         )
-        OutlinedTextField(
-            value = input,
-            singleLine = true,
-            label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 17.dp, end = 17.dp),
-            onValueChange = onValueChange,
-            textStyle = Typography.body1,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions
-        )
+        if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.transport)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.tabtArbejdsfortjeneste)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.honorar)
+        ) {
+            DropDownState(DropDownType.JA_NEJ, onValueChange, input,null)
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.antalDeltagere)
+            || LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.besoeg)
+        ) {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                keyboardActions = keyboardActions
+            )
+        } else if (
+            LocalContext.current.getString(createTrialField.StringResourceHeading) == stringResource(id = R.string.kommune)
+        ) {
+            DropDownState(dropDownType = DropDownType.KOMMUNE, onValueChange, input, keyboardActions)
+        } else {
+            OutlinedTextField(
+                value = input,
+                singleLine = true,
+                label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 17.dp, end = 17.dp),
+                onValueChange = onValueChange,
+                textStyle = Typography.body1,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions
+            )
+        }
     }
 }
 
@@ -166,3 +204,25 @@ fun TrialInputField(
 private fun ProfileUserScreenPreview() {
 //    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
 }
+
+//Column {
+//    Text(
+//        text = LocalContext.current.getString(createTrialField.StringResourceHeading),
+//        modifier = Modifier.padding(start = 17.dp),
+//        style = MaterialTheme.typography.body1,
+//        color = TextColorGreen
+//    )
+//    OutlinedTextField(
+//        value = input,
+//        singleLine = true,
+//        label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 17.dp, end = 17.dp),
+//        onValueChange = onValueChange,
+//        textStyle = Typography.body1,
+//        keyboardOptions = keyboardOptions,
+//        keyboardActions = keyboardActions
+//    )
+//}
+

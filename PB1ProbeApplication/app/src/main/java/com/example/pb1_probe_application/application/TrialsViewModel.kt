@@ -3,6 +3,7 @@ package com.example.pb1_probe_application.application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pb1_probe_application.data.trials.TrialRepository
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.dataClasses.Trial
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,25 +18,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TrialsViewModel @Inject constructor(
-    private val repository: TrialRepository
+    private val repository: TrialRepository, private val userRepository: UserDataRepository
 ) : ViewModel(){
-    val trials = repository.trials
+    val trials = repository.trials // list of all trials
     private val _trial = MutableStateFlow<Trial?>(null)
-    val trial: StateFlow<Trial?> = _trial.asStateFlow()
+    val trial: StateFlow<Trial?> = _trial.asStateFlow() // a specific trial
     private val _myTrialsResearcher = MutableStateFlow<List<Trial>>(ArrayList())
     val myTrialsResearcher: StateFlow<List<Trial>> = _myTrialsResearcher.asStateFlow()
     private val _myTrialsParticipants = MutableStateFlow<List<Trial>>(ArrayList())
     val myTrialsParticipants: StateFlow<List<Trial>> = _myTrialsParticipants.asStateFlow()
     private val _subscribedTrials = MutableStateFlow<List<Trial>>(ArrayList())
     val subscribedTrials: StateFlow<List<Trial>> = _subscribedTrials.asStateFlow()
+    private val _filteredTrials = MutableStateFlow<List<Trial>>(ArrayList())
+    val filteredTrials: StateFlow<List<Trial>> = _filteredTrials.asStateFlow()
+    // for each trial, a list of the uids of the registered participants
     private val _registeredParticipants = HashMap<String, MutableStateFlow<List<String>>>()
-    var currentNavTrial: Trial? = null // for navigation
+    // the number of eligible particpants for each trial
+    private val _eligibleParticipants = HashMap<String, MutableStateFlow<Int>>()
+    var currentNavTrial: Trial? = null // current trial, for navigation
         private set
+    var showFilterResult: Boolean = false // whether to show filter page, used for navigation
 
 
     fun getTrial(trialID: String)= viewModelScope.launch {
         val result = repository.getTrial(trialID)
         _trial.value = result
+    }
+
+    fun getFilteredTrials(searchText: String?, location: String? = null, diagnoses: String? = null, compensation: Boolean = false, transportComp: Boolean = false, lostSalaryComp: Boolean = false, trialDuration: Int? = null, numVisits: Int? = null)= viewModelScope.launch {
+        val result = repository.getFilteredTrials(searchText, location, diagnoses, compensation, transportComp, lostSalaryComp, trialDuration, numVisits)
+        _filteredTrials.value = result
     }
 
     fun getViewModelMyTrialsParticipants() = viewModelScope.launch {
@@ -67,22 +79,35 @@ class TrialsViewModel @Inject constructor(
         repository.registerForTrial(trial.trialID)
     }
 
-    fun getViewModelRegisteredParticipants(trialID: String): StateFlow<List<String>> {
-        if(!_registeredParticipants.containsKey(trialID)) {
+    fun getRegisteredParticipantsUIDList(trialID: String): StateFlow<List<String>> {
+        if(!_registeredParticipants.containsKey(trialID)) { // creates a new entry in the hashmap
             _registeredParticipants[trialID] = MutableStateFlow(ArrayList())
         }
         viewModelScope.launch {
-            val result = repository.getRegisteredParticipants(trialID)
+            val result = repository.getRegisteredParticipantsUID(trialID)
             _registeredParticipants[trialID]?.value = result
         }
         return _registeredParticipants[trialID]?.asStateFlow() ?: MutableStateFlow<List<String>>(ArrayList()).asStateFlow()
     }
+
+    fun getTotalNumOfPotentialCandidates(trialID: String, diagnoses: List<String>): StateFlow<Int> {
+        if(!_eligibleParticipants.containsKey(trialID)) { // creates a new entry in the hashmap
+            _eligibleParticipants[trialID] = MutableStateFlow(0)
+        }
+        viewModelScope.launch {
+            val result = userRepository.getNumUsersWithCondition(diagnoses)
+            _eligibleParticipants[trialID]?.value = result
+        }
+        return _eligibleParticipants[trialID]?.asStateFlow() ?: MutableStateFlow(0).asStateFlow()
+    }
+
 
     fun createNewTrial(trial: Trial) {
         viewModelScope.launch {
             repository.addNew(trial)
         }
         _registeredParticipants[trial.trialID] = MutableStateFlow(ArrayList())
+        _eligibleParticipants[trial.trialID] = MutableStateFlow(0)
     }
 
     fun updateTrial(trial: Trial) {
@@ -96,6 +121,13 @@ class TrialsViewModel @Inject constructor(
             repository.delete(trial.trialID)
         }
         _registeredParticipants.remove(trial.trialID)
+        _eligibleParticipants.remove(trial.trialID)
+    }
+
+    fun deleteCurrentUserFromAllTrialDBEntries() {
+        viewModelScope.launch {
+            repository.deleteUserFromAllTrialsDBs()
+        }
     }
 
     fun setCurrentNavTrialID(trial: Trial) {

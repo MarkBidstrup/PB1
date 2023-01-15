@@ -25,18 +25,6 @@ class TrialRepositoryImpl @Inject constructor(
         return trialDB().document(trialId).get().await().toObject<Trial>()
     }
 
-    override suspend fun getFilteredTrials(
-        searchText: String?,
-        location: String?,
-        compensationOffered: Boolean?
-    ): List<Trial> {
-        TODO("Not yet implemented")
-//        val list: MutableList<Trial> = ArrayList()
-//        val snapshot = trialDB().get().await()
-//        snapshot.forEach { t -> list.add(t.toObject()) }
-//        return list
-    }
-
     override suspend fun addNew(trial: Trial) {
         trialDB().add(trial).await()
     }
@@ -47,60 +35,224 @@ class TrialRepositoryImpl @Inject constructor(
 
     override suspend fun delete(trialId: String) {
         trialDB().document(trialId).delete().await()
-        // TODO - also delete from subscribed list etc. Notify users first?
+        val snapshot1 = registrationDB().whereEqualTo("trialID", trialId).get().await()
+        snapshot1.forEach { t -> t.reference.delete().await()}
+        val snapshot2 = subscriptionDB().whereEqualTo("trialID", trialId).get().await()
+        snapshot2.forEach { t -> t.reference.delete().await()}
     }
 
     override suspend fun getMyTrialsParticipant(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = registrationDB().whereEqualTo("participantEmail", email).get().await()
+        val snapshot = registrationDB().whereEqualTo("participantID", id).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
         return list
     }
 
     override suspend fun getMyTrialsResearcher(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = trialDB().whereEqualTo("researcherEmail", email).get().await()
+        val snapshot = trialDB().whereEqualTo("researcherID", id).get().await()
         snapshot.forEach { t -> list.add(t.toObject()) }
         return list
     }
 
     override suspend fun getSubscribedTrials(): List<Trial> {
-        val email = auth.currentUser?.email
+        val id = auth.currentUser?.uid
         val list: MutableList<Trial> = ArrayList()
-        val snapshot = subscriptionDB().whereEqualTo("participantEmail", email).get().await()
+        val snapshot = subscriptionDB().whereEqualTo("participantID", id).get().await()
         snapshot.forEach { t -> t.getString("trialID")?.let { id -> getTrial(id)?.let { list.add(it) } } }
         return list
     }
 
     override suspend fun registerForTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            registrationDB().document(email + "_$trialId")
-            .set(dbRegistrations(email, trialId)).await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            registrationDB().document(id + "_$trialId")
+            .set(dbRegistrations(id, trialId)).await()
     }
 
     override suspend fun subscribeToTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            subscriptionDB().document(email + "_$trialId")
-            .set(dbRegistrations(email, trialId)).await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            subscriptionDB().document(id + "_$trialId")
+            .set(dbRegistrations(id, trialId)).await()
     }
 
     override suspend fun unsubscribeFromTrial(trialId: String) {
-        val email = auth.currentUser?.email
-        if(email != null)
-            subscriptionDB().document(email + "_$trialId").delete().await()
+        val id = auth.currentUser?.uid
+        if(id != null)
+            subscriptionDB().document(id + "_$trialId").delete().await()
     }
 
-    override suspend fun getRegisteredParticipants(trialId: String): List<String> {
-        val emailList: MutableList<String> = ArrayList()
+    override suspend fun getRegisteredParticipantsUID(trialId: String): List<String> {
+        val uidList: MutableList<String> = ArrayList()
         val snapshot = registrationDB().whereEqualTo("trialID", trialId).get().await()
-        snapshot.forEach { t -> t.getString("participantEmail")?.let { emailList.add(it) } }
-        return emailList
+        snapshot.forEach { t -> t.getString("participantID")?.let { uidList.add(it) } }
+        return uidList
     }
 
+    override suspend fun getFilteredTrials( // used for both search and filter results
+        searchText: String?,
+        location: String?,
+        diagnoses: String?,
+        compensation: Boolean,
+        transportComp: Boolean,
+        lostSalaryComp: Boolean,
+        trialDuration: Int?,
+        numVisits: Int?
+    ): List<Trial>{
+        var list: MutableList<Trial> = ArrayList()
+
+        if(searchText != null && searchText != "") { // if this is a search query
+            // conducts case-sensitive prefix search of the title, purpose, and brief description
+            // source: https://stackoverflow.com/questions/46568142/google-firestore-query-on-substring-of-a-property-value-text-search
+            // answer by GabLeRoux on March 29, 2022
+            val snapshot = trialDB()
+                .whereGreaterThanOrEqualTo("title", searchText)
+                .whereLessThanOrEqualTo("title", searchText + "\uf8ff")
+                .get().await()
+            snapshot.forEach { t -> list.add(t.toObject()) }
+            val snapshot1 = trialDB()
+                .whereGreaterThanOrEqualTo("purpose", searchText)
+                .whereLessThanOrEqualTo("purpose", searchText + "\uf8ff")
+                .get().await()
+            snapshot1.forEach { t -> list.add(t.toObject()) }
+            val snapshot2 = trialDB()
+                .whereGreaterThanOrEqualTo("briefDescription", searchText)
+                .whereLessThanOrEqualTo("briefDescription", searchText + "\uf8ff")
+                .get().await()
+            snapshot2.forEach { t -> list.add(t.toObject()) }
+            val set = list.toSet() //remove duplicates
+            list = set.toMutableList()
+
+        } else { // if this is a filter query
+            var locationsList: MutableList<Trial>? = null
+
+            // get the list of trials filtered by location
+            if(location != null && location != "") {
+                locationsList = ArrayList()
+                val snapshot = trialDB()
+                    .whereEqualTo("kommuner", location)
+                    .get().await()
+                snapshot.forEach { t -> locationsList.add(t.toObject()) }
+            }
+
+            var diagnosesList: MutableList<Trial>? = null
+
+            // get the list of trials filtered by diagnosis
+            if(diagnoses != null && diagnoses != "") {
+                diagnosesList = ArrayList()
+                val snapshot = trialDB()
+                    .whereArrayContains("diagnoses", diagnoses)
+                    .get().await()
+                snapshot.forEach { t -> diagnosesList.add(t.toObject()) }
+            }
+
+            // get the list of trial filtered by various forms of compensation (using logical AND)
+            // if any of the 3 compensation filters were applied
+            var compList: MutableList<Trial> = ArrayList()
+            var tempList: MutableList<Trial> = ArrayList()
+            if (compensation || lostSalaryComp || transportComp) {
+                if(compensation) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("compensation", true)
+                        .get().await()
+                    snapshot.forEach { t -> compList.add(t.toObject()) }
+                }
+                if(transportComp) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("transportComp", true)
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                    compList = if (compensation) {
+                        // if both conditions were checked, we need the intersection
+                        (compList intersect tempList.toSet()).toMutableList()
+                    } else // only transportComp box was checked
+                        tempList
+                }
+                if(lostSalaryComp) {
+                    tempList = ArrayList()
+                    val snapshot = trialDB()
+                        .whereEqualTo("lostSalaryComp", true)
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                    compList = if (compensation || transportComp ) {
+                        // if any of the other 2 conditions were checked, we need the intersection of the 2 lists
+                        (compList intersect tempList.toSet()).toMutableList()
+                    } else // only the lostSalaryComp box was checked
+                        tempList
+                }
+                tempList = ArrayList()
+            }
+
+            if(trialDuration != null && trialDuration > 0) { // if maxDuration filter was checked, add to templist
+                for(i in 1 .. trialDuration) {
+                    val month = if(i == 1)
+                        " måned"
+                    else
+                        " måneder"
+                    val snapshot = trialDB()
+                        .whereEqualTo("trialDuration", "" + i + month)
+                        .get().await()
+                    snapshot.forEach { t -> tempList.add(t.toObject()) }
+                }
+            }
+            if(numVisits != null && numVisits > 0) { // if maxNumVisits was checked, store in templist2
+                val tempList2: MutableList<Trial> = ArrayList()
+                for(i in 1 .. numVisits) {
+                    val snapshot = trialDB()
+                        .whereEqualTo("numVisits", i)
+                        .get().await()
+                    snapshot.forEach { t -> tempList2.add(t.toObject()) }
+                }
+                tempList = if(trialDuration != null && trialDuration > 0) // if both maxDuration and maxVisits were checked, get the intersection
+                    (tempList intersect tempList2.toSet()).toMutableList()
+                else // if only maxNumVisits but not maxDuration was checked
+                    tempList2
+            }
+
+            if (locationsList != null) {
+                list = locationsList
+            }
+            if (diagnosesList != null) {
+                list = if (locationsList == null) {
+                    diagnosesList
+                } else // if there were filters on both location and diagnoses, get the intersection
+                    (list intersect diagnosesList.toSet()).toMutableList()
+            }
+            if (compensation || lostSalaryComp || transportComp) { // if any compensation filters were applied
+                // if there were no filters applied on location or diagnoses, the result list is the complist
+                list = if (locationsList == null && diagnosesList == null) {
+                    compList
+                } else // if there were filters applied, the result is the intersection
+                    (list intersect compList.toSet()).toMutableList()
+            }
+            if((trialDuration != null && trialDuration > 0) || (numVisits != null && numVisits > 0)) {
+                // if no other filters were applied, the result list is the tempList
+                list = if(locationsList == null && diagnosesList == null && !(compensation || lostSalaryComp || transportComp))
+                    tempList
+                else // if any other filters were applied, the result is the intersection
+                    (list intersect tempList.toSet()).toMutableList()
+            }
+        }
+        val set = list.toSet() //remove duplicates
+        list = set.toMutableList()
+        return list
+    }
+
+    override suspend fun deleteUserFromAllTrialsDBs() {
+        val id = auth.currentUser?.uid
+        if(id != null) {
+            val snapshot1 = registrationDB().whereEqualTo("participantID", id).get().await()
+            snapshot1.forEach { t -> t.reference.delete().await()}
+            val snapshot2 = subscriptionDB().whereEqualTo("participantID", id).get().await()
+            snapshot2.forEach { t -> t.reference.delete().await()}
+            val snapshot3 = trialDB().whereEqualTo("researcherID", id).get().await()
+            snapshot3.forEach { t -> t.reference.delete().await()}
+        }
+
+    }
 
     private fun trialDB(): CollectionReference =
         firestore.collection(TRIAL_COLLECTION)

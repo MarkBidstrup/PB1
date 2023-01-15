@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -19,18 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.dataClasses.Trial
 import com.example.pb1_probe_application.navigation.BottomBar
-import com.example.pb1_probe_application.ui.theme.ButtonColorGreen
-import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
-import com.example.pb1_probe_application.ui.theme.MediumGrey
-import com.example.pb1_probe_application.ui.theme.Typography
+import com.example.pb1_probe_application.ui.theme.*
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -41,7 +41,7 @@ enum class TabPage {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT) {
+fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT, userViewModel: UserViewModel) {
     val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
     if (role == Role.TRIAL_PARTICIPANT) {
@@ -81,41 +81,37 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                             text = stringResource(R.string.ingenAktiveStudier), style = Typography.body1,
                             modifier = Modifier.align(CenterHorizontally) )
                         Spacer(modifier = modifier.weight(1f))
-                        PostNewTrialButton(
-                            Modifier
-                                .height(45.dp)
-                                .padding(bottom = 5.dp)
-                                .align(CenterHorizontally)
-                        ) {
-                            navHostController.popBackStack()
-                        }
                     } else {
                         LazyColumn(
                             modifier = modifier.weight(1f),
                             contentPadding = PaddingValues(start = 17.dp, end = 17.dp)
                         ) {
                             items(myTrials) {
-                                val list = trialsViewModel.getViewModelRegisteredParticipants(it.trialID).collectAsState().value
-                                ResearcherTrialPost(it, list.size) {
+                                val list = trialsViewModel.getRegisteredParticipantsUIDList(it.trialID).collectAsState().value
+                                val potentialCandidates = trialsViewModel.getTotalNumOfPotentialCandidates(it.trialID, it.diagnoses).collectAsState().value
+                                ResearcherTrialPost(it, list.size, potentialCandidates) {
                                     trialsViewModel.setCurrentNavTrialID(it)
-                                    navHostController.navigate("ManageTrial") }
+                                    navHostController.navigate("ManageTrial") {
+                                        launchSingleTop = true
+                                    } }
                                 if (myTrials.indexOf(it) != myTrials.lastIndex)
                                     Spacer(modifier = Modifier.height(15.dp))
                             }
                         }
                         Spacer(modifier = Modifier.height(20.dp))
-                        PostNewTrialButton(
-                            modifier
-                                .height(45.dp)
-                                .padding(bottom = 5.dp)
-                                .align(CenterHorizontally)
-                        ) {
-                            navHostController.navigate("CreateTrial")
-                        }
+                    }
+                    PostNewTrialButton(
+                        modifier
+                            .height(45.dp)
+                            .padding(bottom = 5.dp)
+                            .align(CenterHorizontally)
+                    ) {
+                        navHostController.navigate("CreateTrial")
                     }
                 } else { // trial participant
                     val pagerState = rememberPagerState(pageCount = TabPage.values().size)
                     val scope = rememberCoroutineScope()
+                    // source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
                     TrialParticipantTabs(
                         selectedTabIndex = pagerState.currentPage,
                         onSelectedTab = {
@@ -152,16 +148,46 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                 modifier = Modifier.fillMaxSize()
                             ) {
                                 items(trials1) {
+                                    var showDialog by remember{ mutableStateOf(false)}
+                                    if(showDialog){
+                                       Popup(alignment = Alignment.Center,
+                                           onDismissRequest = {showDialog = false},
+                                       ) {
+                                            InfoDisplay(trialsViewModel.currentNavTrial ,userViewModel = userViewModel){showDialog = false}
+                                        }
+                                    }
                                     val onClick: () -> Unit =
                                         if(pagerState.currentPage == 0) {
-                                            {} // TODO contact button
+                                            {
+                                              trialsViewModel.setCurrentNavTrialID(it)
+                                              showDialog = !showDialog
+                                            }
                                         }
                                         else
                                             { {trialsViewModel.unsubscribeFromTrial(it) } }
                                     if(pagerState.currentPage == 0) // mytrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {})
-                                    else // subscribedTrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = true, iconOnClick = onClick, applyOnClick = {navHostController.navigate("DeltagerInfo")})
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
+                                            readMoreOnClick = {
+                                                trialsViewModel.setCurrentNavTrialID(it)
+                                                navHostController.navigate("ReadMoreTrialPost") {
+                                                    launchSingleTop = true
+                                                }
+                                            })
+                                    else { // subscribedTrials
+                                        val canApply = !myTrials.contains(it)
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick,
+                                            applyOnClick = {
+                                            trialsViewModel.setCurrentNavTrialID(it)
+                                            navHostController.navigate("DeltagerInfo") {
+                                                launchSingleTop = true
+                                            } }
+                                        , readMoreOnClick = {
+                                                trialsViewModel.setCurrentNavTrialID(it)
+                                                navHostController.navigate("ReadMoreTrialPost") {
+                                                    launchSingleTop = true
+                                                }
+                                            })
+                                    }
                                     if (trials1.indexOf(element = it) != trials1.lastIndex)
                                         Spacer(modifier = Modifier.height(15.dp))
                                 }
@@ -176,7 +202,42 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
         }
     )
 }
+@Composable
+fun InfoDisplay(trial: Trial?, userViewModel: UserViewModel, onClick: () -> Unit) {
 
+    Card(
+        elevation = 4.dp,
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier
+            .border(4.dp, StrokeColor, RoundedCornerShape(10.dp))
+    ){ //card content
+        Column(
+            modifier=Modifier.padding(start = 24.dp, bottom = 24.dp)
+        ) {
+            Row(horizontalArrangement = Arrangement.End) {
+                Text(text = stringResource(R.string.Kontakt), style = Typography.h3,
+                    modifier = Modifier.padding(top = 20.dp))
+                IconButton(onClick = { onClick() }) {
+                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.Close))
+                }
+            }
+            if (trial != null) {
+                userViewModel.getViewModelUserData(trial.researcherID)
+                val user = userViewModel.otherUserDataFlow.collectAsState().value
+
+                Text (text = stringResource(R.string.navn) +": "+ user.name +" "+ user.lastName,
+                    modifier = Modifier.padding(bottom = 2.dp))
+                Text (text=stringResource(R.string.email) +": "+ user.email,
+                    modifier = Modifier.padding(bottom = 2.dp))
+                //Text(text="tilknyttet hospital: "+user.department)
+                Text(text=stringResource(R.string.telefon) +": "+ user.phone)
+            }
+
+        }
+    }
+}
+
+// source: the horizontal pager tabs were inspired by: https://www.youtube.com/watch?v=D6WNjEu6Y9c
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun TrialParticipantTabs(selectedTabIndex: Int, onSelectedTab: (TabPage) -> Unit, pagerState: PagerState) {
@@ -219,7 +280,7 @@ private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) 
         Row {
             Icon(
                 Icons.Default.Add,
-                contentDescription = "add",
+                contentDescription = stringResource(R.string.add),
                 Modifier,
                 Color.Black
             )
@@ -231,7 +292,7 @@ private fun PostNewTrialButton(modifier: Modifier, newTrialOnClick: () -> Unit) 
 }
 
 @Composable
-fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTrialOnClick: () -> Unit) {
+fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, numEligible: Int, manageTrialOnClick: () -> Unit) {
     val shape = RoundedCornerShape(10.dp)
     Card(
         elevation = 4.dp,
@@ -241,9 +302,8 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
             .border(1.dp, Color.LightGray, shape)
     ) {
         Row (modifier = Modifier.padding(top = 5.dp, end= 5.dp, bottom = 5.dp, start = 10.dp),
-            Arrangement.SpaceEvenly){
+            Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically){
             Column(modifier = Modifier
-                .height(110.dp)
                 .weight(3f),
                 verticalArrangement = Arrangement.SpaceEvenly) {
                 Text(
@@ -260,13 +320,12 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
                     text = stringResource(R.string.antalTilmeldte) + " "+ numRegisteredParticipants,
                     style = MaterialTheme.typography.body2)
                 Text(
-                    text = stringResource(R.string.potentielleKandidater) + " "+ trial.numParticipants, // TODO - what do we show here?
+                    text = stringResource(R.string.potentielleKandidater) + " "+ numEligible,
                     style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(1.dp))
             }
             Spacer(modifier = Modifier.weight(.1f))
             Column(modifier = Modifier
-                .height(110.dp)
                 .width(130.dp)
                 .padding(top = 8.dp, bottom = 8.dp, end = 3.dp)) {
                 Button(
@@ -285,14 +344,14 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
                     Text(stringResource(R.string.haandterStudie), style = Typography.button,
                         fontWeight = FontWeight.Bold, color = Color.Black)
                 }
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(24.dp))
                 Button(
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
                         .align(Alignment.End)
                         .fillMaxWidth()
                         .height(35.dp),
-                    onClick = { /*TODO*/  },
+                    onClick = { /*TODO anmod*/  },
                     shape = RoundedCornerShape(6.dp),
                     elevation = ButtonDefaults.elevation(
                         defaultElevation = 10.dp,
@@ -307,10 +366,12 @@ fun ResearcherTrialPost(trial: Trial, numRegisteredParticipants: Int, manageTria
     }
 }
 
+
+
 @Preview
 @Composable
 private fun ResearcherTrialsScreenPreview() {
     PB1ProbeApplicationTheme(darkTheme = false) {
-        MyTrials(role = Role.RESEARCHER)
+        //MyTrials(role = Role.RESEARCHER)
     }
 }

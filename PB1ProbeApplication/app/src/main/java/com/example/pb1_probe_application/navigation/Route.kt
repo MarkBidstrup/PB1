@@ -14,7 +14,11 @@ sealed class Route(val route: String) {
     object CreateTrial : Route("CreateTrial")
     object EditTrial : Route("EditTrial")
     object ManageTrial : Route("ManageTrial")
-
-
+    object FurtherInformation : Route("FurtherInformation")
+    object ReadMoreTrialPost: Route("ReadMoreTrialPost")
+    object DeleteProfileScreen: Route("DeleteProfileScreen")
+    object ForgottenPassword: Route("ForgottenPassword")
+    object DeltagerListeScreen: Route("DeltagerListeScreen")
+    object DeleteTrialScreen: Route("DeleteTrialScreen")
 
 }

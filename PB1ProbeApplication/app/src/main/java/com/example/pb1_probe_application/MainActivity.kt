@@ -1,5 +1,7 @@
 package com.example.pb1_probe_application
 
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,21 +11,31 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
+import com.example.pb1_probe_application.application.UserViewModel
+import com.example.pb1_probe_application.data.userData.UserDataRepository
 import com.example.pb1_probe_application.navigation.MainHome
+import com.example.pb1_probe_application.ui.*
 
 
 import com.example.pb1_probe_application.ui.theme.PB1ProbeApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val authViewModel by viewModels<AuthViewModel>()
     private val trialsViewModel by viewModels<TrialsViewModel>()
-
+    private val userViewModel by viewModels<UserViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -33,17 +45,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-//                    ManageTrialScreen()
-                      MainHome(authViewModel, trialsViewModel)
-//                    NotificationsScreen()
-//                    ManageTrialScreen()
+                      MainHome(authViewModel, trialsViewModel, userViewModel)
+                      onDestroy()
                 }
             }
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        authViewModel.logout()
+    }
 }
-
-
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {

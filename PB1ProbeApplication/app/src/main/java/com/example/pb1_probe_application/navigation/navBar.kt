@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -14,20 +13,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
-
+import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.Role
 import com.example.pb1_probe_application.ui.*
 import com.example.pb1_probe_application.ui.theme.Cairo
 import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 
-
+// code from https://developer.android.com/jetpack/compose/navigation#kts
 @Composable
-fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel){
+fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
-    authViewModel.logout() // TODO - temp solution - figure out how to log out after activity ends
-    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel)
-}
+    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 
+}
 @Composable
 fun BottomBar(navController: NavHostController){
     val screens = listOf(
@@ -87,113 +85,197 @@ fun RowScope.addItem(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
-    val ctx = LocalContext.current
+fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
     NavHost(navController = navController,
         startDestination = BottomBarItems.Home.route
     )
     {
-
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
-            // temp solution - TODO update if/else
-            val role = if (loggedIn && authViewModel?.currentUser?.email == "forsker@test.com")
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (loggedIn && researcher)
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            TrialListingsScreen(role = role, trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
+            TrialListingsScreen(role = role, userViewModel = userViewModel, trialsViewModel = trialsViewModel, navHostController = navController, loggedIn = loggedIn)
         }
 
         composable(route = Route.Filter.route) {
-            FilterScreen(onClickNav = { navController.navigate("Home") })
+            FilterScreen(trialsViewModel = trialsViewModel, onClickNav = { navController.navigate("Home") {
+                launchSingleTop = true
+            } })
         }
 
         composable(route = BottomBarItems.Trials.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
-                // temp solution - TODO update if/else
-                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+                val role = if (researcher)
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
-                MyTrials(trialsViewModel = trialsViewModel, role = role, navHostController = navController)
+                MyTrials(trialsViewModel = trialsViewModel, role = role, navHostController = navController, userViewModel = userViewModel)
             }
             else
-                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) {
+                    launchSingleTop = true
+                } }, registerOnClick = { navController.navigate(Route.Register.route) {
+                    launchSingleTop = true
+                } }) {
                     navController.popBackStack() }
         }
 
         composable(route = BottomBarItems.Profile.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
-                // temp solution - TODO update if/else
-                val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+                val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+                val role = if (researcher)
                     Role.RESEARCHER
                 else
                     Role.TRIAL_PARTICIPANT
-                ProfileScreen(role = role, navHostController = navController)
+                ProfileScreen(role = role, navHostController = navController, userViewModel)
             }
             else
-                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+                NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route){
+                    launchSingleTop = true
+                } }, registerOnClick = { navController.navigate(Route.Register.route) {
+                    launchSingleTop = true
+                } }) {
                     navController.popBackStack() }
         }
 
         composable(route = Route.EditProfile.route) {
-            // temp solution - TODO update if/else
-            val role = if (authViewModel?.currentUser?.email == "forsker@test.com")
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            EditProfileScreen(role = role) {
-                navController.popBackStack()
-            }
+            EditProfileScreen(
+                role = role,
+                onClick = { navController.popBackStack() },
+                deleteNav = { navController.navigate("DeleteProfileScreen") {
+                    launchSingleTop = true
+                } },
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
+            )
         }
 
         composable(route = Route.LogInd.route) {
-            LogInScreen(navHostController = navController, authViewModel = authViewModel) {
+            LogInScreen(navHostController = navController, authViewModel = authViewModel, userViewModel = userViewModel) {
                 navController.popBackStack()
             }
         }
 
         composable(route = Route.NotLoggedIn.route) {
-            NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route) }, registerOnClick = { navController.navigate(Route.Register.route) }) {
+            NotLoggedInScreen(logInOnClick = { navController.navigate(Route.LogInd.route){
+                launchSingleTop = true
+            } }, registerOnClick = { navController.navigate(Route.Register.route){
+                launchSingleTop = true
+            } }) {
                 navController.popBackStack()
             }
         }
 
         composable(route = Route.Register.route) {
-            RegisterScreen(navHostController = navController, authViewModel = authViewModel) {
+            RegisterScreen(navHostController = navController, authViewModel = authViewModel, userViewModel = userViewModel) {
                 navController.popBackStack()
+            }
+        }
+        composable(route = Route.FurtherInformation.route) {
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            //TODO
+            FurtherInformationScreen(role, authViewModel, userViewModel,
+                onClick =
+            {
+                navController.navigate("Home") {
+                    launchSingleTop = true
+                }
+            }
+            )
+        }
+
+        composable(route = Route.DeleteProfileScreen.route) {
+            DeleteProfileScreen(
+                onClick = { navController.popBackStack() },
+                logOutNav = { navController.navigate(BottomBarItems.Home.route){
+                    launchSingleTop = true
+                } },
+                trialsViewModel = trialsViewModel,
+                authViewModel = authViewModel,
+                userViewModel = userViewModel
+            )
+        }
+
+        composable(route = Route.DeleteTrialScreen.route) {
+            DeleteTrialScreen(
+                onClick = { navController.popBackStack() },
+                trialsViewModel = trialsViewModel,
+            ) { navController.navigate(BottomBarItems.Trials.route) {
+                    launchSingleTop = true
+                }
             }
         }
 
         composable(route = Route.CreateTrial.route) {
-            val email: String?
+            val id: String?
             if(authViewModel?.currentUser != null) {
-                email = authViewModel.currentUser!!.email
-            CreateTrialScreen(email, trialsViewModel, { navController.popBackStack() } ) {
-                navController.navigate(BottomBarItems.Trials.route) }
+                id = authViewModel.currentUser!!.uid
+            CreateTrialScreen(id, trialsViewModel, { navController.popBackStack() } ) {
+                navController.navigate(BottomBarItems.Trials.route){
+                    launchSingleTop = true
+                } }
             }
         }
 
         composable(route = Route.EditTrial.route) {
             EditTrialScreen(trialsViewModel, { navController.popBackStack() } ) {
-                navController.navigate(BottomBarItems.Trials.route)
+                navController.navigate(BottomBarItems.Trials.route){
+                    launchSingleTop = true
+                }
             }
         }
 
         composable(route = Route.ManageTrial.route) {
-            ManageTrialScreen(trialsViewModel, { navController.popBackStack() }) {
-                navController.navigate(Route.EditTrial.route)
+            ManageTrialScreen(trialsViewModel, { navController.popBackStack() },
+                { navController.navigate(Route.EditTrial.route){
+                    launchSingleTop = true
+                } },
+                { navController.navigate(Route.DeltagerListeScreen.route){
+                    launchSingleTop = true
+                } }) {
+                navController.navigate(Route.DeleteTrialScreen.route) {
+                    launchSingleTop = true
+                }
+            }
+        }
+        composable(route = Route.DeltagerListeScreen.route) {
+            DeltagerListeScreen(
+                trialsViewModel = trialsViewModel,
+                navHostController = navController ,
+                userViewModel = userViewModel
+            ) {
+                navController.popBackStack()
             }
         }
 
         composable(route = Route.DeltagerInfo.route) {
-
             if(trialsViewModel.currentNavTrial != null) {
                 DeltagerInfo(trialsViewModel.currentNavTrial!!, trialsViewModel, { navController.popBackStack() }) {
-                    navController.navigate(Route.Applied.route)
+                    navController.navigate(Route.Applied.route) {
+                        launchSingleTop = true
+                    }
                 }
+            }
+        }
+
+        composable(route = Route.ReadMoreTrialPost.route) {
+            ReadMoreTrialPostScreen(trial = trialsViewModel.currentNavTrial!!, navController) {
+                navController.popBackStack()
             }
         }
 
@@ -201,13 +283,19 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             AppliedScreen(navHostController = navController)
         }
 
-        navigationAppHost(navController = navController, authViewModel)
+        composable(route = Route.ForgottenPassword.route) {
+            ForgottenPasswordScreen(authViewModel){
+                navController.popBackStack()
+            }
+        }
+
+        navigationAppHost(navController = navController, authViewModel, trialsViewModel)
         notificationNav(navController = navController)
 
     }
 }
 
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
             notificationNav(navController= navController)
@@ -216,10 +304,15 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
                 navController.popBackStack()
             },
                 onClickNav = {
-                    navController.navigate(Route.Notification.route)
+                    navController.navigate(Route.Notification.route) {
+                        launchSingleTop = true
+                    }
                 },
                 logOutNav = {
-                    navController.navigate(BottomBarItems.Home.route)
+                    trialsViewModel.showFilterResult = false // erases filters if there are any filters in place
+                    navController.navigate(BottomBarItems.Home.route) {
+                        launchSingleTop = true
+                    }
                 }
             )
         }
@@ -229,38 +322,9 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
 fun NavGraphBuilder.notificationNav(navController: NavHostController) {
     navigation(route = Graph.NOTIFICATION, startDestination = BottomBarItems.Profile.route) {
         composable(route = Route.Notification.route) {
-            NotificationsScreen() {
+            NotificationsScreen {
                 navController.popBackStack()
             }
         }
     }
 }
-
-
-
-
-
-//fun NavGraphBuilder.deltagerInfoNav(navController: NavHostController,trialsViewModel: TrialsViewModel) {
-//    navigation(route = Graph.PARTICIPANT ,startDestination = Route.Applied.route) {
-//
-//        composable(Route.DeltagerInfo.route) {
-//            navBackStackEntry ->
-//            val trialID = navBackStackEntry.arguments?.getString("trialID")
-//            if(trialID == null) {
-//                val ctx = LocalContext.current
-//                Toast.makeText(ctx,"TrialID is required", Toast.LENGTH_SHORT).show()
-//            } else {
-//                DeltagerInfo(trialID = trialID, trialsViewModel ,
-//                    onClick = {
-//                        navController.navigate(Route.Applied.route)
-//                },onClickNav = {
-//                    navController.navigate("Home")
-//                })
-//            }
-//        }
-//
-//        composable(route = Route.Applied.route) {
-//            AppliedScreen(navHostController = navController)
-//        }
-//        }
-//    }

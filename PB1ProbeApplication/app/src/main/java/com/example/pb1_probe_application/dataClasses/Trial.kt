@@ -6,10 +6,9 @@ import com.google.firebase.firestore.DocumentId
 
 data class Trial (
     @DocumentId val trialID: String = "",
-    var researcherEmail: String = "",
+    var researcherID: String = "",
     var title: String = "",
     var purpose: String = "",
-    var briefDescription: String = "",
     var numParticipants: Int = 0,
     var registrationDeadline: String = "",
     var inclusionCriteria: String = "",
@@ -18,43 +17,39 @@ data class Trial (
     var compensation: Boolean = false,
     var lostSalaryComp: Boolean = false,
     var trialDuration: String = "",
+    var numVisits: Int = 0,
     var startDate: String = "",
     var endDate: String = "",
     var forsoegsBeskrivelse: String = "",
     var deltagerInformation: String = "",
-    var locations: List<TrialLocation> = ArrayList(),
+    var locations: String = "",
     var interventions: String = "",
-    var diagnoses: List<String> = ArrayList()
+    var diagnoses: List<String> = ArrayList(),
+    var kommuner: String = "" // used for database location search
     )
 
-data class TrialLocation (
-    var hospitalName: String = "",
-    var address: String = "",
-    var postCode: String = "",
-    var city: String = ""
-)
-
 data class dbRegistrations(
-    val participantEmail: String = "",
+    val participantID: String = "",
     val trialID: String = "")
 
 
 enum class trialAttributes {
-    title, purpose, briefDescription, numParticipants, registrationDeadline, inclusionCriteria,
-    exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, startDate, endDate,
-    forsoegsBeskrivelse, deltagerInformation, locations, interventions, diagnoses
+    title, purpose, numParticipants, registrationDeadline, inclusionCriteria,
+    exclusionCriteria, transportComp, compensation, lostSalaryComp, trialDuration, numVisits, startDate, endDate,
+    forsoegsBeskrivelse, deltagerInformation,  interventions, diagnoses, kommuner, locations
 }
 
 fun loadCreateTrialList(): List<CreateTrialField> {
-    return listOf<CreateTrialField>(
-        CreateTrialField(trialAttributes.deltagerInformation, R.string.deltagerinformation, R.string.vedhæftFil),
+    return listOf(
+        CreateTrialField(trialAttributes.deltagerInformation, R.string.deltagerinformation, R.string.indtastDeltagerinfo),
         CreateTrialField(trialAttributes.title, R.string.titelPåStudie, R.string.indtastTitel),
         CreateTrialField(trialAttributes.purpose, R.string.formaal1, R.string.indtastformaal),
         CreateTrialField(trialAttributes.numParticipants, R.string.antalDeltagere, R.string.indtastDeltagere),
         CreateTrialField(trialAttributes.registrationDeadline, R.string.frist, R.string.indtastFrist),
-        CreateTrialField(trialAttributes.briefDescription, R.string.kortBeskr, R.string.indtastKortBeskriv),
         CreateTrialField(trialAttributes.locations, R.string.lokationer, R.string.indtastLokationer),
+        CreateTrialField(trialAttributes.kommuner, R.string.kommune, R.string.indtastKommune),
         CreateTrialField(trialAttributes.trialDuration, R.string.projektetsVarighed, R.string.indtastVarighed),
+        CreateTrialField(trialAttributes.numVisits, R.string.besoeg, R.string.indtastBesoeg),
         CreateTrialField(trialAttributes.endDate, R.string.forventetAfslutningsdato, R.string.indtastAfslutningsdato),
         CreateTrialField(trialAttributes.startDate, R.string.forventetstartdato, R.string.indtastforventetstartdato),
         CreateTrialField(trialAttributes.interventions, R.string.interventioner, R.string.indtastInterventioner),
