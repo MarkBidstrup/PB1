@@ -289,20 +289,27 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
-        navigationAppHost(navController = navController, authViewModel, trialsViewModel)
+        navigationAppHost(navController = navController, authViewModel, trialsViewModel,userViewModel)
         notificationNav(navController = navController)
 
     }
 }
 
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel,userViewModel: UserViewModel) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
             notificationNav(navController= navController)
-            SettingsScreen(role = Role.RESEARCHER, authViewModel = authViewModel, onClick =
-            {
-                navController.popBackStack()
-            },
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            SettingsScreen(
+                role = role,
+                authViewModel = authViewModel,
+                onClick = {
+                    navController.popBackStack()
+                },
                 onClickNav = {
                     navController.navigate(Route.Notification.route) {
                         launchSingleTop = true
