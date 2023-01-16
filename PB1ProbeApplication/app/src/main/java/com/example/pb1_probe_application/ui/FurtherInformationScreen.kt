@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,6 +52,7 @@ fun FurtherInformationScreen(role: Role, authViewModel: AuthViewModel?, userView
     }
     userViewModel.setCurrentUser(uid)
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -125,9 +127,15 @@ fun FurtherInformationScreen(role: Role, authViewModel: AuthViewModel?, userView
                         ) {
                         LoginButton(
                             onClick = {
-                                data.email = userViewModel.currentUserData.email
-                                userViewModel.saveUserData(uid, data)
-                                onClick() },
+                                if(data.name == "" || data.lastName == "")
+                                    Toast.makeText(context,R.string.noName, Toast.LENGTH_LONG).show()
+                                else {
+                                    data.email = userViewModel.currentUserData.email
+                                    userViewModel.saveUserData(uid, data)
+                                    Toast.makeText(context,R.string.infoGemt, Toast.LENGTH_LONG).show()
+                                    onClick()
+                                }
+                              },
                             text = R.string.createProfileCAPS,
                             filled = true)
                         }
