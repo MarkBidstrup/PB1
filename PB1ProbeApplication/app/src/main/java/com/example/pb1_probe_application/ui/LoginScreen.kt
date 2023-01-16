@@ -90,7 +90,8 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
             )
             Spacer(modifier = Modifier.height(80.dp))
 
-            // changes for login
+            // code from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
+            // with own additions
             loginFlow?.value?.let {
                 when (it) {
                     is Resource.Failure -> {

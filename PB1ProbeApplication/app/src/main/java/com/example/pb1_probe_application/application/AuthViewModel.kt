@@ -29,22 +29,25 @@ class AuthViewModel @Inject constructor(
         get() = repository.currentUser
     var forgottenEmail: String = "" // for navigation
 
-//    init {
-//        if (repository.currentUser != null) {
-//            _loginFlow.value = Resource.Success(repository.currentUser!!)
-//        }
-//    }
-
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
     fun login(email: String, password: String) = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
         val result = repository.login(email,password)
         _loginFlow.value = result
     }
 
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
     fun signup(email: String, password: String) = viewModelScope.launch {
         _signupFlow.value = Resource.Loading
         val result = repository.signup(email,password)
         _signupFlow.value = result
+    }
+
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
+    fun logout() {
+        repository.logout()
+        _loginFlow.value = null
+        _signupFlow.value = null
     }
 
     fun resetPassword(email: String) = viewModelScope.launch {
@@ -53,11 +56,6 @@ class AuthViewModel @Inject constructor(
         _resetPasswordFlow.value = result
     }
 
-    fun logout() {
-        repository.logout()
-        _loginFlow.value = null
-        _signupFlow.value = null
-    }
 
     fun delete() {
         repository.delete()

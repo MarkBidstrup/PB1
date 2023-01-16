@@ -91,7 +91,8 @@ fun RegisterScreen(navHostController: NavHostController?, authViewModel: AuthVie
                 text = R.string.registrer, filled = true)
             Spacer(modifier = Modifier.height(20.dp))
 
-            // changes for register
+            // code from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
+            // with own additions
             signupFlow?.value?.let {
                 when (it) {
                     is Resource.Failure -> {

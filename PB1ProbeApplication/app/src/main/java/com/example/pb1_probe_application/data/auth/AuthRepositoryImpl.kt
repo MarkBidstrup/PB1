@@ -13,6 +13,7 @@ class AuthRepositoryImpl @Inject constructor(
     override val currentUser: FirebaseUser?
         get() = firebaseAuth.currentUser
 
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
     override suspend fun login(email: String, password: String): Resource<FirebaseUser> {
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email,password).await()
@@ -23,6 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
     override suspend fun signup(email: String, password: String): Resource<FirebaseUser> {
         return try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email,password).await()
@@ -33,6 +35,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    // from: https://www.youtube.com/watch?v=LHh2_TXBmS8&t=1662s&ab_channel=SimplifiedCoding
+    override fun logout() {
+        firebaseAuth.signOut()
+    }
+
     override suspend fun forgotPassword(email: String): Resource<Boolean> {
         return try {
             firebaseAuth.sendPasswordResetEmail(email).await()
@@ -41,10 +48,6 @@ class AuthRepositoryImpl @Inject constructor(
             e.printStackTrace()
             Resource.Failure(e)
         }
-    }
-
-    override fun logout() {
-        firebaseAuth.signOut()
     }
 
     override fun delete() {
