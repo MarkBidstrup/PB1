@@ -11,6 +11,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import androidx.navigation.navOptions
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
@@ -154,6 +155,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 role = role,
                 onClick = { navController.popBackStack() },
                 deleteNav = { navController.navigate("DeleteProfileScreen") {
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 } },
                 authViewModel = authViewModel,
@@ -221,7 +225,11 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 onClick = { navController.popBackStack() },
                 trialsViewModel = trialsViewModel,
             ) { navController.navigate(BottomBarItems.Trials.route) {
-                    launchSingleTop = true
+               navController.navigate("Home") {
+                   popUpTo("Home") {
+                       inclusive = true
+                   }
+               }
                 }
             }
         }
@@ -243,6 +251,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         composable(route = Route.EditTrial.route) {
             EditTrialScreen(trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route){
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 }
             }
