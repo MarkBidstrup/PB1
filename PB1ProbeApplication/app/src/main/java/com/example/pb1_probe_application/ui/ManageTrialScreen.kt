@@ -32,7 +32,7 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
                 title = { Text(stringResource(R.string.håndterStudie), style = Typography.h1) },
                 navigationIcon = {
                     IconButton(
-                        onClick = onClickNav
+                        onClick = navBack
                     ) {
                         Icon(
                             Icons.Default.ArrowBack,
