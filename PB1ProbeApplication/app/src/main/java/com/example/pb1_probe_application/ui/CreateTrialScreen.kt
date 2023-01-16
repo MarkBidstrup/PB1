@@ -40,16 +40,17 @@ fun CreateTrialScreen(id: String?, trialsViewModel: TrialsViewModel, onClickNavB
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.opretNytStudie), style = Typography.h1, ) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(
-                    onClick = onClickNavBack) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back",
-                    )
-                }
-            }
+                navigationIcon = {
+                    IconButton(
+                        onClick = onClickNavBack) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         },
         content = {
             val trial = Trial()
