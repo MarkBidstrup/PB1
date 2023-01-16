@@ -113,6 +113,8 @@
     <string name="passwordNotRepeated">Gentag den samme adgangskode</string>
     <string name="noEmail">Indtast en email</string>
     <string name="noPassword">Indtast en adgangskode</string>
+    <string name="noName">Indtast dit fornavn og efternavn for at oprette en profil</string>
+    <string name="infoGemt">Dine oplysninger er gemt</string>
 
 
     <!--Create Trial Strings-->
