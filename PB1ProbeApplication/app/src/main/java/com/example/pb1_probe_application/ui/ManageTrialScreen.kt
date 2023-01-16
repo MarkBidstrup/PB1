@@ -30,15 +30,18 @@ fun ManageTrialScreen(trialsViewModel: TrialsViewModel, navBack: () -> Unit, onC
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.håndterStudie), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = navBack) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back arrow"
-                    )
-                }
-            }
+                navigationIcon = {
+                    IconButton(
+                        onClick = onClickNav
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         },
         content = {
             Column() {

@@ -59,10 +59,6 @@ fun FurtherInformationScreen(role: Role, authViewModel: AuthViewModel?, userView
                 title = { Text(stringResource(R.string.IndtastYderligereOplysninger), style = Typography.h1 ) },
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
-            Row(modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) { }
         },
         content = {
             val data: UserData = when(role) {
