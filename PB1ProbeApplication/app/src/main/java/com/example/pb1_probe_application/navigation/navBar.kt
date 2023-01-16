@@ -192,8 +192,13 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             FurtherInformationScreen(role, authViewModel, userViewModel,
                 onClick =
             {
+
                 navController.navigate("Home") {
                     launchSingleTop = true
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
+
                 }
             }
             )
