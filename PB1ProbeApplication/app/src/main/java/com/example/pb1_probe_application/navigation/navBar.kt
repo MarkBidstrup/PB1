@@ -232,6 +232,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 id = authViewModel.currentUser!!.uid
             CreateTrialScreen(id, trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route){
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 } }
             }
@@ -272,6 +275,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             if(trialsViewModel.currentNavTrial != null) {
                 DeltagerInfo(trialsViewModel.currentNavTrial!!, trialsViewModel, { navController.popBackStack() }) {
                     navController.navigate(Route.Applied.route) {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     }
                 }

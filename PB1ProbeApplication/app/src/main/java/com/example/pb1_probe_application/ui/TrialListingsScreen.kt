@@ -2,8 +2,7 @@ package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,10 +20,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -474,6 +475,16 @@ fun LoginButton(
  */
 @Composable
 fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    // the rotation animation code is taken from https://stackoverflow.com/questions/68381193/infinite-rotation-of-an-image-in-jetpack-compose
+    // answer number 23
+    val transition = rememberInfiniteTransition()
+    val rotateAngle by transition.animateFloat(
+        initialValue = 0F,
+        targetValue = 360F,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing)
+        )
+    )
     Box(
         Modifier
             .fillMaxWidth()
@@ -485,7 +496,8 @@ fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Mod
             modifier = modifier
                 .align(Center)
                 .wrapContentWidth(CenterHorizontally)
-                .padding(top = 10.dp),
+                .padding(top = 10.dp)
+                .rotate(rotateAngle)
         )
         if (icon != TopBarIcons.None) {
             IconButton(onClick = onClick, modifier = modifier
