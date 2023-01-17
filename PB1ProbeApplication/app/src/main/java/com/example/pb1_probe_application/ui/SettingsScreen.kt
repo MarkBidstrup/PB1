@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
@@ -40,8 +39,8 @@ fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, auth
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
-    var checkedPlaceholder = true;
-    var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
+    var checkedPlaceholder by remember { mutableStateOf(true) }
+    val onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = !checkedPlaceholder }
     val context = LocalContext.current
 
 
@@ -118,7 +117,10 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
                     .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     .clickable {
                         val url = "https://probe.dk/privatlivspolitik/"
-                        CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
+                        CustomTabsIntent
+                            .Builder()
+                            .build()
+                            .launchUrl(context, Uri.parse(url))
                     }
             )
             Divider(
@@ -182,10 +184,14 @@ fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authVi
                 Text(
                     text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             val url = "https://probe.dk/privatlivspolitik/"
-                            CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
+                            CustomTabsIntent
+                                .Builder()
+                                .build()
+                                .launchUrl(context, Uri.parse(url))
                         }
                 )
                 Divider(

@@ -5,16 +5,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource import androidx.compose.ui.unit.dp
 import com.example.pb1_probe_application.R
-import com.example.pb1_probe_application.ui.theme.TextColorGrey
-import com.example.pb1_probe_application.ui.theme.TextColorRed
 import com.example.pb1_probe_application.ui.theme.Typography
 
 
@@ -22,8 +17,12 @@ import com.example.pb1_probe_application.ui.theme.Typography
 @Composable
 fun NotificationsScreen(onClick: () -> Unit ) {
 
-    var checkedPlaceholder = true;
-    var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
+    var checkedPlaceholder1 by remember { mutableStateOf(true) }
+    val onCheckedChangePlaceholder1: (Boolean) -> Unit = { checkedPlaceholder1 = !checkedPlaceholder1 }
+    var checkedPlaceholder2 by remember { mutableStateOf(true) }
+    val onCheckedChangePlaceholder2: (Boolean) -> Unit = { checkedPlaceholder2 = !checkedPlaceholder2 }
+    var checkedPlaceholder3 by remember { mutableStateOf(true) }
+    val onCheckedChangePlaceholder3: (Boolean) -> Unit = { checkedPlaceholder3 = !checkedPlaceholder3 }
 
     Scaffold(
         topBar = {
@@ -52,8 +51,8 @@ fun NotificationsScreen(onClick: () -> Unit ) {
                 )
                 Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                     Switch(
-                        checked = checkedPlaceholder,
-                        onCheckedChange = onCheckedChangePlaceholder,
+                        checked = checkedPlaceholder1,
+                        onCheckedChange = onCheckedChangePlaceholder1,
                         modifier = Modifier.wrapContentSize(),
                     )
                 }
@@ -71,8 +70,8 @@ fun NotificationsScreen(onClick: () -> Unit ) {
                     )
                     Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                         Switch(
-                            checked = checkedPlaceholder,
-                            onCheckedChange = onCheckedChangePlaceholder,
+                            checked = checkedPlaceholder2,
+                            onCheckedChange = onCheckedChangePlaceholder2,
                             modifier = Modifier.wrapContentSize(),
                         )
                     }
@@ -90,8 +89,8 @@ fun NotificationsScreen(onClick: () -> Unit ) {
                     )
                     Row(Modifier.fillMaxWidth().padding(end = 10.dp), horizontalArrangement = Arrangement.End) {
                         Switch(
-                            checked = checkedPlaceholder,
-                            onCheckedChange = onCheckedChangePlaceholder,
+                            checked = checkedPlaceholder3,
+                            onCheckedChange = onCheckedChangePlaceholder3,
                             modifier = Modifier.wrapContentSize(),
                         )
                     }

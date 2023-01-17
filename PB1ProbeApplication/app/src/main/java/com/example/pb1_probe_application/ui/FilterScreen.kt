@@ -55,38 +55,39 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
             )
         },
         content = {
-            Column(modifier = Modifier
-                .verticalScroll(scrollState)) {
-                Spacer(modifier = Modifier.height(10.dp))
-                DistanceComp(focusManager) {
-                    locations = it
-                }
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
-                CompensationComp(reward = reward, work = work, transport = transport, transportClick = {transport = !transport}, rewardClick = {reward = !reward}, workClick = {work = !work})
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
-                DurationComp { maxDuration = it}
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
-                VisitsComp{maxVisits = it}
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.LightGray
-                )
-                DiagnosesComp(focusManager) {
-                    diagnoses = it
+            Column {
+                Column(modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(scrollState)) {
+                    DistanceComp(focusManager) {
+                        locations = it
+                    }
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.LightGray
+                    )
+                    CompensationComp(reward = reward, work = work, transport = transport, transportClick = {transport = !transport}, rewardClick = {reward = !reward}, workClick = {work = !work})
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.LightGray
+                    )
+                    DurationComp { maxDuration = it}
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.LightGray
+                    )
+                    VisitsComp{maxVisits = it}
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.LightGray
+                    )
+                    DiagnosesComp(focusManager) {
+                        diagnoses = it
+                    }
                 }
                 Row(
                     modifier = Modifier
                         .padding(17.dp)
-                        .padding(top = 40.dp)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -130,7 +131,7 @@ fun DistanceComp(focusManager: FocusManager, onDone: (String) -> Unit) {
     DropDownState(dropDownType = DropDownType.KOMMUNE, onDone, "", KeyboardActions(
         onDone = { focusManager.clearFocus() }
     ))
-    Spacer(modifier = Modifier.height(30.dp))
+    Spacer(modifier = Modifier.height(24.dp))
 }
 
 @Composable
@@ -349,7 +350,7 @@ fun DiagnosesComp(focusManager: FocusManager, onDone: (String) -> Unit) {
     DropDownState(dropDownType = DropDownType.DIAGNOSER, onDone, "", KeyboardActions(
         onDone = { focusManager.clearFocus() }
     ))
-    Spacer(modifier = Modifier.height(30.dp))
+    Spacer(modifier = Modifier.height(24.dp))
 }
 
 
