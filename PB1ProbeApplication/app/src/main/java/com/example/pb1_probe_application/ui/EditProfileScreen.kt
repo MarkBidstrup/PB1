@@ -66,6 +66,18 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.editProfileHeading), style = Typography.h1) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            onClick()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
             Row(modifier = Modifier.fillMaxWidth(),
@@ -112,16 +124,6 @@ fun EditUserInfoList(userInfoList: List<UserInfo>, focusManager: FocusManager, o
                         Icons.Default.Save,
                         contentDescription = "save changes",
                     )
-                }
-                IconButton(
-                     onClick = {
-                         onClick()
-                     }
-                ) {
-                     Icon(
-                         Icons.Default.ArrowBack,
-                         contentDescription = "return",
-                     )
                 }
             }
                 },

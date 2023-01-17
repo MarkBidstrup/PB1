@@ -26,6 +26,8 @@ import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
 import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.StrokeColor
+import com.example.pb1_probe_application.ui.theme.Typography
+
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: NavController, userViewModel: UserViewModel,onNavBack: () -> Unit) {
@@ -39,17 +41,21 @@ fun DeltagerListeScreen( trialsViewModel: TrialsViewModel,navHostController: Nav
 
     Scaffold(
         topBar = {
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(
-                    onClick = {
-                       onNavBack()
-                    }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back",
-                    )
-                }
-            }
+            TopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                title = { Text(stringResource(R.string.deltagerliste), style = Typography.h1) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onNavBack
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back"
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         },
         content = {
             Spacer(modifier = Modifier.height(15.dp))
