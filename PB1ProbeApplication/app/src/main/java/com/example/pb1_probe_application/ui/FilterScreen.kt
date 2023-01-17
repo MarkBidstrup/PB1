@@ -41,17 +41,18 @@ fun FilterScreen(trialsViewModel: TrialsViewModel, onClickNav: () -> Unit) {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.filtrerStudier), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(
-                    onClick = onClickNav
-                ) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back",
-                    )
-                }
-            }
+                navigationIcon = {
+                    IconButton(
+                        onClick = onClickNav
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         },
         content = {
             Column(modifier = Modifier

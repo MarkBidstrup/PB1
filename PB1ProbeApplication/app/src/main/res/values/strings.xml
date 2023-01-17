@@ -24,7 +24,7 @@
     <string name="logUd">Log ud</string>
     <string name="notifikationer">Notifikationer</string>
     <string name="forskereKanAnmode">Forskere kan anmode mig om at deltage i deres studier</string>
-    <string name="tilgaengelighed">Tilgængelighedsfunktion</string>
+    <string name="tilgaengelighed">Tilgængelig</string>
     <string name="sletProfil">Slet profil</string>
 
     <!--Notifications Strings-->
@@ -113,6 +113,8 @@
     <string name="passwordNotRepeated">Gentag den samme adgangskode</string>
     <string name="noEmail">Indtast en email</string>
     <string name="noPassword">Indtast en adgangskode</string>
+    <string name="noName">Indtast dit fornavn og efternavn for at oprette en profil</string>
+    <string name="infoGemt">Dine oplysninger er gemt</string>
 
 
     <!--Create Trial Strings-->
@@ -187,6 +189,7 @@
     <string name="Kontakt">Forskerens kontaktoplysninger:</string>
     <string name="Close">Close popup</string>
     <string name="add">add icon</string>
+    <string name="deltagerliste">Deltagerliste</string>
 
 
 </resources>

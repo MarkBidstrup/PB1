@@ -23,8 +23,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
-    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
-
+    BottomNavigation(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 }
 @Composable
 fun BottomBar(navController: NavHostController){
@@ -85,10 +84,8 @@ fun RowScope.addItem(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
-    NavHost(navController = navController,
-        startDestination = BottomBarItems.Home.route
-    )
+fun BottomNavigation(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
+    NavHost( navController, startDestination = BottomBarItems.Home.route)
     {
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
@@ -105,7 +102,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 launchSingleTop = true
             } })
         }
-
         composable(route = BottomBarItems.Trials.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
@@ -154,6 +150,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 role = role,
                 onClick = { navController.popBackStack() },
                 deleteNav = { navController.navigate("DeleteProfileScreen") {
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 } },
                 authViewModel = authViewModel,
@@ -188,18 +187,22 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            //TODO
             FurtherInformationScreen(role, authViewModel, userViewModel,
                 onClick =
             {
+
                 navController.navigate("Home") {
                     launchSingleTop = true
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
+
                 }
             }
             )
         }
 
-        composable(route = Route.DeleteProfileScreen.route) {
+        composable(route = Route.DeleteProfile.route) {
             DeleteProfileScreen(
                 onClick = { navController.popBackStack() },
                 logOutNav = { navController.navigate(BottomBarItems.Home.route){
@@ -211,12 +214,16 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             )
         }
 
-        composable(route = Route.DeleteTrialScreen.route) {
+        composable(route = Route.DeleteTrial.route) {
             DeleteTrialScreen(
                 onClick = { navController.popBackStack() },
                 trialsViewModel = trialsViewModel,
             ) { navController.navigate(BottomBarItems.Trials.route) {
-                    launchSingleTop = true
+               navController.navigate("Home") {
+                   popUpTo("Home") {
+                       inclusive = true
+                   }
+               }
                 }
             }
         }
@@ -227,6 +234,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 id = authViewModel.currentUser!!.uid
             CreateTrialScreen(id, trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route){
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 } }
             }
@@ -235,6 +245,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
         composable(route = Route.EditTrial.route) {
             EditTrialScreen(trialsViewModel, { navController.popBackStack() } ) {
                 navController.navigate(BottomBarItems.Trials.route){
+                    popUpTo("Home") {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 }
             }
@@ -245,15 +258,15 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 { navController.navigate(Route.EditTrial.route){
                     launchSingleTop = true
                 } },
-                { navController.navigate(Route.DeltagerListeScreen.route){
+                { navController.navigate(Route.DeltagerListe.route){
                     launchSingleTop = true
                 } }) {
-                navController.navigate(Route.DeleteTrialScreen.route) {
+                navController.navigate(Route.DeleteTrial.route) {
                     launchSingleTop = true
                 }
             }
         }
-        composable(route = Route.DeltagerListeScreen.route) {
+        composable(route = Route.DeltagerListe.route) {
             DeltagerListeScreen(
                 trialsViewModel = trialsViewModel,
                 navHostController = navController ,
@@ -267,6 +280,9 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             if(trialsViewModel.currentNavTrial != null) {
                 DeltagerInfo(trialsViewModel.currentNavTrial!!, trialsViewModel, { navController.popBackStack() }) {
                     navController.navigate(Route.Applied.route) {
+                        popUpTo("Home") {
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     }
                 }
@@ -289,20 +305,27 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
             }
         }
 
-        navigationAppHost(navController = navController, authViewModel, trialsViewModel)
+        navigationAppHost(navController = navController, authViewModel, trialsViewModel,userViewModel)
         notificationNav(navController = navController)
 
     }
 }
 
-fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel) {
+fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel,userViewModel: UserViewModel) {
     navigation(route = Graph.SETTING ,startDestination = BottomBarItems.Profile.route) {
         composable(Route.Setting.route) {
             notificationNav(navController= navController)
-            SettingsScreen(role = Role.RESEARCHER, authViewModel = authViewModel, onClick =
-            {
-                navController.popBackStack()
-            },
+            val researcher = userViewModel.getUserRole() == Role.RESEARCHER
+            val role = if (researcher)
+                Role.RESEARCHER
+            else
+                Role.TRIAL_PARTICIPANT
+            SettingsScreen(
+                role = role,
+                authViewModel = authViewModel,
+                onClick = {
+                    navController.popBackStack()
+                },
                 onClickNav = {
                     navController.navigate(Route.Notification.route) {
                         launchSingleTop = true

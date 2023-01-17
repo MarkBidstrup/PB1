@@ -22,7 +22,7 @@ import com.example.pb1_probe_application.ui.theme.Typography
 @Composable
 fun NotificationsScreen(onClick: () -> Unit ) {
 
-    var checkedPlaceholder: Boolean = true;
+    var checkedPlaceholder = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
 
     Scaffold(
@@ -30,17 +30,17 @@ fun NotificationsScreen(onClick: () -> Unit ) {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.notificationsHeading), style = Typography.h1) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onClick() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
                 backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = {
-                    onClick()
-                }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back arrow"
-                    )
-                }
-            }
         },
         content = {
             Column() {

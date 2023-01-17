@@ -52,22 +52,18 @@ fun DeltagerInfo(
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.deltager_info), style = Typography.h1) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onClickNav
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back"
+                        )
+                    }
+                },
                 backgroundColor = MaterialTheme.colors.onPrimary
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = onClickNav
-                ) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back arrow"
-                    )
-                }
-            }
         },
         content = {
             Column(

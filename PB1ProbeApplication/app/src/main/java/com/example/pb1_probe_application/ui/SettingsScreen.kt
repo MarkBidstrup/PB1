@@ -39,7 +39,7 @@ fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, auth
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
-    var checkedPlaceholder: Boolean = true;
+    var checkedPlaceholder = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
     val context = LocalContext.current
 
@@ -49,28 +49,28 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = {
-                    onClick()
-                }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back arrow"
-                    )
-                }
-            }
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onClick() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         }
     ) {
 
         Column() {
             Row() {
                 Column() {
-
                     Text(
                         text = stringResource(R.string.tilgaengelighed),
                         style = Typography.body1,
-                        modifier = Modifier.padding(start = 17.dp, end = 17.dp)
+                        modifier = Modifier.padding(start = 17.dp, end = 17.dp, top = 10.dp)
                     )
                     Text(
                         text = stringResource(R.string.forskereKanAnmode),
