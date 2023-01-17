@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -210,7 +211,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                                 }
                             }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
-                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController,
+                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick,
                          readMoreOnClick = {
                              trialsViewModel.setCurrentNavTrialID(it)
                              navHostController?.navigate("ReadMoreTrialPost") {
@@ -253,7 +254,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
 
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,navHostController: NavHostController?,
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,
               iconOnClick: () -> Unit, applyOnClick: () -> Unit, readMoreOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -323,6 +324,10 @@ fun TrialExpandButton(
             modifier = modifier
                 .scale(2f)
                 .padding(end = 2.dp)
+                .testTag(
+                    if (expanded) Icons.Filled.ExpandLess.toString()
+                    else Icons.Filled.ExpandMore.toString()
+                )
         )
     }
 }

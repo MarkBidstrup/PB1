@@ -171,7 +171,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                                 Toast.makeText(context, R.string.removedSubscribedTrials, Toast.LENGTH_LONG).show()
                                             } }
                                     if(pagerState.currentPage == 0) // mytrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {},
                                             readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
                                                 navHostController.navigate("ReadMoreTrialPost") {
@@ -180,7 +180,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             })
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick,
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick,
                                             applyOnClick = {
                                             trialsViewModel.setCurrentNavTrialID(it)
                                             navHostController.navigate("DeltagerInfo") {
