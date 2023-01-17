@@ -107,6 +107,9 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
                         LaunchedEffect(Unit) {
                             userViewModel.setCurrentUser(authViewModel.currentUser!!.uid)
                             navHostController?.navigate("Home") {
+                                popUpTo("Home") {
+                                    inclusive = true
+                                }
                                 launchSingleTop = true
                             }
                         }
