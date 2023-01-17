@@ -202,7 +202,7 @@ fun BottomNavigation(navController: NavHostController, authViewModel: AuthViewMo
             )
         }
 
-        composable(route = Route.DeleteProfileScreen.route) {
+        composable(route = Route.DeleteProfile.route) {
             DeleteProfileScreen(
                 onClick = { navController.popBackStack() },
                 logOutNav = { navController.navigate(BottomBarItems.Home.route){
@@ -214,7 +214,7 @@ fun BottomNavigation(navController: NavHostController, authViewModel: AuthViewMo
             )
         }
 
-        composable(route = Route.DeleteTrialScreen.route) {
+        composable(route = Route.DeleteTrial.route) {
             DeleteTrialScreen(
                 onClick = { navController.popBackStack() },
                 trialsViewModel = trialsViewModel,
@@ -258,15 +258,15 @@ fun BottomNavigation(navController: NavHostController, authViewModel: AuthViewMo
                 { navController.navigate(Route.EditTrial.route){
                     launchSingleTop = true
                 } },
-                { navController.navigate(Route.DeltagerListeScreen.route){
+                { navController.navigate(Route.DeltagerListe.route){
                     launchSingleTop = true
                 } }) {
-                navController.navigate(Route.DeleteTrialScreen.route) {
+                navController.navigate(Route.DeleteTrial.route) {
                     launchSingleTop = true
                 }
             }
         }
-        composable(route = Route.DeltagerListeScreen.route) {
+        composable(route = Route.DeltagerListe.route) {
             DeltagerListeScreen(
                 trialsViewModel = trialsViewModel,
                 navHostController = navController ,
