@@ -190,6 +190,8 @@
     <string name="Close">Close popup</string>
     <string name="add">add icon</string>
     <string name="deltagerliste">Deltagerliste</string>
+    <string name="removedSubscribedTrials">Fjernet fra fulgte studier</string>
+    <string name="addedSubscribedTrials">Tilføjet til fulgte studier</string>
 
 
 </resources>

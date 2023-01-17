@@ -19,6 +19,7 @@ import androidx.navigation.*
 
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 
 
 import com.example.pb1_probe_application.dataClasses.Role
@@ -29,16 +30,16 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
+fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
     val currentUser: Role = role
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
+        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav, userViewModel = userViewModel)
     if (currentUser.equals(Role.RESEARCHER))
-        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
+        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav, userViewModel = userViewModel)
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
+fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
     var checkedPlaceholder = true;
     var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
     val context = LocalContext.current
@@ -133,8 +134,8 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
                     .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     .clickable {
                         authViewModel?.logout()
+                        userViewModel.resetUserRole()
                         logOutNav()
-
                     }
             )
         }
@@ -142,7 +143,7 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
+fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -200,6 +201,7 @@ fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authVi
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             authViewModel?.logout()
+                            userViewModel.resetUserRole()
                             logOutNav()
                         }
                 )

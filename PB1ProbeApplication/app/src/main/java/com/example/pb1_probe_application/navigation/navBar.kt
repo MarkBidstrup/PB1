@@ -323,6 +323,7 @@ fun NavGraphBuilder.navigationAppHost(navController: NavHostController, authView
             SettingsScreen(
                 role = role,
                 authViewModel = authViewModel,
+                userViewModel = userViewModel,
                 onClick = {
                     navController.popBackStack()
                 },
