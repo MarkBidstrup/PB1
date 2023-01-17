@@ -11,7 +11,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
-import androidx.navigation.navOptions
 import com.example.pb1_probe_application.application.AuthViewModel
 import com.example.pb1_probe_application.application.TrialsViewModel
 import com.example.pb1_probe_application.application.UserViewModel
@@ -24,8 +23,7 @@ import com.example.pb1_probe_application.ui.theme.NavBarColorGreen
 @Composable
 fun MainHome(authViewModel: AuthViewModel, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel){
     val navController = rememberNavController()
-    BottomNavGraph(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
-
+    BottomNavigation(navController = navController, authViewModel = authViewModel, trialsViewModel = trialsViewModel, userViewModel = userViewModel)
 }
 @Composable
 fun BottomBar(navController: NavHostController){
@@ -86,10 +84,8 @@ fun RowScope.addItem(
 }
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
-    NavHost(navController = navController,
-        startDestination = BottomBarItems.Home.route
-    )
+fun BottomNavigation(navController: NavHostController, authViewModel: AuthViewModel?, trialsViewModel: TrialsViewModel, userViewModel: UserViewModel) {
+    NavHost( navController, startDestination = BottomBarItems.Home.route)
     {
         composable(route = BottomBarItems.Home.route) {
             val loggedIn = authViewModel?.currentUser != null
@@ -106,7 +102,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 launchSingleTop = true
             } })
         }
-
         composable(route = BottomBarItems.Trials.route) {
             val loggedIn = authViewModel?.currentUser != null
             if(loggedIn) {
@@ -192,7 +187,6 @@ fun BottomNavGraph(navController: NavHostController, authViewModel: AuthViewMode
                 Role.RESEARCHER
             else
                 Role.TRIAL_PARTICIPANT
-            //TODO
             FurtherInformationScreen(role, authViewModel, userViewModel,
                 onClick =
             {
