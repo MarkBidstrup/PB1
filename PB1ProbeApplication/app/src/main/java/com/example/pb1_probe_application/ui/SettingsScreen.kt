@@ -67,11 +67,10 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
         Column() {
             Row() {
                 Column() {
-
                     Text(
                         text = stringResource(R.string.tilgaengelighed),
                         style = Typography.body1,
-                        modifier = Modifier.padding(start = 17.dp, end = 17.dp)
+                        modifier = Modifier.padding(start = 17.dp, end = 17.dp, top = 10.dp)
                     )
                     Text(
                         text = stringResource(R.string.forskereKanAnmode),
