@@ -484,16 +484,6 @@ fun LoginButton(
  */
 @Composable
 fun ProbeTopBar(icon: TopBarIcons, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    // the rotation animation code is taken from https://stackoverflow.com/questions/68381193/infinite-rotation-of-an-image-in-jetpack-compose
-    // answer number 23
-//    val transition = rememberInfiniteTransition()
-//    val rotateAngle by transition.animateFloat(
-//        initialValue = 0F,
-//        targetValue = 360F,
-//        animationSpec = infiniteRepeatable(
-//            animation = tween(2000, easing = LinearEasing)
-//        )
-//    )
     Box(
         Modifier
             .fillMaxWidth()

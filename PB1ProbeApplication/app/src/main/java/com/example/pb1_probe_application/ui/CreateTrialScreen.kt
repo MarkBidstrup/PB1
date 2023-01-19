@@ -199,31 +199,3 @@ fun TrialInputField(
         }
     }
 }
-
-@Preview
-@Composable
-private fun ProfileUserScreenPreview() {
-//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-}
-
-//Column {
-//    Text(
-//        text = LocalContext.current.getString(createTrialField.StringResourceHeading),
-//        modifier = Modifier.padding(start = 17.dp),
-//        style = MaterialTheme.typography.body1,
-//        color = TextColorGreen
-//    )
-//    OutlinedTextField(
-//        value = input,
-//        singleLine = true,
-//        label = { Text(text = LocalContext.current.getString(createTrialField.StringResourceFieldText)) },
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(start = 17.dp, end = 17.dp),
-//        onValueChange = onValueChange,
-//        textStyle = Typography.body1,
-//        keyboardOptions = keyboardOptions,
-//        keyboardActions = keyboardActions
-//    )
-//}
-

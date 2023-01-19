@@ -230,9 +230,3 @@ fun EditTrialField(
 
     }
 }
-
-//@Preview
-//@Composable
-//private fun ProfileUserScreenPreview() {
-//    EditUserInfoList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current)
-//}
