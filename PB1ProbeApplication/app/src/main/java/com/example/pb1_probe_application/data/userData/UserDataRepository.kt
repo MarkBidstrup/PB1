@@ -3,7 +3,6 @@ package com.example.pb1_probe_application.data.userData
 import com.example.pb1_probe_application.dataClasses.UserData
 
 interface UserDataRepository {
-    //val userData: Flow<List<UserPatient>>
 
     suspend fun getData(userID: String): UserData
     suspend fun getData(userIDs: List<String>): List<UserData>
