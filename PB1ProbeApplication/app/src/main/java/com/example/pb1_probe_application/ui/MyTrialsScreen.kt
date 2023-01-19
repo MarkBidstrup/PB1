@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ enum class TabPage {
 fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = viewModel(), navHostController: NavHostController = rememberNavController(), role: Role = Role.TRIAL_PARTICIPANT, userViewModel: UserViewModel) {
     val subscribedTrials: List<Trial>
     val myTrials: List<Trial>
+    val context = LocalContext.current
     if (role == Role.TRIAL_PARTICIPANT) {
         trialsViewModel.getViewModelMyTrialsParticipants()
         trialsViewModel.getViewModelSubscribedTrials()
@@ -164,9 +167,11 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             }
                                         }
                                         else
-                                            { {trialsViewModel.unsubscribeFromTrial(it) } }
+                                            { {trialsViewModel.unsubscribeFromTrial(it)
+                                                Toast.makeText(context, R.string.removedSubscribedTrials, Toast.LENGTH_LONG).show()
+                                            } }
                                     if(pagerState.currentPage == 0) // mytrials
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false,navHostController = navHostController, iconOnClick = onClick, applyOnClick = {},
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.Contact, buttonEnabled = false, iconOnClick = onClick, applyOnClick = {},
                                             readMoreOnClick = {
                                                 trialsViewModel.setCurrentNavTrialID(it)
                                                 navHostController.navigate("ReadMoreTrialPost") {
@@ -175,7 +180,7 @@ fun MyTrials(modifier: Modifier = Modifier, trialsViewModel: TrialsViewModel = v
                                             })
                                     else { // subscribedTrials
                                         val canApply = !myTrials.contains(it)
-                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply,navHostController = navHostController, iconOnClick = onClick,
+                                        TrialItem(trial = it, iconUsed = TrialPostIcons.NotificationOff, buttonEnabled = canApply, iconOnClick = onClick,
                                             applyOnClick = {
                                             trialsViewModel.setCurrentNavTrialID(it)
                                             navHostController.navigate("DeltagerInfo") {

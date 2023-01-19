@@ -1,7 +1,6 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.clickable
@@ -19,6 +18,7 @@ import androidx.navigation.*
 
 import com.example.pb1_probe_application.R
 import com.example.pb1_probe_application.application.AuthViewModel
+import com.example.pb1_probe_application.application.UserViewModel
 
 
 import com.example.pb1_probe_application.dataClasses.Role
@@ -29,18 +29,18 @@ import com.example.pb1_probe_application.ui.theme.Typography
 
 
 @Composable
-fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
+fun SettingsScreen(role: Role, onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
     val currentUser: Role = role
     if (currentUser.equals(Role.TRIAL_PARTICIPANT))
-        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
+        SettingsPatientScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav, userViewModel = userViewModel)
     if (currentUser.equals(Role.RESEARCHER))
-        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav)
+        SettingsResearcherScreen(onClick = onClick, onClickNav = onClickNav, authViewModel = authViewModel,logOutNav = logOutNav, userViewModel = userViewModel)
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
-    var checkedPlaceholder = true;
-    var onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = it };
+fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
+    var checkedPlaceholder by remember { mutableStateOf(true) }
+    val onCheckedChangePlaceholder: (Boolean) -> Unit = { checkedPlaceholder = !checkedPlaceholder }
     val context = LocalContext.current
 
 
@@ -117,7 +117,10 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
                     .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     .clickable {
                         val url = "https://probe.dk/privatlivspolitik/"
-                        CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
+                        CustomTabsIntent
+                            .Builder()
+                            .build()
+                            .launchUrl(context, Uri.parse(url))
                     }
             )
             Divider(
@@ -133,8 +136,8 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
                     .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                     .clickable {
                         authViewModel?.logout()
+                        userViewModel.resetUserRole()
                         logOutNav()
-
                     }
             )
         }
@@ -142,24 +145,25 @@ fun SettingsPatientScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewM
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, logOutNav :() -> Unit) {
+fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authViewModel: AuthViewModel?, userViewModel: UserViewModel, logOutNav :() -> Unit) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
                 modifier = Modifier.fillMaxWidth(),
                 title = { Text(stringResource(R.string.settingsHeading), style = Typography.h1) },
-                backgroundColor = MaterialTheme.colors.onPrimary)
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
-                IconButton(onClick = {
-                    onClick()
-                }) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "back arrow"
-                    )
-                }
-            }
+                navigationIcon = {
+                    IconButton(
+                        onClick = { onClick() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.onPrimary
+            )
         },
         content = {
             Column() {
@@ -181,10 +185,14 @@ fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authVi
                 Text(
                     text = stringResource(R.string.privatLicensAftale),
                     style = Typography.body1,
-                    modifier = Modifier.padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
+                    modifier = Modifier
+                        .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             val url = "https://probe.dk/privatlivspolitik/"
-                            CustomTabsIntent.Builder().build().launchUrl(context, Uri.parse(url))
+                            CustomTabsIntent
+                                .Builder()
+                                .build()
+                                .launchUrl(context, Uri.parse(url))
                         }
                 )
                 Divider(
@@ -200,6 +208,7 @@ fun SettingsResearcherScreen(onClick: () -> Unit, onClickNav :() -> Unit, authVi
                         .padding(start = 17.dp, end = 17.dp, bottom = 10.dp, top = 10.dp)
                         .clickable {
                             authViewModel?.logout()
+                            userViewModel.resetUserRole()
                             logOutNav()
                         }
                 )

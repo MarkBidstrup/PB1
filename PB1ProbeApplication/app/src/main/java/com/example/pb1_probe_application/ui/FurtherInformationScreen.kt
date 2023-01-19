@@ -32,14 +32,6 @@ import com.example.pb1_probe_application.dataClasses.*
 import com.example.pb1_probe_application.ui.theme.TextColorGreen
 import com.example.pb1_probe_application.ui.theme.Typography
 
-/*@Composable
-fun FurtherInformationScreens(role: Role, authViewModel: AuthViewModel?, userViewModel: UserViewModel, onClick: () -> Unit) {
-
-    if (role == Role.TRIAL_PARTICIPANT)
-        FurtherInformationList(userInfoList = Datasource().loadProfilePatientInfo(), focusManager = LocalFocusManager.current, onClick = onClick, authViewModel = authViewModel, userViewModel = userViewModel)
-    if (role == Role.RESEARCHER)
-        FurtherInformationList(userInfoList = Datasource().loadProfileResearcherInfo(), focusManager = LocalFocusManager.current, onClick = onClick, authViewModel = authViewModel, userViewModel = userViewModel)
-}*/
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

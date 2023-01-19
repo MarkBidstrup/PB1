@@ -36,7 +36,7 @@ fun LogInScreen(navHostController: NavHostController?, authViewModel: AuthViewMo
     // changes for login
     val loginFlow = authViewModel?.loginFlow?.collectAsState()
 
-    var email by remember { mutableStateOf("test@test.com") }
+    var email by remember { mutableStateOf("deltager@mail.com") }
     var password by remember { mutableStateOf("123456") }
     var toastErrorShow by remember { mutableStateOf(true) }
 

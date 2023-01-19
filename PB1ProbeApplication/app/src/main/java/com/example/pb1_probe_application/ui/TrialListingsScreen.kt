@@ -1,6 +1,7 @@
 package com.example.pb1_probe_application.ui
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -30,7 +31,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -69,6 +72,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
      val focusRequester = remember { FocusRequester()  }
      val focusManager = LocalFocusManager.current
      val scope = rememberCoroutineScope()
+     val context = LocalContext.current
 
      if(loggedIn && role == Role.TRIAL_PARTICIPANT) {
          trialsViewModel.getViewModelSubscribedTrials()
@@ -179,12 +183,14 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                             if(subscribedTrials.contains(it)) {
                                 icon = TrialPostIcons.NotificationOff
                                 onClick = { icon = TrialPostIcons.NotificationOn
-                                            trialsViewModel.unsubscribeFromTrial(it) }
+                                    Toast.makeText(context, R.string.removedSubscribedTrials, Toast.LENGTH_LONG).show()
+                                    trialsViewModel.unsubscribeFromTrial(it) }
                             }
                             else {
                                 icon = TrialPostIcons.NotificationOn
                                 onClick = { icon = TrialPostIcons.NotificationOff
-                                            trialsViewModel.subscribeToTrial(it)  }
+                                    Toast.makeText(context, R.string.addedSubscribedTrials, Toast.LENGTH_LONG).show()
+                                    trialsViewModel.subscribeToTrial(it)  }
                             }
                         }
                         val applyButtonEnabled: Boolean =
@@ -205,7 +211,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
                                 }
                             }}
                         TrialItem(trial = it, iconUsed = icon, applyOnClick = applyOnClick,
-                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick, navHostController = navHostController,
+                            buttonEnabled = applyButtonEnabled, iconOnClick = onClick,
                          readMoreOnClick = {
                              trialsViewModel.setCurrentNavTrialID(it)
                              navHostController?.navigate("ReadMoreTrialPost") {
@@ -248,7 +254,7 @@ fun TrialListingsScreen(trialsViewModel: TrialsViewModel = viewModel(), userView
 
 
 @Composable
-fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,navHostController: NavHostController?,
+fun TrialItem(trial: Trial, modifier: Modifier = Modifier, iconUsed: TrialPostIcons, buttonEnabled: Boolean,
               iconOnClick: () -> Unit, applyOnClick: () -> Unit, readMoreOnClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -318,6 +324,10 @@ fun TrialExpandButton(
             modifier = modifier
                 .scale(2f)
                 .padding(end = 2.dp)
+                .testTag(
+                    if (expanded) Icons.Filled.ExpandLess.toString()
+                    else Icons.Filled.ExpandMore.toString()
+                )
         )
     }
 }

@@ -66,9 +66,10 @@ class UserViewModel @Inject constructor(
         currentUserData = repository.getData(userID)
         _userDataFlow.value = repository.getData(currentUserID)
     }
-//    public override fun onCleared() {
-//        super.onCleared()
-//    }
+
+    fun resetUserRole() = viewModelScope.launch {
+        _userDataFlow.value = null
+    }
 
 
 
