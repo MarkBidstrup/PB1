@@ -352,13 +352,3 @@ fun DiagnosesComp(focusManager: FocusManager, onDone: (String) -> Unit) {
     ))
     Spacer(modifier = Modifier.height(24.dp))
 }
-
-
-
-//@Preview
-//@Composable
-//fun FilterPreview() {
-//    PB1ProbeApplicationTheme(darkTheme = false) {
-//        FilterScreen(onClickNav = onClickNav)
-//    }
-//}
