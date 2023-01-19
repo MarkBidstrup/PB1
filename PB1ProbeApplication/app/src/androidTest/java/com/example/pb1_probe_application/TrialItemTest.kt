@@ -14,14 +14,11 @@ import org.junit.Test
 class TrialItemTest {
     @get:Rule
     val composeTestRule = createComposeRule()
-
+    val trial = Trial(title = "Test trial", purpose = "Why not", locations = "Over there")
 
     @Test
-    fun test1() {
+    fun titleTest() {
         composeTestRule.setContent {
-            val trial = Trial(title = "Test trial")
-            var applyButton = 0
-
             TrialItem(
                 trial = trial,
                 iconUsed = TrialPostIcons.NotificationOn,
@@ -32,10 +29,96 @@ class TrialItemTest {
             )
         }
         composeTestRule.onNodeWithText("Test trial").assertExists()
-        composeTestRule.onNodeWithContentDescription("notificationsOn").assertIsDisplayed()
-        composeTestRule.onNodeWithTag(Icons.Filled.ExpandMore.toString(), true).assertExists().performClick()
-        composeTestRule.onNodeWithTag(Icons.Filled.ExpandLess.toString(), true).assertExists()
+    }
+
+    @Test
+    fun expandTest() {
+        composeTestRule.setContent {
+            TrialItem(
+                trial = trial,
+                iconUsed = TrialPostIcons.NotificationOn,
+                buttonEnabled = false,
+                iconOnClick = {},
+                applyOnClick = {},
+                readMoreOnClick = {},
+            )
+        }
+        composeTestRule.onNodeWithTag(Icons.Filled.ExpandMore.toString(), true)
+            .assertExists().performClick().assertDoesNotExist()
+        composeTestRule.onNodeWithTag(Icons.Filled.ExpandLess.toString(), true)
+            .assertExists().performClick().assertDoesNotExist()
+        composeTestRule.onNodeWithTag(Icons.Filled.ExpandMore.toString(), true)
+            .assertExists()
+    }
+
+    @Test
+    fun contentTest() {
+        composeTestRule.setContent {
+            TrialItem(
+                trial = trial,
+                iconUsed = TrialPostIcons.NotificationOn,
+                buttonEnabled = false,
+                iconOnClick = {},
+                applyOnClick = {},
+                readMoreOnClick = {},
+            )
+        }
+        composeTestRule.onNodeWithText("Formål: Why not").assertExists()
+        composeTestRule.onNodeWithText("Lokation: Over there").assertDoesNotExist()
+        composeTestRule.onNodeWithTag(Icons.Filled.ExpandMore.toString(), true).performClick()
+        composeTestRule.onNodeWithText("Lokation: Over there").assertExists()
+    }
+
+    @Test
+    fun applyTest() {
+        var temp = 0
+        composeTestRule.setContent {
+            TrialItem(
+                trial = trial,
+                iconUsed = TrialPostIcons.NotificationOn,
+                buttonEnabled = false,
+                iconOnClick = {},
+                applyOnClick = {temp++},
+                readMoreOnClick = {},
+            )
+        }
+        composeTestRule.onNodeWithText("Ansøg", useUnmergedTree = true).assertDoesNotExist()
+        composeTestRule.onNodeWithTag(Icons.Filled.ExpandMore.toString(), true).performClick()
         composeTestRule.onNodeWithText("Ansøg", useUnmergedTree = true).assertExists()
+    }
+
+    @Test
+    fun notificationOnTest() {
+        composeTestRule.setContent {
+            var icon = TrialPostIcons.NotificationOn
+            TrialItem(
+                trial = trial,
+                iconUsed = icon,
+                buttonEnabled = false,
+                iconOnClick = {},
+                applyOnClick = {},
+                readMoreOnClick = {},
+            )
+        }
+        composeTestRule.onNodeWithContentDescription("notificationsOn")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun notificationOffTest() {
+        composeTestRule.setContent {
+            var icon = TrialPostIcons.NotificationOff
+            TrialItem(
+                trial = trial,
+                iconUsed = icon,
+                buttonEnabled = false,
+                iconOnClick = {},
+                applyOnClick = {},
+                readMoreOnClick = {},
+            )
+        }
+        composeTestRule.onNodeWithContentDescription("notificationsOff")
+            .assertIsDisplayed()
     }
 }
 
